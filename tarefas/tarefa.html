@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link type="text/css" rel="stylesheet" href="../css/main.css" />
+<link type="text/css" rel="stylesheet" href="../css/tarefa.css" />
+<title>Nova Tarefa</title>
+</head>
+
+<body>
+
+    <div id="container-cabecalho">
+    <header>
+    
+    </header>
+    </div>
+    <div id="container-menu">
+    
+    </div>
+   
+
+	<div id="all-content">
+    <div id="form-container">
+    
+    <form oninput="total.value = (nights.valueAsNumber * 99) + ((guests.valueAsNumber - 1) * 10)">
+    
+        <label>Título:</label>
+        <input type="text" id="titulo" name="titulo" size="60" placeholder="Tarefa 1" required>
+        
+        
+        <label>Descrição:</label>
+        <textarea id="descricao" rows="6" maxlength="250" cols="50" name="descricao" placeholder="Pequena descrição sobre a tarefa" required></textarea> 
+        
+        <label for="prazo">Prazo:</label>
+        <input type="date" id="prazo" name="prazo" required>
+        
+        <label for="color">Cor:</label>
+        <input type="color" id="color" name="color" required>
+        
+        <label>Prioridade:</label>
+        <select id="prioridade" class="combobox" required>
+        <option value="Baixa">Baixa</option>
+        <option selected="selected" value="Normal">Normal</option>
+        <option value="Alta">Alta</option>
+        </select>
+        
+        
+        <label>Alocado para:</label>
+        <select id="prioridade" class="combobox" required>
+        
+        </select>
+        
+        
+        <br/>
+        <input type="submit" value="Add-Tarefa" /> 
+    </form>
+    </div>
+</div>
+
+</body>
+</html>

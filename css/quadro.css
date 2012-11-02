@@ -1,0 +1,182 @@
+html, body {
+	font: 14px/24px Helvetica, Helvetica Neue, Arial;
+    font-size: 1em;
+    line-height: 1.4;
+	margin: 0% 0% 0% 0%;
+	padding: 0% 0% 0% 0%;
+    background-color: #EEEDE9;  /* Cor de fundo */
+	
+	height: 100%;
+	width: 100%;
+	
+	color: #6d685b;
+}
+
+
+#container-cabecalho{
+	background-color: #555;
+	background-image: url('../linha.png');
+	
+	background-repeat: repeat-x;
+	background-position: bottom;
+}
+
+#container-menu{
+	background-color: white;
+	width: 100%;
+	height: 55px;
+	
+	-webkit-box-shadow: 0 5px 10px #aaa;
+	   -moz-box-shadow: 0 5px 10px #aaa;
+			box-shadow: 0 5px 10px #aaa;
+    
+	background-image:url('../logo1.png');
+	background-repeat: no-repeat;
+	background-position: left;
+}
+
+header{
+	height: 45px;
+}
+
+.texto {
+	font-style: normal;
+	font-weight: bolder;
+}
+
+.titulo {
+	float: right;
+}
+
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+input[type="search"],
+input[type="submit"] {
+	border:1px solid #ccc;
+	font-size:15px;
+	min-height:32px;
+	margin-top:15px;
+	outline: none;
+	height: 32px;
+	
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	-o-border-radius:5px;
+	-ms-border-radius:5px;
+	border-radius:5px;
+}
+
+input[type=submit] {
+	color: white; 
+	font-weight: bold;
+	background-color: #F90;
+	border-color: #F90;
+	min-width: 80px;
+	margin-top:5px;
+}
+
+#new_task {
+	float: right;
+	line-height: 18px;
+	font-size: 15px;
+	color: #414141;
+	cursor: pointer;
+	
+	margin: 3px 3px 3px 3px;
+	
+	width: 48px;
+	height: 48px;
+	background-image: url('add.png');
+	background-repeat: no-repeat;
+	background-position: left;
+	text-align: right;
+}
+
+a:link{
+	text-decoration: none;
+}
+
+a:hover {
+    color: #FF6600;
+}
+
+#new_task.disabled strong {
+    color: #999;
+    cursor: default;
+}
+
+#new_task strong  {
+    cursor: pointer;
+}
+
+#div_quadro{
+    background-color: #EEEDE9;  /* Cor de fundo */
+	width: 99.8%;
+	height: 85%;
+	border-style: none;
+	overflow: auto;
+	
+}
+
+#div_scroll_quadro{
+    background-color: #EEEDE9;  /* Cor de fundo */
+	min-height: 700px;
+	height: 100%;
+	
+	float:left;
+    margin-right:-30000px;/*Be safe with Opera's limited negative margin of 32695px (-999em could cause problems with large font sizes)*/
+}
+
+.quadro {
+	float:left;
+	width: 450px;
+	min-height: 700px;
+	height: 100%;
+	border-style: solid ;
+
+	border-color: #999;
+	border-width: 1px thin;
+	
+	text-align: center;
+}
+
+#div_reserva DIV {
+	height:20px;
+	width:150px;
+	position:absolute;
+	
+	border-color: #000000; 
+	border-style:solid; 
+	border-width:1px;
+	
+	background:#FFFFFF;
+	font-family:Verdana; font-size:12px;
+	padding-top: 5px;
+	margin: 4px;
+	text-align:center;
+	cursor:move;
+}
+
+#div_solicitado{
+
+}
+
+#div_processo{
+
+}
+
+#div_feito{
+
+}
