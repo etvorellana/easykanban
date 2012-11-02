@@ -1,53 +1,15 @@
 @charset "utf-8";
 /* CSS Document */
 
-html, body {
-	font: 16px/26px Helvetica, Helvetica Neue, Arial;
-    font-size: 1em;
-    line-height: 1.4;
-	margin: 0% 0% 0% 0%;
-	padding: 0% 0% 0% 0%;
-	color: #6d685b; /* Cor de fundo */
-	
-	height: 100%;
-	width: 100%;
-	
-	min-height: 100%;
-	min-width: 100%;
-}
-
-#container-cabecalho{
-	background-color: #555;
-	background-image: url('../images/linha.png');
-	
-	background-repeat: repeat-x;
-	background-position: bottom;
-}
-
-#container-menu{
-	background-color: white;
-	height: 40px;
-	width: 100%;
-	height: 50px;
-	
-	-webkit-box-shadow: 0 5px 10px #aaa;
-	   -moz-box-shadow: 0 5px 10px #aaa;
-			box-shadow: 0 5px 10px #aaa;
-    
-	background-image:url('../images/marca.png');
-	background-repeat: no-repeat;
-	background-position: left;
-}
-
 header{
-	height: 45px;
+	height: 		45px;
 }
 
 #quadro-container{
-	margin: 1% 1% 1% 1%; 
-	height: 85%;	
-	width: 98%;
-	overflow: auto;
+	height: 		85%;	
+	width: 			100%;
+	overflow: 		auto;
+	margin-top:		2%;
 }
 
 
