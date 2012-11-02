@@ -1,21 +1,24 @@
-body { 
-	margin:           0px;
-	font: 14px Helvetica, Helvetica Neue, Arial;
-	background-color: #EEEDE9;  /* Cor de fundo */
-	color: #6d685b;
+html, body { 
+	margin:           	0px;
+	font: 				14px Helvetica, Helvetica Neue, Arial;
+	background-color: 	#EEEDE9;  /* Cor de fundo */
+	color: 				#6d685b;
+	
+	height:				100%;
+	width: 				100%;
   
 }
 
 #sidebar {
-	background:       white;
-	font-size:        105%;
-	padding:          15px;
-	margin:           50px 10px 100px 470px;
+	background:       	white;
+	font-size:        	105%;
+	padding:          	15px;
+	margin:           	50px 10px 100px 470px;
   
-	border-color :	  #D8D3CD; /* corda linha */
-	border-style:     solid;
-	border-width:     thin;
-	border-radius:    8px; 
+	border-color :	  	#D8D3CD; /* corda linha */
+	border-style:     	solid;
+	border-width:     	thin;
+	border-radius:    	8px; 
 	
 	/* logo */
 	background-image: 		url('../images/logo.png');
@@ -58,8 +61,6 @@ body {
 	background-image:		url('../images/marca.png');
 	background-repeat: 		no-repeat;
 	background-position: 	left;
-	
-	margin-bottom: 			2%;
 }
 
 
