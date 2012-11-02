@@ -1,0 +1,88 @@
+#main {
+  background:       white;
+  font-size:        105%;
+  padding:          15px;
+  margin:           0px 10px 10px 10px;
+  width:            420px;
+  float:            left;
+}
+
+#allcontent {
+	width:            800px;
+	min-height:		  480px;
+	height:		      auto;
+	
+	padding-top:      5px;
+	padding-bottom:   5px;
+	background-color: white;
+	margin-left:      auto;
+	margin-right:     auto;
+  	
+	/* borda */
+  	border-color :    #D8D3CD;
+	border-style:     solid;
+	border-width:     thin;
+	border-radius:    8px;
+	
+	/* borda inferior */
+	border-bottom-style: 	solid;
+	border-bottom-width: 	2px;
+	border-bottom-color: 	#F19620; /* Amarelo */
+	
+	/* borda Superior */
+	border-top-style:	solid;
+	border-top-width:	2px;
+	border-top-color: 	#F19620; /* Amarelo */	
+	
+	/* somvbra ao redor da div do formulario */
+	/*
+	-webkit-box-shadow: 	0 5px 10px #aaa;
+	   -moz-box-shadow:	    0 5px 10px #aaa;
+			box-shadow: 	0 5px 10px #aaa;
+	*/
+}
+
+/***************************/
+/* CSS do da tela de Login */
+/***************************/
+
+#campos_login {
+	width: 100%;
+}
+
+input[type=email],
+input[type=password],
+input[type=text],
+input[type=url] {
+	display: 		inline-block;
+	min-height:		32px;
+	width: 			100%;
+	background: 	#fff;
+	border: 		1px solid #ccc;
+
+	
+	-webkit-box-sizing: 	border-box;
+	-ms-border-radius:		3px;
+	-o-border-radius:		3px;
+	-webkit-border-radius:	3px;
+	-moz-border-radius:		3px;
+	border-radius:			3px;
+}
+  
+  
+/* Submit */
+input[type="submit"]{
+	background-color: #047B7F;
+	border:none; 
+	color: #fff;
+	border-radius: 3px;
+	cursor: pointer; 
+	height: 35px; 
+	width: 110px;
+	font-size: 16px;
+}
+
+input[type="submit"]:hover{
+	color: #ff6937;
+	text-shadow: 0 0 1px rgba(255,255,255,.2);
+}

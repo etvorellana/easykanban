@@ -1,0 +1,154 @@
+@charset "utf-8";
+/* CSS Document */
+
+html, body {
+	font: 16px/26px Helvetica, Helvetica Neue, Arial;
+    font-size: 1em;
+    line-height: 1.4;
+	margin: 0% 0% 0% 0%;
+	padding: 0% 0% 0% 0%;
+	color: #6d685b; /* Cor de fundo */
+	
+	height: 100%;
+	width: 100%;
+	
+	min-height: 100%;
+	min-width: 100%;
+}
+
+#container-cabecalho{
+	background-color: #555;
+	background-image: url('../images/linha.png');
+	
+	background-repeat: repeat-x;
+	background-position: bottom;
+}
+
+#container-menu{
+	background-color: white;
+	height: 40px;
+	width: 100%;
+	height: 50px;
+	
+	-webkit-box-shadow: 0 5px 10px #aaa;
+	   -moz-box-shadow: 0 5px 10px #aaa;
+			box-shadow: 0 5px 10px #aaa;
+    
+	background-image:url('../images/marca.png');
+	background-repeat: no-repeat;
+	background-position: left;
+}
+
+header{
+	height: 45px;
+}
+
+#quadro-container{
+	margin: 1% 1% 1% 1%; 
+	height: 85%;	
+	width: 98%;
+	overflow: auto;
+}
+
+
+#div_scroll_quadro{
+	background-color: #EEEDE9;  /* Cor de fundo */
+	min-height: 700px;
+	height: 100%;
+	
+	float:left;
+    margin-right:-30000px;/*Be safe with Opera's limited negative margin of 32695px (-999em could cause problems with large font sizes)*/
+}
+
+.quadro {
+	float:left;
+	width: 450px;
+	min-height: 700px;
+	height: 100%;
+	border-style: solid ;
+
+	border-color: #999;
+	border-width: 1px thin;
+	
+	text-align: center;
+}
+/*
+html>body #main-container {
+	width: auto;
+} 
+*/
+
+
+/***************************/
+/* CSS do da tela de Login */
+/***************************/
+
+#campos_login {
+	width: 80%;
+}
+
+input[type=email],
+input[type=password],
+input[type=text],
+input[type=url] {
+	display: inline-block;
+	min-height:32px;
+	width: 100%;
+	background: #fff;
+	border:1px solid #ccc;
+
+	
+	-webkit-box-sizing: border-box;
+	-ms-border-radius:3px;
+	-o-border-radius:3px;
+	-webkit-border-radius:3px;
+	-moz-border-radius:3px;
+	border-radius:3px;
+}
+  
+  
+/* Submit */
+input[type="submit"]{
+	background-color: #047B7F;
+	border:none; 
+	color: #fff;
+	border-radius: 3px;
+	cursor: pointer; 
+	height: 35px; 
+	width: 110px;
+	font-size: 16px;
+}
+
+input[type="submit"]:hover{
+	color: #ff6937;
+	text-shadow: 0 0 1px rgba(255,255,255,.2);
+}
+
+#div_reserva{
+	border-top-width: 5px;
+	border-top-color: #F89C20; /* Amarelo */
+}
+
+#div_solicitado{
+	border-top-width: 5px;
+	border-top-color: #694D96; /* Roxo */
+}
+
+#div_processo{
+	border-top-width: 5px;
+	border-top-color: #D02E27; /* Vermelho */
+}
+
+#div_feito{
+	border-top-width: 5px;
+	border-top-color: #2EB3C4; /* Vermelho */
+}
+
+#div_arquivado{
+	border-top-width: 5px;
+	border-top-color: #CCC; /* Vermelho */
+}
+
+/***********************************/
+/*  FOOTER 						   */
+/***********************************/
