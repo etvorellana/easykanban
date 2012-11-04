@@ -9,6 +9,12 @@ html, body {
   
 }
 
+#perfil{
+	margin: 8px;
+	color: white;
+	float: right;	
+}
+
 #sidebar {
 	background:       	white;
 	font-size:        	105%;
@@ -48,22 +54,99 @@ html, body {
 	background-position: 	bottom;
 }
 
+/*************************************************/
+/*			       CSS DO MENU					 */
+/*************************************************/
+
 #container-menu{
 	background-color: 		white;
 	height: 				40px;
-	width:					 100%;
-	height:					 50px;
-	
+	width:					100%;
+	height:					50px;
 	-webkit-box-shadow: 	0 5px 10px #aaa;
-	   -moz-box-shadow:	    0 5px 10px #aaa;
-			box-shadow: 	0 5px 10px #aaa;
+	-moz-box-shadow:	    0 5px 10px #aaa;
+	box-shadow: 			0 5px 10px #aaa;
     
-	background-image:		url('../images/marca.png');
-	background-repeat: 		no-repeat;
-	background-position: 	left;
 }
 
+#container-menu ul{
+    margin: 			0; 
+	padding: 			0;
+    float: 				left;
+	text-align: 		center;
+}
+ 
+#container-menu ul li{
+    display: 			inline-block;
+}
+ 
+ 
+#container-menu ul li a{
+    float: 				left; 
+	text-decoration: 	none;
+	color:				#000; 
+	padding: 			17px 50px;
+	
+	background-color: 	white;
+    
+}
+ 
+#container-menu ul li a:visited{
+	color:				#000; 
+}
+
+#container-menu ul a{
+	width: 				125px;	
+}
+ 
+#container-menu ul li a:hover, .menu ul li .current{
+    color: 				#fff;
+    background-color: 	#30B4C5; 
+}
 
 header{
-	height: 45px;
+	height: 		45px;
+}
+
+/*************************************************/
+/*			FIM CSS DO MENU						 */
+/*************************************************/
+
+
+
+
+/*************************************************/
+/*			COMPORTAMENTO GLOBAL DOS BOTÕES		 */
+/*************************************************/
+
+input[type="submit"] {
+	font-size:					15px;
+	color: 						#FFF;
+	text-decoration: 			none;
+	-moz-border-radius: 		6px; 
+	-webkit-border-radius: 		6px;
+	-moz-box-shadow: 			0 1px 3px rgba(0,0,0,0.6);
+	-webkit-box-shadow: 		0 1px 3px rgba(0,0,0,0.6	);
+	text-shadow: 				0 -1px 1px rgba(0,0,0,0.25);
+	border-bottom: 				1px solid rgba(0,0,0,0.25);
+	position: 					relative;
+	cursor: 					pointer
+	border-radius: 				5px;
+	
+	-moz-border-radius: 		6px; 
+	-webkit-border-radius: 		6px;
+	-webkit-box-shadow: 		0 1px 3px rgba(0,0,0,0.6	);
+	text-shadow: 				0 -1px 1px rgba(0,0,0,0.25);
+	border-bottom: 				1px solid rgba(0,0,0,0.25);
+	position: 					relative;
+	cursor: 					pointer
+}
+
+input[type=submit]:active{
+	top:				1px;
+}
+
+input[type="submit"]:hover{
+	
+	background-image:  url('../images/overlay.png');
 }

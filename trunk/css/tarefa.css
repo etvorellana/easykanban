@@ -52,11 +52,8 @@ input[type=color]{
 	width: 				60px;
 }
 
-input[type=submit] {
-	font-size:			20px;
-	color: 				#FFF;
+input[type=submit]{
 	padding:			10px;
 	background: 		#2EB3C4; /* Azul */
 	border-style: 		none;
-	border-radius: 		5px;
 }
