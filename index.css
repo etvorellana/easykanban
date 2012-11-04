@@ -7,6 +7,12 @@
   float:            left;
 }
 
+#container-menu{
+	background-image:		url('images/marca.png');
+	background-repeat: 		no-repeat;
+	background-position: 	left;
+}
+
 #allcontent {
 	width:            800px;
 	min-height:		  480px;
@@ -73,17 +79,9 @@ input[type=url] {
   
 /* Submit */
 input[type="submit"]{
-	background-color: #047B7F;
-	border:none; 
-	color: #fff;
-	border-radius: 3px;
-	cursor: pointer; 
-	height: 35px; 
-	width: 110px;
-	font-size: 16px;
-}
-
-input[type="submit"]:hover{
-	color: #ff6937;
-	text-shadow: 0 0 1px rgba(255,255,255,.2);
+	background-color: 	#047B7F;
+	border-style: 		none; 
+	cursor: 			pointer; 
+	height: 			35px; 
+	width: 				100px;
 }

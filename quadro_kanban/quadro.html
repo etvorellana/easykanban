@@ -3,25 +3,47 @@
 <head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>easykanban</title>
-
+		
+        <link type="text/css" rel="stylesheet" href="../css/main.css" />
 		<link type="text/css" rel="stylesheet" href="../css/quadro.css" />
         
-		<link type="text/css" rel="stylesheet" href="../css/main.css" />
 		
+        
+        <!-- Empede que o Usuário selecione o texto da pagina -->
+		<script language="JavaScript1.2">
+        <!--
+			function disableselect(e){
+			return false
+			}
+			function reEnable(){
+			return true
+			}
+			document.onselectstart=new Function ("return false")
+			if (window.sidebar){
+			document.onmousedown=disableselect
+			document.onclick=reEnable
+			}
+        //-->
+        </script>
+        
 	</head>
 	
 	<body>
         <div id="container-cabecalho">
-            <header>
-
-          </header>
+        <header>
+        	<label> Nome do Projeto </label>
+			<div id="perfil">
+            	<label> Nome Usuário </label>
+            	<img src="../images/zoom.png" alt="Alicar Zoom nas letras do Sistema">
+            </div>		
+        </header>
         </div>
+        
         <div id="container-menu">
-            <!--- <div id="new_task" > -->
-            <div id="light">
-            <ul>
-            <li><a class="large button green">Nova Tarefa</a></li>
-            </ul>
+            <div id="nova-tarefa" >
+           		<form action="../tarefas/tarefa.html">
+                	<input type="submit" name="Nova Tarefa" value=" + Nova Tarefa " >
+                </form>
             </div>
     </div>
         
