@@ -35,8 +35,21 @@
  
 #container-cabecalho ul li a{
     float: 				left; 
+	background-color:	transparent; /* para o IE */
+}
+
+#acessiobilidade a{
+	float:				right;	
+	background-color:	transparent; /* para o IE */
+}
+
+.menu_acesso_rapido {
 	text-decoration: 	none;
-	color:				#FFF; 
 	font-size:			16px;
 	padding: 			8px 40px;
+	color:				white;
+}
+
+.menu_acesso_rapido:hover {
+	color:				#F99D1C; 
 }
