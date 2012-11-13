@@ -53,3 +53,21 @@
 .menu_acesso_rapido:hover {
 	color:				#F99D1C; 
 }
+
+/************************************************/
+/*			PAINEL DIREITO						*/
+/************************************************/
+
+#caixa1{
+	border-style:	solid;
+	float:			left;
+	width:			200px;
+	height:			100px;
+}
+
+#sensacional{
+	width:			200px; /* Propriedade obrigatória para todo elemento flutuante */
+	height:			100px;
+	border-style:	solid;
+	float:			right;
+}

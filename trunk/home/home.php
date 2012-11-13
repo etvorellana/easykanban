@@ -36,7 +36,13 @@
         <br style="clear:left"/>
         </div>
     <div id="main">
-
+		<div id="caixa1">   	
+        
+        </div>
+        
+		<div id="sensacional">   	
+        
+        </div>
     </div>
 
     <div id="footer">
