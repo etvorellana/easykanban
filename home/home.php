@@ -16,19 +16,22 @@
     <header>
     
 		<ul class="menu_acesso_rapido">
-        <li> <a href="#"> <?php echo ( $_SESSION['usu_nome']) ?> </a> </li>
+        <li> <a class="menu_acesso_rapido" href="#"> <?php echo ( $_SESSION['usu_nome']) ?> </a> </li>
     	</ul>
-    
+    	
+        <div id="acessiobilidade">
+        	<label > <a class="menu_acesso_rapido" href="../logout.php"> logout </a> </label>
+        </div>
+        
     </header>
     </div>
     
 	<div id="container-menu">
         <ul>
-        <li><a href="#">Empresa</a></li>
-        <li><a href="#">Localizar Empresas</a></li>
-        <li><a href="#">Link</a></li>
-        <li><a href="#">Link</a></li>
-        <li><a href="#">Link</a></li>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Empresas</a></li>
+        <li><a href="#">Relatórios</a></li>
+        <li><a href="#">Configurações</a></li>
         </ul>
         <br style="clear:left"/>
         </div>

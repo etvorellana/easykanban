@@ -85,18 +85,13 @@ html, body {
     float: 				left; 
 	text-decoration: 	none;
 	color:				#000; 
-	padding: 			17px 50px;
-	
+	padding: 			14px 40px;
 	background-color: 	white;
-    
+    width:				150px;
 }
  
 #container-menu ul li a:visited{
 	color:				#000; 
-}
-
-#container-menu ul a{
-	width: 				125px;	
 }
  
 #container-menu ul li a:hover, .menu ul li .current{

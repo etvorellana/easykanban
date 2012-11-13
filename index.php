@@ -100,7 +100,7 @@
 			<?php
                 // If the session var is empty, show any error message and the log-in form; otherwise confirm the log-in
                 if (empty($_SESSION['usu_id'])) {
-                echo '<p class="error">' . $error_msg . '</p>';
+                	echo '<p class="error">' . $error_msg . '</p>';
             ?>
             
             <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
