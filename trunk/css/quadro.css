@@ -80,23 +80,6 @@ header{
 	text-align: center;
 }
 
-#div_reserva DIV {
-	height:20px;
-	width:150px;
-	position:absolute;
-	
-	border-color: #000000; 
-	border-style:solid; 
-	border-width:1px;
-	
-	background:#FFFFFF;
-	font-family:Verdana; font-size:12px;
-	padding-top: 5px;
-	margin: 4px;
-	text-align:center;
-	cursor:move;
-}
-
 #div_reserva{
 	border-top-width: 5px;
 	border-top-color: #F89C20; /* Amarelo */
@@ -120,4 +103,10 @@ header{
 #div_arquivado{
 	border-top-width: 5px;
 	border-top-color: #CCC; /* Vermelho */
+}
+
+#tarefa, #tarefa1{
+	background-image: url('../images/postit.png');	
+	width:	128px;
+	height:	128px;
 }

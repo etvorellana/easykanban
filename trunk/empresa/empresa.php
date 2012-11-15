@@ -16,7 +16,7 @@
     
 	<div id="container-menu">
         <ul>
-        <li><a href="#">Home</a></li>
+        <li><a href="../home/home.php">Home</a></li>
         <li><a href="#">Empresas</a></li>
         <li><a href="#">Link</a></li>
         <li><a href="#">Link</a></li>
