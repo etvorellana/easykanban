@@ -1,5 +1,5 @@
 <?php
-	require_once('connect/connect_vars.php');
+	require_once('connect/guest_connect_vars.php');
 	
 	// Inicia a sessão
 	session_start();
@@ -37,10 +37,10 @@
 					$row = mysqli_fetch_array($data);
 					$_SESSION['usu_id'] = $row['usu_id'];
 					$_SESSION['usu_nome'] = $row['usu_nome'];
-					$_SESSION['usu_email'] = $row['usu_email'];
+					$_SESSION['tip_id'] = $row['tip_id'];
 					setcookie('usu_id', $row['usu_id'], time() + (60 * 60 * 24 * 30));    // expires in 30 days
 					setcookie('usu_nome', $row['usu_nome'], time() + (60 * 60 * 24 * 30));  // expires in 30 days
-					setcookie('usu_email', $row['usu_email'], time() + (60 * 60 * 24 * 30));  // expires in 30 days
+					setcookie('tip_id', $row['tip_id'], time() + (60 * 60 * 24 * 30));  // expires in 30 days
 					$home_url = 'home/home.php';
 					header('Location: ' . $home_url);
 				}
@@ -53,6 +53,9 @@
 				// O nome de usuário e/ou senha não estão cadastrados 
 				$error_msg = 'Por favor, você deve preencher os campos de email e senha';
 			}
+			
+			// encerra conexão com o banco de dados */
+			mysqli_close($dbc);
 		}
 	}
 ?>
@@ -95,7 +98,7 @@
     <div id="sidebar">
 
         <div id="campos_login" class="centro">
-            <h3 align="left">Bem-Vindo <strong></strong></h3>
+            
             
 			<?php
                 // If the session var is empty, show any error message and the log-in form; otherwise confirm the log-in
@@ -104,20 +107,21 @@
             ?>
             
             <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-            <p align="left">
-                <label for="email">Email:</label> <br/>
-                <input type="email" id="email" name="email" required> <br/><br/>
+            <table>
+
+            	<tr> <h3 align="left">Bem-Vindo <strong></strong></h3> </tr> <br />
+                <tr> <label for="email">Email:</label> </tr> 
+                <tr>  <input type="email" id="email" name="email" required> </tr>  <br /><br />
+        
+                <tr> <label for="senha">Senha:</label> </tr>
+                <tr> <input type="password" id="senha" name="senha" required></tr> <br /> <br />
                 
-                <label for="senha">Senha:</label> <br/>
-                <input type="password" id="senha" name="senha" required> <br/> <br/>
-                
-                <input type="submit" value="Log In" name="submit" />
-            </p>
-            
+                <tr> <input type="submit" value="Log In" name="submit" /> </tr> <br /> <br />
+				<tr> <p> Esqueceu sua senha? <a href="index.html">Clique aqui! </a> </p> </tr>
+            </table>
             </form>
-            <p>
-            Esqueceu sua senha? <a href="index.html">Clique aqui! </a> 
-            </p>  
+            
+             
          </div>
         
     </div>

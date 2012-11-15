@@ -7,23 +7,30 @@
         <link type="text/css" rel="stylesheet" href="../css/main.css" />
 		<link type="text/css" rel="stylesheet" href="../css/quadro.css" />
         
+		<script>
+			function allowDrop(ev)
+			{
+				ev.preventDefault();
+			}
 		
-        
-        <!-- Empede que o Usuário selecione o texto da pagina -->
-		<script language="JavaScript1.2">
-        <!--
-			function disableselect(e){
-			return false
+			function drag(ev)
+			{
+				// Quando o usuário inicia um drag, guardamos no dataset do evento 
+				// o id do objeto sendo arrastado
+				ev.dataTransfer.setData("ID",ev.target.id);
 			}
-			function reEnable(){
-			return true
+		
+			// Quando o usuário arrasta sobre um dos painéis, retornamos 
+			// false para que o evento não se propague para o navegador, o 
+			// que faria com que o conteúdo fosse selecionado. 30 
+			function dragOver(ev) { return false; } 
+		
+			function drop(ev)
+			{
+				ev.preventDefault();
+				var data=ev.dataTransfer.getData("ID");
+				ev.target.appendChild(document.getElementById(data));
 			}
-			document.onselectstart=new Function ("return false")
-			if (window.sidebar){
-			document.onmousedown=disableselect
-			document.onclick=reEnable
-			}
-        //-->
         </script>
         
 	</head>
@@ -51,23 +58,26 @@
 			
             <div id="div_scroll_quadro">
             
-                <div id="div_reserva" class="quadro" >
-                	<label class="texto" > BACKLOG </label>
+                <div id="div_reserva" class="quadro" ondrop="drop(event)" ondragover="allowDrop(event)" >
+                	<label class="texto" > BACKLOG </label> 
+                    <div id="tarefa" draggable="true" ondragstart="drag(event)" > </div>
+                    <div id="tarefa1" draggable="true" ondragstart="drag(event)" > </div>
                 </div>
                 
-                <div id="div_solicitado" class="quadro" >
+                <div id="div_solicitado" class="quadro" ondrop="drop(event)" ondragover="allowDrop(event)" >
                 	<label class="texto"> REQUISITADO </label>
+                    
                 </div>
                 
-                <div id="div_processo" class="quadro" >
+                <div id="div_processo" class="quadro" ondrop="drop(event)" ondragover="allowDrop(event)" >
                 	<label class="texto"> EM PROCESSO </label>
                 </div>
                 
-                <div id="div_feito" class="quadro" >
+                <div id="div_feito" class="quadro" ondrop="drop(event)" ondragover="allowDrop(event)" >
                 	<label class="texto"> CONCLUIDO </label>
                 </div>
                 
-                <div id="div_arquivado" class="quadro" >
+                <div id="div_arquivado" class="quadro" ondrop="drop(event)" ondragover="allowDrop(event)" >
                 	<label class="texto"> ARQUIVADO </label>
                 </div>
      		</div>

@@ -1,3 +1,10 @@
+/* Utilizar o seletor universal(*) para remover todos os valores padrão para margin e pedding dos browser's */
+* {
+margin: 0;
+padding: 0;
+}
+
+
 html, body { 
 	margin:           	0px;
 	font: 				14px Helvetica, Helvetica Neue, Arial;
@@ -10,36 +17,19 @@ html, body {
 }
 
 #perfil{
-	margin: 8px;
-	color: white;
-	float: right;	
-}
-
-#sidebar {
-	background:       	white;
-	font-size:        	105%;
-	padding:          	15px;
-	margin:           	50px 10px 100px 470px;
-  
-	border-color :	  	#D8D3CD; /* corda linha */
-	border-style:     	solid;
-	border-width:     	thin;
-	border-radius:    	8px; 
-	
-	/* logo */
-	background-image: 		url('../images/logo.png');
-	background-repeat: 		no-repeat;
-	background-position: 	top right;
+	margin: 		8px;
+	color: 			white;
+	float: 			right;	
 }
 
 #footer {
-  background-color: #CCC9C2;
-  text-align:       center;
-  padding:          15px;
-  margin-top:		4%;
-  height: 			100px;
-  font-size:        90%;
-  clear:            left;
+	background-color: 	#CCC9C2;
+	text-align:       	center;
+	padding:         	15px;
+	margin-top:			2%;
+	height: 			100px;
+	font-size:        	90%;
+	clear:            	left;
 }
 
 /******************************/
@@ -145,3 +135,51 @@ input[type="submit"]:hover{
 	
 	background-image:  url('../images/overlay.png');
 }
+
+/***********************************************/
+/***********************************************/
+
+.nome_titulo{
+	font-size:		30px;	
+}
+
+/************************************************/
+/*				 CSS MENU 						*/
+/************************************************/
+
+#container-cabecalho ul{
+    margin: 			0; 
+	padding: 			0;
+    float: 				left;
+	text-align: 		center;
+}
+ 
+#container-cabecalho ul li{
+    display: 			inline-block;
+}
+ 
+ 
+#container-cabecalho ul li a{
+    float: 				left; 
+	background-color:	transparent; /* para o IE */
+}
+
+
+#acessiobilidade a{
+	float:				right;	
+	background-color:	transparent; /* para o IE */
+}
+
+.menu_acesso_rapido {
+	text-decoration: 	none;
+	font-size:			16px;
+	padding: 			8px 40px;
+	color:				white;
+}
+
+.menu_acesso_rapido:hover {
+	color:				#F99D1C; 
+}
+/************************************************/
+/*				FIM CSS MENU 		     		*/
+/************************************************/

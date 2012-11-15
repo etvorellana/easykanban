@@ -85,3 +85,20 @@ input[type="submit"]{
 	height: 			35px; 
 	width: 				100px;
 }
+
+#sidebar {
+	background:       	white;
+	font-size:        	105%;
+	padding:          	15px;
+	margin:           	50px 10px 100px 470px;
+  
+	border-color :	  	#D8D3CD; /* corda linha */
+	border-style:     	solid;
+	border-width:     	thin;
+	border-radius:    	8px; 
+	
+	/* logo */
+	background-image: 		url('../images/logo.png');
+	background-repeat: 		no-repeat;
+	background-position: 	top right;
+}
