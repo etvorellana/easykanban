@@ -17,61 +17,42 @@
 	border-radius: 			8px;
 }
 
+#fim_da_lista {
+	text-align:center;
+}
+
+#botoes_empresa{
+	padding-top:	5px;
+	padding-bottom:	5px;
+	width:			250px;
+	margin: 		0 auto;
+}
+
+#config_button{
+	margin-left:	40px;	
+}
+
+
 #all-content{
 	margin:			0;
 	padding:		0;	
 }
 
+#fim_da_lista{
+	text-align:center
+}
 
 #menu_perfil{
 	width:						850px;
 	
 	padding:					5px 5px 5px 5px;
 	
-	margin-bottom:  			30px;
+	margin-top:  				30px;
+	
 	border-bottom:  			solid;
 	border-bottom-width:		5px;
 	border-bottom-color:		#D8D3CD; /* marron escuro */
 }
-
-/************************************************/
-/*			PAINEIS ESQUERDO E DIREITO			*/
-/************************************************/
-
-/* Painel direito */
-#container_projetos{
-	float:						left;
-}
-
-.info{
-	color:						#F99D1C;
-	padding:					14px 5px 5px 5px;
-	
-	width:						410px;/* Propriedade obrigatória para todo elemento flutuante */
-
-	background-image:			url('../images/home_barra.png');
-	background-repeat:  		no-repeat;
-	background-position:		top center;
-	
-	background-color:			#EEEDE9; /* marron claro */
-	
-	border:						1px solid #D8D3CD;
-	border-radius:				5px;
-}
-
-.label_titulo{
-	padding-left: 25px;
-}
-
-/* Painel Esquerdo */
-#container_tarefas{
-	margin-left:	440px;
-}
-
-/************************************************/
-/*		FIM PAINEIS ESQUERDO E DIREITO			*/
-/************************************************/
-
 
 /*************************************************/
 /*				REGRAS DOS BOTOES				 */
@@ -110,15 +91,13 @@
 
 
 
-
-
 /*************************************************/
 /*					FIM REGRA DOS BOTOES		 */
 /*************************************************/
 
-.add_usuario{
-	width:			100%;	
+#dialog-modal{
+	height:		100%;
+	width:		100%;	
+	
 }
-
-#inline { display: none; width: 600px; }
 

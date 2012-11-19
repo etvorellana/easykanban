@@ -75,16 +75,6 @@ input[type=url] {
 	-moz-border-radius:		3px;
 	border-radius:			3px;
 }
-  
-  
-/* Submit */
-input[type="submit"]{
-	background-color: 	#047B7F;
-	border-style: 		none; 
-	cursor: 			pointer; 
-	height: 			35px; 
-	width: 				100px;
-}
 
 #sidebar {
 	background:       	white;

@@ -4,6 +4,9 @@ margin: 0;
 padding: 0;
 }
 
+a {
+	text-decoration:		none;	/* Retira o sublinhado de todos os links */	
+}
 
 html, body { 
 	margin:           	0px;
@@ -115,7 +118,7 @@ input[type="submit"] {
 	text-shadow: 				0 -1px 1px rgba(0,0,0,0.25);
 	border-bottom: 				1px solid rgba(0,0,0,0.25);
 	position: 					relative;
-	cursor: 					pointer
+	cursor: 					pointer;
 	border-radius: 				5px;
 	
 	-moz-border-radius: 		6px; 
@@ -166,14 +169,29 @@ input[type="submit"]:hover{
 
 
 #acessiobilidade a{
-	float:				right;	
+	float:				right;
+	padding-top:		13px;
+	padding-right:		20px;
 	background-color:	transparent; /* para o IE */
+	text-decoration: 	none;
+}
+
+#nome_usuario{
+	float:				left;	
+	padding-top:		13px;
+	padding-left:		30px;
+	margin-left:		10px;
+	
+	background-color:	transparent; /* para o IE */
+	
+	background-image: url('../images/user.png');
+	background-repeat:	no-repeat;
+	background-position: bottom left;
 }
 
 .menu_acesso_rapido {
 	text-decoration: 	none;
 	font-size:			16px;
-	padding: 			8px 40px;
 	color:				white;
 }
 
@@ -183,3 +201,44 @@ input[type="submit"]:hover{
 /************************************************/
 /*				FIM CSS MENU 		     		*/
 /************************************************/
+
+/**********************************************/
+/*		    css dos botões 					  */
+/**********************************************/
+
+.orange_button{
+	padding:			10px;
+	background: 		#F89C20; /* Amarelo */
+	border-style: 		none;
+	border-radius: 		5px;
+}
+
+.blue_button{
+	padding:			10px;
+	background: 		#2EB3C4; /* Azul */
+	border-style: 		none;
+}
+
+/**********************************************/
+/*			fim css dos botões 				  */
+/**********************************************/
+
+#nova-tarefa{
+	margin: 5px 20px 0px 0px;
+	float:	right;		
+	text-decoration:	none;	
+}
+
+#busca{
+	border-radius: 				20px;
+	-moz-border-radius: 		20px; 
+	-webkit-border-radius: 		20px;		
+	
+	width:						30%;
+	
+	border-color:				#000;
+	border-width:				2px;
+	padding-left:				10px;
+	
+	margin-left:				68%;
+}
