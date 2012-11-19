@@ -99,7 +99,6 @@
 
         <div id="campos_login" class="centro">
             
-            
 			<?php
                 // If the session var is empty, show any error message and the log-in form; otherwise confirm the log-in
                 if (empty($_SESSION['usu_id'])) {
@@ -108,19 +107,18 @@
             
             <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <table>
-
-            	<tr> <h3 align="left">Bem-Vindo <strong></strong></h3> </tr> <br />
-                <tr> <label for="email">Email:</label> </tr> 
+            	<td> <tr> <h3 align="center">Bem-Vindo <strong></strong></h3> </tr> </td> <br />
+                <td> <tr> <label for="email"> <strong> Email: </strong> </label> </tr>  </td>
                 <tr>  <input type="email" id="email" name="email" required> </tr>  <br /><br />
         
-                <tr> <label for="senha">Senha:</label> </tr>
-                <tr> <input type="password" id="senha" name="senha" required></tr> <br /> <br />
+                <td> <tr> <label for="senha"> <strong> Senha: </strong> </label> </tr> </td>
+                <td> <tr> <input type="password" id="senha" name="senha" required></tr> </td> <br /> <br />
                 
-                <tr> <input type="submit" value="Log In" name="submit" /> </tr> <br /> <br />
-				<tr> <p> Esqueceu sua senha? <a href="index.html">Clique aqui! </a> </p> </tr>
+                <td> <tr> <input class="blue_button" type="submit" value="Log In" name="submit" /> </tr> </td> <br /> 
             </table>
-            </form>
             
+            </form>
+			<p> Esqueceu sua senha? <a href="index.html">Clique aqui! </a> </p>
              
          </div>
         
