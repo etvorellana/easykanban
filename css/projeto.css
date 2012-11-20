@@ -1,11 +1,12 @@
 @charset "utf-8";
 /* CSS Document */
 
+
 #main{
 	width:					860px;
-	height:					70%;
+	height:					100%;
 	
-	padding:				1px 15px 0px 15px;
+	padding:				1px 15px 50px 15px;
 	margin:					0 auto;
 	background-color:		white;
 	
@@ -21,10 +22,17 @@
 	text-align:center;
 }
 
+div.projeto_info:hover{
+	background-color:		#EEEDE9;	
+	-webkit-box-shadow: 	0 5px 10px #aaa;
+	-moz-box-shadow:	    0 5px 10px #aaa;
+	box-shadow: 			0 5px 10px #aaa;
+}
+
 #botoes_empresa{
 	padding-top:	5px;
 	padding-bottom:	5px;
-	width:			250px;
+	width:			270px;
 	margin: 		0 auto;
 }
 
@@ -48,6 +56,7 @@
 	padding:					5px 5px 5px 5px;
 	
 	margin-top:  				30px;
+	margin-bottom:				30px;
 	
 	border-bottom:  			solid;
 	border-bottom-width:		5px;
@@ -93,6 +102,4 @@
 /*************************************************/
 /*					FIM REGRA DOS BOTOES		 */
 /*************************************************/
-
-
 

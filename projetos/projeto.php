@@ -4,17 +4,11 @@
 	
 	if( isset($_SESSION['usu_id']) )
 		$usu_id = $_SESSION['usu_id'];
-	else
-		printf("Você precisa realizar Login");
-	
-	if ( isset($_GET['emp_id']) )
-		$emp_id = $_GET['emp_id'];
-	else
-		printf("Não!");
-		
+
 		
 	if (isset($_SESSION['usu_id'])) 
 	{
+
 		// Quando o usuário submeter os dados de cadastro de nova empresa
 		if (isset($_POST['send'])) 
 		{
@@ -28,24 +22,28 @@
 			$data_inicio = trim($_POST['data_inicio']);
 			$data_fim = trim($_POST['data_fim']);
 			$tip_situacao = trim ($_POST['tipo_situacao']);	
-			
-			echo "$nome";
-			echo "$descrição";
-			echo "$data_inicio";
-			echo "$data_fim";
-			echo "$tip_situacao";
-			
+			$data_hora = date("d/m/Y h:i:s");
+
 			if ( !empty($nome) && !empty($data_inicio) && !empty($data_fim) && !empty($tip_situacao) )
 			{
+
 				// criando query de inserção na tabela projeto
-				$query = "INSERT INTO projeto ( emp_id, tip_id, pro_nome, pro_descricao, pro_dt_inicio, pro_dt_fim ) VALUES ('$emp_id', '$tip_situacao', '$nome', '$descrição', '$data_inicio', '$data_fim' )"
+				$query = "INSERT INTO projeto ( tip_id, pro_nome, pro_descricao, pro_dt_inicio, pro_dt_fim, pro_dt_criacao ) VALUES ( '$tip_situacao', '$nome', '$descrição', '$data_inicio', '$data_fim', '$data_hora' )"
 				or die ('Erro ao contruir a consulta');
-				
-				echo "$query";
 				
 				//execulta query de inserção na tabela cep
 				$data = mysqli_query($dbc, $query)
 					or die('Erro ao execultar a inserção na tabela projeto');
+					
+				// recupera o id do projeto inserido e insere na tabela usuario_projeto
+				$ultimo_pro_id = mysqli_insert_id($dbc);
+				
+				$query = "INSERT INTO usuario_projeto ( usu_id, pro_id ) VALUES ( '$usu_id', '$ultimo_pro_id' )"
+				or die ('Erro ao criar a consulta');
+				
+				// execulta query de inserção na tabela usuario_empresa
+				$data = mysqli_query($dbc, $query)
+					or die('Erro ao execultar a inserção na tabela usuario_empresa');
 	
 			}
 				
@@ -72,102 +70,95 @@
   </head> 
 
   <body>
-    
-	<div id="container-cabecalho">
-    <header>
-    
-		<div id="nome_usuario" class="menu_acesso_rapido">
-        	<label> <?php echo ( $_SESSION['usu_nome']) ?> </label>
-    	</div>
-    	
-        <div id="acessiobilidade" >
-        	<label > <a class="menu_acesso_rapido" href="../logout.php"> logout </a> </label>
-        </div>
-    </header>
-    </div>
-    
-	<div id="container-menu">
-        <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="../empresa/empresa.php">Empresas</a></li>
-        <li><a href="#">Relatórios</a></li>
-        <li><a href="#">Configurações</a></li>
-        </ul>
+  	<div id="corpo">
+        <div id="container-cabecalho">
+        <header>
         
-        <div id="nova-tarefa" >
-            <a id="bug" class="modalbox" href="#inline"> 
-                <input class="orange_button" type="submit" value="+ Novo Projeto" > 
-            </a>
+            <div id="nome_usuario" class="menu_acesso_rapido">
+                <label> <?php echo ( $_SESSION['usu_nome']) ?> </label>
+            </div>
+            
+            <div id="acessiobilidade" >
+                <label > <a class="menu_acesso_rapido" href="../logout.php"> logout </a> </label>
+            </div>
+        </header>
         </div>
         
-    <br style="clear:left"/>
-    </div>
-    
-    <div id="main">
-    	<div id="menu_busca">
-        	<input type="text" name="busca" id="busca" placeholder="Buscar Projetos" />
+        <div id="container-menu">
+            <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="../empresa/empresa.php">Empresas</a></li>
+            <li><a href="#">Relatórios</a></li>
+            <li><a href="#">Configurações</a></li>
+            </ul>
+            
+            <div id="nova-tarefa" >
+                <a id="bug" class="modalbox" href="#inline"> 
+                    <input class="orange_button" type="submit" value="+ Novo Projeto" > 
+                </a>
+            </div>
+            
+        <br style="clear:left"/>
         </div>
-    	
-		<?php
-		// se a sessão estiver devidamente definida
-		if (isset($_SESSION['usu_id'])) 
-		{
-			// conecta ao banco de dados
-			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
-				die('Erro ao conectar ao BD!');
-				
-			
-			// Se a empresa foi selecionada, selecionamos todos os projetos pertencentes a devida empresa, se não selecinamos todos os projetos
-			if ( isset($_GET['emp_id'] ) ){
-				$query = "SELECT pro_id, emp_id, tip_id, pro_nome, pro_descricao, pro_dt_inicio, pro_dt_fim" .
-						 " FROM projeto WHERE emp_id =" . $_GET['emp_id'] 
-						 or die ('Erro ao contruir a consulta');
-			}else{
-				$query = "SELECT pro_id, emp_id, tip_id, pro_nome, pro_descricao, pro_dt_inicio, pro_dt_fim FROM" .
-						 " projeto " 
-						 or die ('Erro ao contruir a consulta');
-			}
-			
-			
-			// executa consulta
-			$data = mysqli_query($dbc, $query) or die ('Erro ao execultar consulta');
-			//*$row = mysqli_num_rows($data); */
-		
-			while ($row = mysqli_fetch_array($data)) 
-			{
-				echo '<div id="menu_perfil">';
-				echo '<table id="dados">';
-				
-				echo '<tr> <td> <strong class="nome_titulo">'; echo( $row['pro_nome'] ); echo '</strong> </td> </tr>';
-				echo '<tr> <td> <strong> Descrição: </strong>';     echo( $row['pro_descricao'] ); echo '</td> </tr>';
-				  
-				echo '<tr> <td> <strong> Data de Início: </strong>';  echo( $row['pro_dt_inicio'] );   echo '</td>';
-				echo '<td> <strong> Previsão de Término:   </strong>';  echo( $row['pro_dt_fim'] ); echo '</td> </tr>';
-				
-			
-				echo '</table>';
-				
-				echo '<div id="botoes_empresa">';
-					echo '<a href="../quadro_kanban/quadro.html?emp_id=' . $row['pro_id'] . ' " class="gray_button">Entrar</a>';
-					echo '<a id="config_button" href="#" class="gray_button">Configurações</a>';
-				echo '</div>';
-				
-				echo '</div>';
-			}
-			mysqli_close($dbc);
-		}
-	?>
-    
-	<p id="fim_da_lista"> Não existem mais projetos cadastradas </p>
         
+        <div id="main">
+            <div>
+                <input type="text" name="busca" id="busca" placeholder="Buscar Projetos" />
+            </div>
+            
+            <?php
+            // se a sessão estiver devidamente definida
+            if (isset($_SESSION['usu_id'])) 
+            {
+                // conecta ao banco de dados
+                $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
+                    die('Erro ao conectar ao BD!');
+                    
+                    
+                $query = "SELECT pro_id, tip_id, pro_nome, pro_descricao, pro_dt_inicio, pro_dt_fim" .
+                         " FROM projeto"
+                         or die ('Erro ao contruir a consulta');
+                
+                // executa consulta
+                $data = mysqli_query($dbc, $query) or die ('Erro ao execultar consulta');
+                //*$row = mysqli_num_rows($data); */
+            
+                while ($row = mysqli_fetch_array($data)) 
+                {
+                    echo '<div class="projeto_info" id="menu_perfil">';
+                    echo '<table width="100%" class="border_space">';
+                    
+					
+                    echo '<tr> <td> <strong class="nome_titulo">'; echo( $row['pro_nome'] ); echo '</strong> </td> </tr>';
+                    echo '<tr> <td>  <strong> Descrição: </strong>';     echo( $row['pro_descricao'] ); echo '</td> </tr>';
+                      
+                    echo '<tr> <td width="60%"> <strong> Data de Início: </strong>';  echo( $row['pro_dt_inicio'] );   echo '</td>';
+                    echo '<td> <strong> Previsão de Término:   </strong>';  echo( $row['pro_dt_fim'] ); echo '</td> </tr>';
+                    
+					echo '<tr> <td> <strong> Situação do Projeto: </strong>';     echo( $row['tip_id'] ); echo '</td> </tr>';
+                
+                    echo '</table>';
+                    
+                    echo '<div id="botoes_empresa">';
+                        echo '<a href="../quadro_kanban/quadro.html?emp_id=' . $row['pro_id'] . ' " class="gray_button">Entrar</a>';
+                        echo '<a id="config_button" href="config_projeto.php?pro_id=' . $row['pro_id'] . ' " class="gray_button">Configurações</a>';
+                    echo '</div>';
+                    
+                    echo '</div>';
+                }
+                mysqli_close($dbc);
+            }
+        ?>
+        
+        <p id="fim_da_lista"> Não existem mais projetos cadastradas </p>
+            
+        </div>
     </div>
-    
-    
 	<!-- invisivel inline form -->
 	<div id="inline">
 	<h2> Adicionar novo Projeto </h2> <br />
     
-	<form id="contact" name="contact" method="post" action="<?php echo ( $_SERVER['PHP_SELF'] . "?emp_id=" . $emp_id ); ?>" >
+	<form id="contact" name="contact" method="post" action="<?php echo ( $_SERVER['PHP_SELF'] ); ?>" >
          <table class="add_projeto" >
          	
             <tr>

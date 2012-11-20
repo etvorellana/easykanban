@@ -4,18 +4,6 @@
 	
 	$usu_id =  $_SESSION['usu_id'];
 	
-	if ( isset($_SESSION['usu_id']) )
-	{
-		if ( isset($_POST['add_colaborador']) and isset($_POST['checkbox_add_user']) )
-		{
-			$campo = $_POST['checkbox_add_user']; 
-
-			foreach($campo as $value){
-				echo $value.'<br />';
-			}
-		}
-	}
-	
 	// Quando o usuário submeter os dados de cadastro de nova empresa
 	if (isset($_POST['send'])) 
 	{
@@ -132,7 +120,7 @@
     </div>
     
     <div id="main">
-    	<div id="menu_busca">
+    	<div>
         	<input type="text" name="busca" id="busca" placeholder="Buscar Empresas" />
         </div>
     	
@@ -162,7 +150,7 @@
 			{
 				echo '<div id="menu_perfil">';
 			
-				echo '<table id="dados">';
+				echo '<table>';
 				echo '<tr>';
 				
 				echo '<td rowspan="6">';
@@ -187,7 +175,7 @@
 				
 				echo '<div id="botoes_empresa">';
 					echo '<a href="../projetos/projeto.php?emp_id=' . $row['emp_id'] . ' " class="gray_button">Entrar</a>';
-					echo '<a id="config_button" href="#" class="gray_button">Configurações</a>';
+					echo '<a id="config_button" href="config_company.php?emp_id=' . $row['emp_id'] . ' " class="gray_button">Configurações</a>';
 				echo '</div>';
 				
 				echo '</div>';
@@ -198,49 +186,8 @@
 ?>
 
     	<p id="fim_da_lista"> Não existem mais empresas cadastradas </p>
-        
-		<div id="dialog-modal" title="Inserir Colaboradores">
-<?php	
-			// se a sessão do usuário estiver devidamente definida
-			if ( isset($_SESSION['usu_id']) ) 
-			{	
-				// conecta ao banco de dados
-				$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
-					die('Erro ao conectar ao BD!');
-				
-				// constroi a query	
-				$query = "SELECT DISTINCT u.usu_id, u.usu_nome " .
-						 " FROM usuario AS u, empresa AS e, usuario_empresa ue" .
-						 " WHERE e.emp_id = 3" .
-						 " AND NOT ( ue.usu_id = u.usu_id )" .
-						 " AND ( e.emp_id = ue.emp_id )"
-						 or die ('Erro ao construir a consulta');
-					
-					
-				// executa consulta
-				$data = mysqli_query($dbc, $query) or die ('Erro ao execultar consulta');
-				//*$row = mysqli_num_rows($data); */
-				
-				 
-				echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '?>" >';
-				 
-				while ($row = mysqli_fetch_array($data)) 
-				{
-					echo '<table>';
-					echo '<tr> <td> <input type="checkbox" name="checkbox_add_user[]" id="checkbox_add_user" value="'; echo($row['usu_id']); echo'" />'; echo( " " . $row['usu_nome']); echo '<br></td> </tr>';		
-					echo '</table>';
-					
-				}
-       
-				echo '<input class="orange_button" type="submit" value="Adicionar" name="add_colaborador" id="add_colaborador" />';
-				echo '</form>';
-				
-				mysqli_close($dbc);
-			}
-?>    
-		</div>  
+   
     </div>
-    
     
 	<!-- invisivel inline form -->
 	<div id="inline">
