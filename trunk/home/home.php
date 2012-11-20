@@ -13,7 +13,7 @@
 		
 		
 		// consulta que retorna todos os dados do usuário logado no sistema
-		$query = "SELECT usu_id, tip_id, usu_nome, usu_email, usu_senha, usu_foto " . 
+		$query = "SELECT usu_id, tip_id, usu_nome, usu_email, usu_senha, usu_dt_cadastro, usu_foto " . 
 				 "FROM usuario " .
 				 "WHERE usu_id = " . $usu_id 
 				 or die ('Erro ao construir a query');
@@ -51,10 +51,11 @@
 			$email = trim($_POST['email']);
 			$senha = trim($_POST['senha']);
 			$tipo = trim($_POST['tipo']);
+			$data_hora = date("d/m/Y h:i:s");
 			
 			if ( !empty($nome) && !empty($email) && !empty($senha) && !empty($tipo) )
 			{
-				$query = "INSERT INTO usuario (tip_id, usu_nome, usu_email, usu_senha) VALUES ('$tipo', '$nome', '$email', SHA('$senha') )" or 
+				$query = "INSERT INTO usuario (tip_id, usu_nome, usu_email, usu_senha, usu_dt_cadastro ) VALUES ('$tipo', '$nome', '$email', SHA('$senha'), '$data_hora' )" or 
 					die ('Erro ao contruir a consulta');
 				
 				$result = mysqli_query($dbc, $query)
@@ -104,7 +105,7 @@
 	<div id="container-menu">
         <ul>
         <li><a href="#">Home</a></li>
-        <li><a href="../empresa/company.php">Empresas</a></li>
+        <li><a href="../projetos/projeto.php">Projetos</a></li>
         <li><a href="#">Relatórios</a></li>
         <li><a href="#">Configurações</a></li>
         </ul>
