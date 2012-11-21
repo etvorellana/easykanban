@@ -4,7 +4,10 @@
 	
 	if( isset($_SESSION['usu_id']) )
 		$usu_id = $_SESSION['usu_id'];
-
+	else{
+		$home = "../index.php";
+		header("Location:" . $home );
+	}
 		
 	if (isset($_SESSION['usu_id'])) 
 	{
@@ -115,17 +118,22 @@
                     die('Erro ao conectar ao BD!');
                     
                     
-                $query = "SELECT pro_id, tip_id, pro_nome, pro_descricao, pro_dt_inicio, pro_dt_fim" .
-                         " FROM projeto"
+                $query = "SELECT p.pro_id, ts.tip_situacao, p.pro_nome, p.pro_descricao, p.pro_dt_inicio, p.pro_dt_fim " .
+						"FROM projeto p " .
+						"JOIN usuario_projeto up on up.pro_id = p.pro_id " .
+						"JOIN usuario u on u.usu_id = up.usu_id " .
+						"JOIN tipo_situacao ts on ts.tip_id = p.tip_id " .
+						"WHERE u.usu_id=" . $usu_id 
                          or die ('Erro ao contruir a consulta');
-                
+						 
+
                 // executa consulta
                 $data = mysqli_query($dbc, $query) or die ('Erro ao execultar consulta');
                 //*$row = mysqli_num_rows($data); */
             
                 while ($row = mysqli_fetch_array($data)) 
                 {
-                    echo '<div class="projeto_info" id="menu_perfil">';
+                    echo '<div class="projeto_info_hover" id="menu_perfil">';
                     echo '<table width="100%" class="border_space">';
                     
 					
@@ -135,12 +143,12 @@
                     echo '<tr> <td width="60%"> <strong> Data de Início: </strong>';  echo( $row['pro_dt_inicio'] );   echo '</td>';
                     echo '<td> <strong> Previsão de Término:   </strong>';  echo( $row['pro_dt_fim'] ); echo '</td> </tr>';
                     
-					echo '<tr> <td> <strong> Situação do Projeto: </strong>';     echo( $row['tip_id'] ); echo '</td> </tr>';
+					echo '<tr> <td> <strong> Situação do Projeto: </strong>';     echo( $row['tip_situacao'] ); echo '</td> </tr>';
                 
                     echo '</table>';
                     
                     echo '<div id="botoes_empresa">';
-                        echo '<a href="../quadro_kanban/quadro.html?emp_id=' . $row['pro_id'] . ' " class="gray_button">Entrar</a>';
+                        echo '<a href="../quadro_kanban/quadro.php?pro_id=' . $row['pro_id'] . ' " class="gray_button">Entrar</a>';
                         echo '<a id="config_button" href="config_projeto.php?pro_id=' . $row['pro_id'] . ' " class="gray_button">Configurações</a>';
                     echo '</div>';
                     
@@ -154,6 +162,7 @@
             
         </div>
     </div>
+    
 	<!-- invisivel inline form -->
 	<div id="inline">
 	<h2> Adicionar novo Projeto </h2> <br />
