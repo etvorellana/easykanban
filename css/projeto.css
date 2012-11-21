@@ -22,7 +22,7 @@
 	text-align:center;
 }
 
-div.projeto_info:hover{
+div.projeto_info_hover:hover{
 	background-color:		#EEEDE9;	
 	-webkit-box-shadow: 	0 5px 10px #aaa;
 	-moz-box-shadow:	    0 5px 10px #aaa;
@@ -98,7 +98,7 @@ div.projeto_info:hover{
 	top:1px;
 }
 
-
+#inline { display: none; width: 600px; }
 /*************************************************/
 /*					FIM REGRA DOS BOTOES		 */
 /*************************************************/

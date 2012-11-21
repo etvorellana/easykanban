@@ -3,9 +3,8 @@
 
 #main{
 	width:					860px;
-	height:					70%;
-	
-	padding:				1px 15px 0px 15px;
+
+	padding:				1px 15px 20px 15px;
 	margin:					0 auto;
 	background-color:		white;
 	
@@ -48,7 +47,7 @@
 	padding:					14px 5px 5px 5px;
 	
 	width:						410px;/* Propriedade obrigatória para todo elemento flutuante */
-
+	
 	background-image:			url('../images/home_barra.png');
 	background-repeat:  		no-repeat;
 	background-position:		top center;
@@ -120,5 +119,41 @@
 	width:			100%;	
 }
 
-#inline { display: none; width: 600px; }
+#sumario_projetos{
+	color: 						#6d685b;  /* Cor da fonte */	
+	padding:					5px 5px 5px 5px;
+	
+	margin-top:  				15px;
+	margin-bottom:				10px;
+	
+	border-bottom:  			solid;
+	border-bottom-width:		2px;
+	border-bottom-color:		#D8D3CD; /* marron escuro */
+}
 
+#sumario_tarefas{
+	color: 						#6d685b;  /* Cor da fonte */	
+	padding:					5px 5px 5px 5px;
+	
+	margin-top:  				15px;
+	margin-bottom:				10px;
+}
+
+label.titulo_projeto{
+	text-align: 	center;
+	font-size:		16px;
+	font-weight:	bold;	
+}
+
+legend{
+	font-size:18px;
+	text-align:center;	
+}
+
+fieldset{
+	padding-top:			10px;
+	border:					2px solid #D8D3CD;
+	-moz-border-radius:		8px;
+	-webkit-border-radius:	8px;	
+	border-radius:			8px;	
+}
