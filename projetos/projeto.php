@@ -89,10 +89,10 @@
         
         <div id="container-menu">
             <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="../empresa/empresa.php">Empresas</a></li>
-            <li><a href="#">Relatórios</a></li>
-            <li><a href="#">Configurações</a></li>
+                <li><a href="../home/home.php">Home</a></li>
+                <li class="atual"><a href="projeto.php">Projetos</a></li>
+                <li><a href="#">Relatórios</a></li>
+                <li><a href="#">Configurações</a></li>
             </ul>
             
             <div id="nova-tarefa" >
@@ -101,7 +101,7 @@
                 </a>
             </div>
             
-        <br style="clear:left"/>
+        	<br style="clear:left"/>
         </div>
         
         <div id="main">
@@ -118,18 +118,20 @@
                     die('Erro ao conectar ao BD!');
                     
                     
-                $query = "SELECT p.pro_id, ts.tip_situacao, p.pro_nome, p.pro_descricao, p.pro_dt_inicio, p.pro_dt_fim " .
-						"FROM projeto p " .
-						"JOIN usuario_projeto up on up.pro_id = p.pro_id " .
-						"JOIN usuario u on u.usu_id = up.usu_id " .
-						"JOIN tipo_situacao ts on ts.tip_id = p.tip_id " .
-						"WHERE u.usu_id=" . $usu_id 
+                $query = 'SELECT p.pro_id, ts.tip_situacao, p.pro_nome, p.pro_descricao, p.pro_dt_inicio, p.pro_dt_fim
+						  FROM projeto p
+						  JOIN usuario_projeto up on up.pro_id = p.pro_id
+						  JOIN usuario u on u.usu_id = up.usu_id 
+					      JOIN tipo_situacao ts on ts.tip_id = p.tip_id
+						  WHERE u.usu_id=%s'
                          or die ('Erro ao contruir a consulta');
 						 
-
+				// alimenta os parametros da conculta
+				$query = sprintf($query, $usu_id ); 	
+				
+				
                 // executa consulta
                 $data = mysqli_query($dbc, $query) or die ('Erro ao execultar consulta');
-                //*$row = mysqli_num_rows($data); */
             
                 while ($row = mysqli_fetch_array($data)) 
                 {

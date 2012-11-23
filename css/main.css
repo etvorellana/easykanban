@@ -61,6 +61,7 @@ html, body {
     
 }
 
+
 #container-menu ul{
     margin: 			0; 
 	padding: 			0;
@@ -69,7 +70,7 @@ html, body {
 }
  
 #container-menu ul li{
-    display: 			inline-block;
+    display: 			inline;
 }
  
  
@@ -79,17 +80,25 @@ html, body {
 	color:				#000; 
 	padding: 			14px 40px;
 	background-color: 	white;
-    width:				150px;
+    width:				100px;
 }
  
 #container-menu ul li a:visited{
 	color:				#000; 
 }
  
-#container-menu ul li a:hover, .menu ul li .current{
-    color: 				#fff;
-    background-color: 	#30B4C5; 
+#container-menu ul li a:hover, li.atual a {
+    background-color:	#D6D6D6;
+    color:				#6D6D6D;
+    border-bottom:		5px solid #D02E27;
 }
+
+/* Css que controla a cor do link atual */
+#container-menu ul li.atual a {
+	color: 				#fff;
+    background-color: 	#30B4C5; 	
+}
+
 
 header{
 	height: 		45px;

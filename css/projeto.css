@@ -22,11 +22,12 @@
 	text-align:center;
 }
 
-div.projeto_info_hover:hover{
-	background-color:		#EEEDE9;	
-	-webkit-box-shadow: 	0 5px 10px #aaa;
-	-moz-box-shadow:	    0 5px 10px #aaa;
-	box-shadow: 			0 5px 10px #aaa;
+div#menu_perfil:hover{
+	background-color:		#EEEDE9;
+	
+	border-bottom:  			solid;
+	border-bottom-width:		5px;
+	border-bottom-color:		#D02E27; /* marron escuro */	
 }
 
 #botoes_empresa{

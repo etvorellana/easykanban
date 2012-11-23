@@ -5,9 +5,9 @@
 	if ( isset($_SESSION['usu_id']) and isset($_GET['pro_id']) )
 	{
 		$usu_id = $_SESSION['usu_id'];
-		$emp_id = $_GET['pro_id'];
-	}
-	
+		$usu_nome = $_SESSION['usu_nome'];
+		$pro_id = $_GET['pro_id'];
+
 ?>
 
 <!DOCTYPE HTML>
@@ -29,7 +29,7 @@
     <header>
     
 		<div id="nome_usuario" class="menu_acesso_rapido">
-        	<label> <?php echo ( $_SESSION['usu_nome']) ?> </label>
+        	<label> <?php echo ( $usu_nome ) ?> </label>
     	</div>
     	
         <div id="acessiobilidade" >
@@ -40,7 +40,7 @@
     
 	<div id="container-menu">
         <ul>
-        <li><a href="#">Home</a></li>
+        <li><a href="../home/home.php">Home</a></li>
         <li><a href="empresa.php">Empresas</a></li>
         <li><a href="#">Relatórios</a></li>
         <li><a href="#">Configurações</a></li>
@@ -49,68 +49,56 @@
     </div>
     
     <div id="main">
-<?php
-		// se a sessão for válida
-		if (isset($_SESSION['usu_id'])) 
-		{
-			// conectar ao banco de dados
-			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
-				die('Erro ao conectar ao BD!');
-			
-			
-			$query =  "SELECT e.emp_id, e.end_id, e.emp_nome, e.emp_email, e.emp_tel, e.emp_descricao, e.emp_cnpj, c.cep_numero, c.cep_rua, c.cep_bairro, c.cep_cidade, c.cep_uf, ed.end_numero" .
-					" FROM empresa e" .
-					" JOIN endereco ed on ed.end_id = e.end_id"  .
-					" JOIN cep c on c.cep_id = ed.cep_id" .
-					" JOIN usuario_empresa ue ON ue.emp_id = e.emp_id" .
-					" JOIN usuario u on u.usu_id = ue.usu_id" .
-					" WHERE ue.usu_id =" . $usu_id 
-					or die('Erro ao construir a consulta');
-			
-			// executa consulta
-			$data = mysqli_query($dbc, $query);
-			$row = mysqli_num_rows($data);
-			
-			while ($row = mysqli_fetch_array($data)) 
-			{
-				echo '<div id="menu_perfil">';
-			
-				echo '<table>';
-				echo '<tr>';
-				
-				echo '<td rowspan="6">';
-				
-				if (empty($row['usu_foto'])) {
-					echo '<img src="../nopic.jpg" alt="Profile Picture" />';
-				}
-				
-				echo '</td>';
-				echo '</tr>';
-				
-				echo '<tr> <td> <strong class="nome_titulo">'; echo( $row['emp_nome'] ); echo '</strong> </td> </tr>';
-				echo '<tr> <td> <strong> Cnpj: </strong>';     echo( $row['emp_cnpj'] ); echo '</td> </tr>';
-				
-				echo '<tr> <td> <strong> Endereço: </strong>'; echo( $row['cep_rua'] . ' ' . $row['end_numero'] . ', ' . $row['cep_bairro'] . ', 	' . $row['cep_cidade'] . '-' . $row['cep_uf'] ); echo '</td> </tr>'; 
-				  
-				echo '<tr> <td> <strong> Telefone: </strong>';  echo( $row['emp_tel'] );   echo '</td> </tr>';
-				echo '<tr> <td> <strong> E-mail:   </strong>';  echo( $row['emp_email'] ); echo '</td> </tr>';
-				
-			
-				echo '</table>';
-				
-				echo '<div id="botoes_empresa">';
-					echo '<a id="config_button" href="config_company.php?emp_id=' . $row['emp_id'] . ' " class="gray_button">Editar Configurações</a>';
-				echo '</div>';
-				
-				echo '</div>';
-			}
-		
-			mysqli_close($dbc);
-		}
-?>
+	<?php
+        // conectar ao banco de dados
+        $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
+            die('Erro ao conectar ao BD!');
+                
+        $query = 'SELECT p.pro_id, ts.tip_situacao, p.pro_nome, p.pro_descricao, p.pro_dt_inicio, p.pro_dt_fim, p.pro_dt_criacao
+                  FROM projeto p
+                  JOIN usuario_projeto up on up.pro_id = p.pro_id
+                  JOIN usuario u on u.usu_id = up.usu_id 
+                  JOIN tipo_situacao ts on ts.tip_id = p.tip_id
+                  WHERE u.usu_id=%s AND p.pro_id=%s'
+                 or die ('Erro ao contruir a consulta');
+                 
+        // alimenta os parametros da conculta
+        $query = sprintf($query, $usu_id, $pro_id ); 	
+        
+        // executa consulta
+        $data = mysqli_query($dbc, $query);
+        
+        // executa consulta
+        $data = mysqli_query($dbc, $query) or die ('Erro ao execultar consulta');
+    
+        while ($row = mysqli_fetch_array($data)) 
+        {
+            echo '<div class="projeto_info_hover" id="menu_perfil">';
+            echo '<table width="100%" class="border_space">';
+            
+            
+            echo '<tr> <td> <strong class="nome_titulo">'; echo( $row['pro_nome'] ); echo '</strong> </td> </tr>';
+            echo '<tr> <td>  <strong> Descrição: </strong>';     echo( $row['pro_descricao'] ); echo '</td> </tr>';
+              
+            echo '<tr> <td width="60%"> <strong> Data de Início: </strong>';  echo( $row['pro_dt_inicio'] );   echo '</td>';
+            echo '<td> <strong> Previsão de Término:   </strong>';  echo( $row['pro_dt_fim'] ); echo '</td> </tr>';
+            
+            echo '<tr> <td> <strong> Situação do Projeto: </strong>';     echo( $row['tip_situacao'] ); echo '</td> </tr>';
+        
+            echo '</table>';
+            
+            echo '<div id="botoes_projeto">';
+                echo '<a href="../quadro_kanban/quadro.php?pro_id=' , $row['pro_id'] , ' " class="gray_button">Editar Projeto</a>';
+            echo '</div>';
+            
+            echo '</div>';
+        }
+        mysqli_close($dbc);
+    ?>
         
         <div id="colaboradores" class="info" >
-            <strong class="label_titulo" > Colaboradores </strong> 
+            <strong class="label_titulo" > Colaboradores não vinculados ao Projeto </strong> 
+            
             <div class="css_colaboradores_usuarios">
 <?php	
 			// se a sessão do usuário estiver devidamente definida
@@ -120,28 +108,39 @@
 				$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 					die('Erro ao conectar ao BD!');
 				
-				// constroi a query	
-				$query = "SELECT DISTINCT u.usu_id, u.usu_nome " .
-						 " FROM usuario AS u, empresa AS e, usuario_empresa ue" .
-						 " WHERE e.emp_id =" . $emp_id .
-						 " AND ( ue.usu_id = u.usu_id )" .
-						 " AND ( e.emp_id = ue.emp_id )"
-						 or die ('Erro ao construir a consulta');
-					
-				// executa consulta
-				$data = mysqli_query($dbc, $query) or die ('Erro ao execultar consulta');
-				//*$row = mysqli_num_rows($data); */
+				// selecioma todos os usuários que não estão ligados ao projeto selecionado	
+				$query = 'SELECT u.usu_id, u.usu_nome
+						FROM usuario u 
+						JOIN usuario_projeto up on NOT (up.usu_id = u.usu_id)  
+						JOIN projeto p on p.pro_id = up.pro_id 
+						WHERE p.pro_id=%s'
+				or die ('Erro ao construir a consulta');
+			
+				// alimenta os parametros da conculta
+				$query = sprintf($query, $pro_id );	
 				
+				// executa consulta
+				$data = mysqli_query($dbc, $query) or die ('Erro ao executar consulta');
 				 
 				echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '?>" >';
 				 
+				echo '<table class="tabela_zebrada" width="100%">'; 
+				 
 				while ($row = mysqli_fetch_array($data)) 
 				{
-					echo '<table>';
-					echo '<tr> <td> <input type="checkbox" name="checkbox_add_user[]" id="checkbox_add_user" value="'; echo($row['usu_id']); echo'" />'; echo( " " . $row['usu_nome']); echo '<br></td> </tr>';		
-					echo '</table>';
-					
+					echo '<tr> ';
+						echo '<td width="90%">';
+					    echo( $row['usu_nome'] . '<br>' );
+						echo '</td>';
+						
+						echo '<td width="10%">';
+							echo '<a href="inserir_remover_usuario_projeto.php?insert_user=' . $row['usu_id'] . "&pro_id=" . $pro_id . '&action=inserir"> <img src="../images/add.png" title="Inserir"/> </a>';
+						echo '</td>';
+						
+					echo '</tr>';		
 				}
+				echo '</table>';
+				
 				echo '</form>';
 				
 				mysqli_close($dbc);
@@ -162,54 +161,47 @@
 				$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 					die('Erro ao conectar ao BD!');
 				
-				// constroi a query	
-				$query = "SELECT DISTINCT u.usu_id, u.usu_nome " .
-						 " FROM usuario AS u, empresa AS e, usuario_empresa ue" .
-						 " WHERE e.emp_id =" . $emp_id .
-						 " AND NOT ( ue.usu_id = u.usu_id )" .
-						 " AND ( e.emp_id = ue.emp_id )"
-						 or die ('Erro ao construir a consulta');
-					
-				// executa consulta
-				$data = mysqli_query($dbc, $query) or die ('Erro ao execultar consulta');
-				//*$row = mysqli_num_rows($data); */
+				$query = 'SELECT u.usu_id, u.usu_nome
+						FROM usuario u
+						jOIN usuario_projeto up on up.usu_id = u.usu_id
+						JOIN projeto p on p.pro_id = up.pro_id
+						WHERE p.pro_id = %s'
+					     or die ("Erro ao construir a consulta");
+			
+				// alimenta os parametros da conculta
+				$query = sprintf($query, $pro_id );	
 				
+				// executa consulta
+				$data = mysqli_query($dbc, $query) or die ('Erro ao executar consulta');
 				 
 				echo '<form method="post" action="' . $_SERVER['PHP_SELF'] . '?>" >';
-				 
-				echo '<table class="tabela_zebrada" width="100%">'; 
-				 
+				echo '<table>';
+				
 				while ($row = mysqli_fetch_array($data)) 
 				{
-					echo '<tr> ';
-						echo '<td width="90%">';
-					    echo( $row['usu_nome'] . '<br>' );
-						echo '</td>';
-						
-						echo '<td width="10%">';
-							echo '<a href="inserir_remover_usuario_empresa.php?usu_id=' . $row['usu_id'] . "&emp_id=" . $emp_id . '&haction=inserir"> <img src="../images/add.png" title="Inserir"/> </a>';
-						echo '</td>';
-						
-					echo '</tr>';		
+					echo '<tr> <td> <input type="checkbox" name="checkbox_add_user[]" id="checkbox_add_user" value="'; echo($row['usu_id']); echo'" />'; echo( " " . $row['usu_nome']); echo '<br></td> </tr>';		
+					
 				}
 				echo '</table>';
-				
 				echo '</form>';
 				
 				mysqli_close($dbc);
 			}
-?>    
+?>                
             </div>
         </div>
         
-		<div id="dialog-modal" title="Inserir Colaboradores">
-
+		<div id="inserir_colaborador">
+			<tr> <td> <input class="blue_button" type="submit" value="Adiconar ao Projeto" name="send" id="send" />  </td> </tr>
 		</div>  
     </div>
     
 </body>
 </html>
 
+<?php
+	}
+?>
 
 
 

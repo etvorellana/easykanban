@@ -13,11 +13,15 @@
 		
 		
 		// consulta que retorna todos os dados do usuário logado no sistema
-		$query = "SELECT u.usu_id, tu.tip_descricao, u.usu_nome, u.usu_email, u.usu_senha, u.usu_dt_cadastro, u.usu_foto " .
-				 "FROM usuario u " .
-				 "NATURAL JOIN tipo_usuario tu " .
-				 "WHERE usu_id =" . $usu_id 
+		$query = 'SELECT u.usu_id, tu.tip_descricao, u.usu_nome, u.usu_email, u.usu_senha, u.usu_dt_cadastro, u.usu_foto
+				  FROM usuario u
+				  NATURAL JOIN tipo_usuario tu
+				  WHERE usu_id =%s'
 				 or die ('Erro ao construir a query');
+		
+		// alimenta os parametros da conculta
+		$query = sprintf($query, $usu_id ); 	
+		
 		
 		// executa consulta
 		$data = mysqli_query($dbc, $query);
@@ -66,9 +70,6 @@
 			/* Fecha conexão com o banco */
 			mysqli_close($dbc);
 		}
-		
-	}
-	
 ?>
 
 <!DOCTYPE HTML>
@@ -107,12 +108,12 @@
     
 	<div id="container-menu">
         <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="../projetos/projeto.php">Projetos</a></li>
-        <li><a href="#">Relatórios</a></li>
-        <li><a href="#">Configurações</a></li>
+            <li class="atual" ><a href="home.php">Home</a></li>
+            <li><a href="../projetos/projeto.php">Projetos</a></li>
+            <li><a href="#">Relatórios</a></li>
+            <li><a href="#">Configurações</a></li>
         </ul>
-        
+            
         <div id="nova-tarefa" >
             <a id="bug" class="modalbox" href="#inline"> 
                 <input class="orange_button" type="submit" value=" + Novo Usuário " > 
@@ -141,7 +142,7 @@
             <tr> <td> <strong> Tipo do Usuário: </strong> <?php echo( $usu_tipo ); ?> </td> </tr>
             <tr> <td> <strong> E-mail: </strong> <?php echo( $usu_email ); ?>  </td> </tr>
             
-            <tr> <td> <a href="#" class="gray_button">Editar Perfil</a> </td> </tr>
+            <tr> <td> <a href="#edit_inline" class="gray_button">Editar Perfil</a> </td> </tr>
 
             </table>
         </div>
@@ -150,23 +151,23 @@
             <strong class="label_titulo" > Meus Projetos </strong>
             
             <?php
-            // se a sessão estiver devidamente definida
-            if (isset($_SESSION['usu_id'])) 
-            {
                 // conecta ao banco de dados
                 $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
                     die('Erro ao conectar ao BD!');
                     
                     
-                $query = "SELECT p.pro_id, ts.tip_situacao, p.pro_nome, p.pro_descricao, p.pro_dt_inicio, p.pro_dt_fim " . 
-						"FROM projeto p " .
-						"JOIN usuario_projeto up on up.pro_id = p.pro_id " .
-						"JOIN usuario u on u.usu_id = up.usu_id " .
-						"JOIN tipo_situacao ts on ts.tip_id = p.tip_id " .
-						"WHERE u.usu_id =" . $usu_id . " AND ts.tip_id = 1 " . 
-						"ORDER BY (p.pro_dt_fim)"
-                         or die ('Erro ao contruir a consulta');
+                $query = 'SELECT p.pro_id, ts.tip_situacao, p.pro_nome, p.pro_descricao, p.pro_dt_inicio, p.pro_dt_fim  
+						  FROM projeto p 
+						  JOIN usuario_projeto up on up.pro_id = p.pro_id 
+						  JOIN usuario u on u.usu_id = up.usu_id 
+						  JOIN tipo_situacao ts on ts.tip_id = p.tip_id 
+						  WHERE u.usu_id =%s AND ts.tip_id = 1 
+						  ORDER BY (p.pro_dt_fim)'
+                          or die ('Erro ao contruir a consulta');
                 
+				// alimenta os parametros da consulta
+				$query = sprintf($query, $usu_id ); 	
+				
                 // executa consulta
                 $data = mysqli_query($dbc, $query) or die ('Erro ao execultar consulta');
                 //*$row = mysqli_num_rows($data); */
@@ -179,13 +180,14 @@
 						echo '<tr> <td> <strong> Descrição: </strong>';     echo( $row['pro_descricao'] ); echo '</td> </tr>';
 						echo '<tr> <td> <strong> Situação: </strong>';     echo( $row['tip_situacao'] ); echo '</td> </tr>';
 						echo '<tr>';
-                 		echo '<tr> <td> <a href="../quadro_kanban/quadro.php?pro_id=' . $row['pro_id'] . ' " class="gray_button">Entrar</a> <tr> </td>';
+                 		echo '<tr> <td> <a href="../quadro_kanban/quadro.php?pro_id=' , $row['pro_id'] , ' " class="gray_button">Entrar</a> <tr> </td>';
 						echo '</tr>';
                     echo '</table>';
                     echo '</div>';
                 }
+				
+				// fecha conexão com o bd
                 mysqli_close($dbc);
-            }
         ?>
             
         </div>
@@ -193,61 +195,68 @@
         <div id="container_tarefas" class="info">   
             <strong class="label_titulo" > Minhas Tarefas </strong>	
        
-<?php
-            // se a sessão estiver devidamente definida
-            if (isset($_SESSION['usu_id'])) 
-            {
+		<?php
+
                 // conecta ao banco de dados
                 $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
                     die('Erro ao conectar ao BD!');
 					
                 // seleciona a quantidade de projetos ligados ao usuario que está logado   
-				$query = "SELECT p.pro_id, p.pro_nome " .
-						 "FROM projeto p " . 
-						 "JOIN usuario_projeto up on up.pro_id = p.pro_id " .
-						 "JOIN usuario u on u.usu_id = up.usu_id " .
-						 "WHERE u.usu_id=" . $usu_id 
-						 or die ('Erro ao construir a consulta');
+				$query = 'SELECT p.pro_id, p.pro_nome 
+						  FROM projeto p
+						  JOIN usuario_projeto up on up.pro_id = p.pro_id
+						  JOIN usuario u on u.usu_id = up.usu_id
+						  WHERE u.usu_id=%s'
+						  or die ('Erro ao construir a consulta');
+					
+				// alimenta os parametros da conculta
+				$query = sprintf($query, $usu_id ); 	
 						 
                 // executa consulta
                 $dados_consulta = mysqli_query($dbc, $query) or die ('Erro ao executar consulta');			
 				
 				while ( $linha = mysqli_fetch_array($dados_consulta) ) 
 				{
-					$query = "SELECT p.pro_id, t.tar_id, m.met_descricao, s.sit_descricao, p.pro_nome, t.tar_titulo, t.tar_descricao, t.tar_comentario, t.tar_data_inicio, t.tar_data_conclusao " .
-							"FROM tarefa t " .
-							"JOIN situacao s on s.sit_id = t.sit_id " .
-							"JOIN projeto p on p.pro_id = t.pro_id " .
-							"JOIN usuario_projeto up on up.pro_id = p.pro_id " .
-							"JOIN usuario u on u.usu_id = up.usu_id " .
-							"LEFT JOIN meta m on m.met_id = t.met_id " .
-							"WHERE u.usu_id =" . $usu_id . " and p.pro_id=" . $linha['pro_id'] . " " .
-							"ORDER BY (tar_data_conclusao)"
+					$query = 'SELECT p.pro_id, t.tar_id, m.met_descricao, s.sit_descricao, p.pro_nome, t.tar_titulo, t.tar_descricao, t.tar_comentario, t.tar_data_inicio, t.tar_data_conclusao 
+							 FROM tarefa t 
+							 JOIN situacao s on s.sit_id = t.sit_id 
+							 JOIN projeto p on p.pro_id = t.pro_id 
+							 JOIN usuario_projeto up on up.pro_id = p.pro_id 
+							 JOIN usuario u on u.usu_id = up.usu_id 
+							 LEFT JOIN meta m on m.met_id = t.met_id 
+							 WHERE u.usu_id =%s and p.pro_id=%s 
+							 ORDER BY (tar_data_conclusao)'
 									 or die ('Erro ao construir a consulta');
-					
+									 
+					// alimenta os parametros da conculta
+					$query = sprintf($query, $usu_id, $linha['pro_id'] ); 	
+				
 					// executa consulta
 					$data = mysqli_query($dbc, $query) or die ('Erro ao execultar consulta');
-
-					echo '<div id="sumario_tarefas">';
 					
-					echo '<fieldset class="tarefas_agrupadas">';
-					echo '<legend>' . $linha['pro_nome'] . ' </legend>';
-					echo '<table width="100%" class="border_space">';
-					
-					while ( $row = mysqli_fetch_array($data) ) 
+					if (  $row = mysqli_num_rows($data) ) 
 					{
-						echo '<tr> <td> <strong> Tarefa: </strong> <strong >'; echo( $row['tar_titulo'] ); echo '</strong> </td> </tr>';
-						echo '<tr> <td> <strong> Situação: </strong>';     echo( $row['sit_descricao'] ); echo '</td> </tr>';
-						echo '<tr> <td> <strong> Conclusão: </strong>';     echo( $row['tar_data_conclusao'] ); echo '</td> </tr>';
-						echo '<tr> <td> <br> <tr> </td>';
-					}
+						echo '<div id="sumario_tarefas">';
+						
+						echo '<fieldset class="tarefas_agrupadas">';
+						echo '<legend>' . $linha['pro_nome'] . ' </legend>';
+						echo '<table width="100%" class="border_space">';
+						
+						while ( $row = mysqli_fetch_array($data) ) 
+						{
+							echo '<tr> <td> <strong> Tarefa: </strong> <strong >'; echo( $row['tar_titulo'] ); echo '</strong> </td> </tr>';
+							echo '<tr> <td> <strong> Situação: </strong>';     echo( $row['sit_descricao'] ); echo '</td> </tr>';
+							echo '<tr> <td> <strong> Conclusão: </strong>';     echo( $row['tar_data_conclusao'] ); echo '</td> </tr>';
+							echo '<tr> <td> <br> <tr> </td>';
+						}
+						
+						echo '</table>';
+						echo '</fieldset>';
+						echo '</div>';
 					
-					echo '</table>';
-					echo '</fieldset>';
-					echo '</div>';
+					}
 				}
                 mysqli_close($dbc);
-            }
         ?>
             
         </div>
@@ -255,6 +264,13 @@
     </div>
     
     </div>
+    
+    <
+	<!-- invisivel inline form -->
+	<div id="edit_inline">
+    	<?php require_once('edit_user.php') ?>
+    </div>
+    
     
 	<!-- invisivel inline form -->
 	<div id="inline">
@@ -370,6 +386,11 @@
   
 </body>
 </html>
+
+<?php
+	}
+	
+?>
 
 
 
