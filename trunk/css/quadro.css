@@ -101,12 +101,41 @@ header{
 
 }
 
+#inline { display: none; width: 600px; }
+
+select#mostrar_tarefas{
+	border:						1px solid #ccc;
+	width:						160px;
+	margin-bottom:				2px;
+	margin-top:					2px;
+	outline: 					none;
+	
+	-webkit-border-radius:		5px;
+	-moz-border-radius:			5px;
+	-o-border-radius:			5px;
+	-ms-border-radius:			5px;
+	border-radius:				5px;
+	padding-left:				3px;
+}
+
 #options_menu{
 	background-color: 		white;
 	height: 				25px;
 	width:					100%;
-	border:					1px solid #D8D3CD;
+	border-top:				1px solid #D8D3CD;
 	font-weight:			bold;
 }
 
-#inline { display: none; width: 600px; }
+#options_menu ul {
+    padding:			0px;
+	margin:				0px;
+    float: 				left;
+    width: 				100%;
+    background-color:	#EDEDED;
+    list-style:			none;
+}
+
+#options_menu ul li { 
+    padding:			0px 0px 0px 10px;
+	display: inline; 
+}

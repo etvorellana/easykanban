@@ -1,21 +1,21 @@
 <?php
-	include_once('../connect/connect_vars.php');
-	include_once('../sessao_php/inicia_sessao.php');
+	require_once('../connect/connect_vars.php');
+	require_once('../sessao_php/inicia_sessao.php');
 	
 	if (isset($_SESSION['usu_id']) and isset($_GET['pro_id'])) 
 	{
 		$usu_id = $_SESSION['usu_id'];
 		$pro_id = $_GET['pro_id'];
 		
+		// conectar ao banco de dados
+		$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
+		die('Erro ao conectar ao BD!');
+		
+		mysqli_select_db($dbc, "easykanban");
+		
 		if (isset($_POST['send'])) 
 		{
-			// conectar ao banco de dados
-			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
-			die('Erro ao conectar ao BD!');
-			
 			// recupera os dados digitados no formulário
-			$tip_tarefa = trim($_POST['tip_tarefa']);
-			$prioridade = trim($_POST['prioridade']);
 			$tar_titulo = trim($_POST['titulo']);
 			$tar_descricao = trim($_POST['descricao']);
 			$tar_comentario = trim ($_POST['comentario']);	
@@ -26,84 +26,68 @@
 
 			if ( !empty($tar_titulo) )
 			{
-
 				// criando query de inserção na tabela tarefa
-				$query = "INSERT INTO tarefa ( tip_t_id, pri_id, met_id, sit_id, pro_id, tar_titulo, tar_descricao, tar_comentario, tar_data_inicio, tar_data_conclusao, tar_tempo_estimado, tar_data_criacao) VALUES ( '$tip_tarefa', '$prioridade', NULL, '1', '$pro_id', '$tar_titulo', '$tar_descricao', '$tar_comentario', '$tar_data_inicio', '$tar_data_conclusao', NULL, '$tar_data_criacao');"
-				or die ('Erro ao contruir a consulta' . mysqli_error($dbc) );
-
+				$query = "INSERT INTO tarefa ( met_id, sit_id, pro_id, tar_titulo, tar_descricao, tar_comentario, tar_data_inicio, tar_data_conclusao, tar_tempo_estimado, tar_data_criacao) VALUES ( NULL, '1', '$pro_id', '$tar_titulo', '$tar_descricao', '$tar_comentario', '$tar_data_inicio', '$tar_data_conclusao', NULL, '$tar_data_criacao');"
+				or die ('Erro ao contruir a consulta');
+				
 				//execulta query de inserção na tabela tarefa
 				$data = mysqli_query($dbc, $query)
-					or die('Erro ao executar a inserção na tabela tarefa' );
+					or die('Erro ao execultar a inserção na tabela tarefa');
 			}
-			/* Fecha conexão com o banco */
-			mysqli_close($dbc);
 		}
 		
 		function get_tarefas( $parametro_pro_id, $parametro_sit_id )
 		{
-			if (isset($_SESSION['usu_id']) and isset($_GET['pro_id']))  
-			{
-				// conectar ao banco de dados
-				$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
-				die('Erro ao conectar ao BD!');
-			
-				$query = 'SELECT t.tar_id, t.tar_titulo 
-						 FROM tarefa t 
-						 JOIN projeto p on p.pro_id = t.pro_id 
-						 JOIN situacao s on s.sit_id = t.sit_id 
-						 WHERE t.pro_id=%s AND s.sit_id=%s'
-				or die ("Erro ao construir a consulta");
-						
-				// alimenta os parametros da conculta
-				$query = sprintf($query, $parametro_pro_id, $parametro_sit_id); 			
-						
-				//executa query de consulta na tabela tarefa
-				$data = mysqli_query($dbc, $query)
-					or die('Erro ao executar a inserção na tabela tarefa');
-				
-				while ($row = mysqli_fetch_array($data)) {
-					echo '<div id="', $row['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event)" > ID:' , $row['tar_id'] , '</div>';
-				}
-				
-				mysqli_close($dbc);
-			}
-		} //fim função get_tarefas
-		
-		function get_user_from_project( $parametro_pro_id )
-		{
 			// conectar ao banco de dados
 			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 			die('Erro ao conectar ao BD!');
-			
-			// selecioma todos os usuários logados ao projeto selecionado
-			$query = 'SELECT u.usu_id, u.usu_nome
-					  FROM usuario u 
-					  JOIN usuario_projeto up on up.usu_id = u.usu_id 
-					  JOIN projeto p on p.pro_id = up.pro_id
-					  WHERE p.pro_id=%s'
+		
+			$query = "SELECT t.tar_id, t.tar_titulo " .
+					 "FROM tarefa t " . 
+					 "JOIN projeto p on p.pro_id = t.pro_id " .
+					 "JOIN situacao s on s.sit_id = t.sit_id " .
+					 "WHERE t.pro_id=" . $parametro_pro_id . 
+					 " AND s.sit_id=" . $parametro_sit_id
 			or die ("Erro ao construir a consulta");
-			
-			// alimenta os parametros da conculta
-			$query = sprintf($query, $parametro_pro_id);	
-					
-			//executa query de inserção na tabela cep
+										
+			//executa query de consulta na tabela tarefa
 			$data = mysqli_query($dbc, $query)
-				or die('Erro ao execultar a inserção na tabela projeto');
+				or die('Erro ao execultar a inserção na tabela tarefa');
 			
 			while ($row = mysqli_fetch_array($data)) {
-				echo '<option value="' , $row['usu_id'] , '"> ' , $row['usu_nome'] , '</option>';
+				echo '<div id="' . $row['tar_id'] . '" class="tarefa" draggable="true" ondragstart="drag(event)" >' . $row['tar_titulo'] . '</div>';
+			}
+		}
+		
+		function get_user_from_project( $parametro_usu_id, $parametro_pro_id )
+		{
+			$query = "SELECT u.usu_id, u.usu_nome " .
+					 "FROM usuario u " .
+					 "JOIN usuario_projeto up on up.usu_id = u.usu_id " .
+					 "JOIN projeto p on p.pro_id = up.pro_id " .
+					 "WHERE u.usu_id=" . $parametro_usu_id .
+					 " AND p.pro_id=" . $parametro_pro_id
+			or die ("Erro ao construir a consulta");
+										
+			//executa query de inserção na tabela cep
+			$data = mysqli_query($dbc, $query)
+				or die('Erro ao executar a inserção na tabela projeto');
+			
+			while ($row = mysqli_fetch_array($data)) {
+				echo '<option value="' . $row['usu_id'] . '">' . $row['usu_nome'] . '</option> ';
 			}
 			
-			// fecha conexão com bd
-			mysqli_close($dbc);	
-		} // fim função get_user_from_project
+			return ;
+		}
 		
+		/* Fecha conexão com o banco */
+		mysqli_close($dbc);
+
 	}
 	else {
-		$home = '../index.php';
-		header( 'Location:' . $home );	
+		$home = "../index.php";
+		header("Location:" . $home );	
 	}
-
 
 ?>
 
@@ -120,7 +104,6 @@
         
         <link type="text/css" rel="stylesheet" href="../css/main.css" />
 		<link type="text/css" rel="stylesheet" href="../css/quadro.css" />
-  
                 
 		<script>
 			function allowDrop(ev)
@@ -134,24 +117,11 @@
 				// o id do objeto sendo arrastado
 				ev.dataTransfer.setData("ID",ev.target.id);
 			}
-			
-			function over(ev)
-			{
-				
-			}
-			
+		
 			// Quando o usuário arrasta sobre um dos painéis, retornamos 
 			// false para que o evento não se propague para o navegador, o 
 			// que faria com que o conteúdo fosse selecionado
-			function dragOver(ev) { 
-				return false; 
-			} 
-			
-			function dragStart(ev) {
-				alert('asdfsdafsdaf');
-			  	this.style.opacity = '0.4';  // this / e.target is the source node.
-			  
-			}
+			function dragOver(ev) { return false; } 
 
 			function drop(ev)
 			{ 
@@ -164,7 +134,7 @@
 				var tar_id = String(data);
 				
 				// se a tarefa for alocada de posição, o servidor é requisitado para fazer a atualização do status da tarefa
-				location.href= '<?php echo  'mudar_status_tarefa.php?pro_id=' , $pro_id , '&action=change_state&tar_id='; ?>' + tar_id + '<?php echo'&sit_id='; ?>' + sit_id;
+				location.href= '<?php echo ( 'mudar_status_tarefa.php?pro_id=' . $pro_id . '&action=change_state&tar_id='); ?>' + tar_id + '<?php echo('&sit_id='); ?>' + sit_id;
 			}
         </script>
         
@@ -203,11 +173,7 @@
                 <li>
                		Mostrar Tarefas de:
                     <select id="mostrar_tarefas" name="mostrar_tarefas" required>      
-                    <?php
-						if (isset($_SESSION['usu_id']) and isset($_GET['pro_id']))  {
-							get_user_from_project( $_GET['pro_id'] );
-						}
-                    ?>    
+						get_user_from_project( $_SESSION['usu_id'], $_GET['pro_id'] ); 
                     </select>
                 </li>
 
@@ -266,7 +232,7 @@
 	<div id="inline">
 	<h2> Adicionar novo Projeto </h2> <br />
     
-	<form id="contact" name="contact" method="post" action="<?php echo  $_SERVER['PHP_SELF'] , '?pro_id=' , $pro_id; ?>" >
+	<form id="contact" name="contact" method="post" action="<?php echo ( $_SERVER['PHP_SELF'] . '?pro_id=' . $pro_id ); ?>" >
 		<table class="add_projeto" >
          	
             <tr>
@@ -322,35 +288,22 @@
                     <table class="add_projeto">
                         <tr>
                             <td> <label class="negrito" >Alocado para:</label> </td>
-                            <td> <label class="negrito" >Tipo:</label> </td>
                             <td> <label class="negrito" >Prioridade:</label> </td>
                         </tr>
                         <tr>
                             <td>     
 							<select class="tipo_situacao" name="tipo_situacao" required>      
                             <?php
-								if (isset($_SESSION['usu_id']) and isset($_GET['pro_id']))  
-								{
-									get_user_from_project( $_SESSION['usu_id'], $_GET['pro_id'] );
-								}
+								get_user_from_project( $_SESSION['usu_id'], $_GET['pro_id'] );
 							?>    
                             </select>          
                             </td>
                             
                             <td>									
-                            <select class="tipo_situacao" name="tip_tarefa" required>
-								<option value="1"> Tarefa </option>
-                                <option value="2"> Nova Característica </option>
-                                <option value="3"> Defeito  </option>
-                                <option value="4"> Melhoria  </option>
-							</select>
-                            </td>
-                            
-                            <td>									
-                            <select class="tipo_situacao" name="prioridade" required>
-								<option value="1">  Baixa </option>
-                                <option value="2">  Média </option>
-                                <option value="3">  Alta  </option>
+                            <select class="tipo_situacao" name="tipo_situacao" required>
+								<option value="Baixa"> Baixa </option>
+                                <option value="Média"> Média </option>
+                                <option value="Alta">  Alta  </option>
 							</select>
                             </td>
                         </tr>
@@ -359,12 +312,7 @@
             </tr>
 
             <tr>
-            	<td> 
-                	<table class="add_projeto" >
-                    	<tr> <td> <br> </tr> </td>
-                		<tr> <td> <input class="blue_button" type="submit" value="Cadastrar" name="send" id="send" />  </td> </tr>
-                    </table>
-                </td>
+            <td> <input class="blue_button" type="submit" value="Cadastrar" name="send" id="send" /> </td>
             </tr>
             
          </table>
