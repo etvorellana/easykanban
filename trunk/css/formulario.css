@@ -9,7 +9,7 @@
 /************************************************/
 /*			CSS CAMPOS E BOTOES DE FORMULÁRIOS	*/
 /************************************************/
-textarea, input[type=text],
+select, textarea, input[type=text],
 input[type=email],input[type=password],
 input[type=date], input[type=color]{
 	border:						1px solid #ccc;
@@ -27,10 +27,13 @@ input[type=date], input[type=color]{
 	padding-left:				3px;
 }
 
-select.tipo_situacao{
+select#mostrar_tarefas {
 	border:						1px solid #ccc;
 	width:						100%;
-	height:						30px;
+	min-height:					20px;
+	margin-bottom:				10px;
+	margin-top:					2px;
+	outline: 					none;
 	
 	-webkit-border-radius:		5px;
 	-moz-border-radius:			5px;
@@ -65,6 +68,12 @@ input[type=color]{
 
 #edit_inline { display: none; width: 600px; }
 
+#tarefa_inline { display: none; width: 600px; }
+
 /************************************************/
 /*			CSS CAMPOS E BOTOES DE FORMULÁRIOS	*/
 /************************************************/
+
+input[type=text].edit_max_tarefas{
+	width:				25px;
+}

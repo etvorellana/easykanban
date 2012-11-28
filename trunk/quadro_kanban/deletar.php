@@ -2,97 +2,29 @@
 	include_once('../connect/connect_vars.php');
 	include_once('../sessao_php/inicia_sessao.php');
 	
+	function mudar_status_tarefa( $paramentro_tar_id, $paramentro_sit_id )
+	{
+		// conectar ao banco de dados
+		$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
+		die('Erro ao conectar ao BD!');
+		
+		$query = 'UPDATE tarefa SET sit_id=' . $paramentro_pro_id . ' WHERE tar_id =' . $paramentro_tar_id
+		or die ('Erro ao criar a consulta');
+		
+		// execulta query de inserção na tabela tarefa
+		$data = mysqli_query($dbc, $query)
+			or die('Erro ao executar a inserção na tabela tarefa');
+		
+		/* Fecha conexão com o banco */
+		mysqli_close($dbc);
+	}
+	
 	if (isset($_SESSION['usu_id']) and isset($_GET['pro_id'])) 
 	{
 		$usu_id = $_SESSION['usu_id'];
 		$pro_id = $_GET['pro_id'];
-	
-		function get_tarefas_from_project( $parametro_pro_id, $parametro_sit_id )
-		{
-			if (isset($_SESSION['usu_id']) and isset($_GET['pro_id']))  
-			{
-				// conectar ao banco de dados
-				$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
-				die('Erro ao conectar ao BD!');
-			
-				$query = 'SELECT t.tar_id, t.tar_titulo
-						  FROM tarefa t
-						  JOIN projeto p ON p.pro_id = t.pro_id
-						  JOIN situacao s ON s.sit_id = t.sit_id
-						  WHERE t.pro_id = %s AND s.sit_id=%s'
-				or die ("Erro ao construir a consulta");
-						
-				// alimenta os parametros da conculta
-				$query = sprintf($query, $parametro_pro_id, $parametro_sit_id); 			
-						
-				//executa query de consulta na tabela tarefa
-				$result = mysqli_query($dbc, $query)
-					or die('Erro ao executar a inserção na tabela tarefa');
-	
-				mysqli_close($dbc);
-				
-				return $result;
-			}
-		} //fim função get_tarefas
-
-
-		function get_user_from_project( $parametro_pro_id )
-		{
-			// conectar ao banco de dados
-			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
-			die('Erro ao conectar ao BD!');
-			
-			// selecioma todos os usuários logados ao projeto selecionado
-			$query = 'SELECT u.usu_id, u.usu_nome
-					  FROM usuario u 
-					  JOIN usuario_projeto_tipo up on up.usu_id = u.usu_id 
-					  JOIN projeto p on p.pro_id = up.pro_id
-					  WHERE p.pro_id=%s'
-			or die ("Erro ao construir a consulta");
-			
-			// alimenta os parametros da conculta
-			$query = sprintf($query, $parametro_pro_id);	
-					
-			//executa query de inserção na tabela cep
-			$data = mysqli_query($dbc, $query)
-				or die('Erro ao execultar a inserção na tabela projeto');
-			
-			while ($row = mysqli_fetch_array($data)) {
-				echo '<option value="' , $row['usu_id'] , '"> ' , $row['usu_nome'] , '</option>';
-			}
-			
-			// fecha conexão com bd
-			mysqli_close($dbc);	
-		} // fim função get_user_from_project
 		
-		
-		
-		function get_limite_tarefas_por_coluna ( $project_id )
-		{
-			// conectar ao banco de dados
-			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
-			die('Erro ao conectar ao BD!');
-			
-			// selecioma todos os usuários logados ao projeto selecionado
-			$query = 'SELECT s.sit_id, l.lin_limite
-					  FROM limite_tarefa l
-					  JOIN projeto p on p.pro_id = l.pro_id
-					  JOIN situacao s on s.sit_id = l.sit_id
-					  WHERE p.pro_id =%s'
-							or die ("Erro ao construir a consulta");
-			
-			// alimenta os parametros da conculta
-			$query = sprintf($query, $project_id );	
-					
-			//executa query de inserção na tabela cep
-			$data = mysqli_query($dbc, $query)
-				or die('Erro ao execultar a inserção na tabela projeto');
-			
-			// fecha conexão com bd
-			mysqli_close($dbc);		
-			
-			return $data;	
-		}	
+		include_once ('functions.php');
 	}
 	else {
 		header( 'Location: ../index.php' ) xor die ;	
@@ -101,10 +33,13 @@
 
 ?>
 
-<!DOCTYPE HTML>
-	<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-    <head>
-    	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<!doctype html>
+<html>
+<head>
+<meta charset="charset=ISO-8859-1">
+<title>Documento sem t&iacute;tulo</title>
+</head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
         
         <link rel="stylesheet" type="text/css" media="all" href="../css/formulario.css">
         <link rel="stylesheet" type="text/css" media="all" href="../fancybox/jquery.fancybox.css">
@@ -119,18 +54,6 @@
         		alert(selectobj.selectedIndex)
         	}
         </script>
-        
-        <script type="text/javascript">  
-			function enter(ev) {  
-				
-				if(window.event && window.event.keyCode == 13) {  
-					flag_tarefa
-					return false; 
-				}  
-				else  
-					return true; 
-			}  
-		</script>
         
 		<script>
 			var max_tarefas_backlog = 0;
@@ -172,29 +95,21 @@
 				var sit_id = String(ev.target.id);
 				
 				var tar_id = String(data);
-				
-				alert( sit_id + " " + tar_id );
 
 				// se a tarefa for alocada de posição, o servidor é requisitado para fazer a atualização do status da tarefa
 				location.href= '<?php echo  'mudar_status_tarefa.php?pro_id=' , $pro_id , '&action=change_state&tar_id='; ?>' + tar_id + '<?php echo'&sit_id='; ?>' + sit_id;
 				
             }
         </script>
-        
-	</head>
-	
-	<body>
-    	
-        <div id="container-cabecalho">
+<body>
+ <div id="container-cabecalho">
         <header>
             <div id="nome_usuario" class="menu_acesso_rapido" >
                 <label> <?php echo ( $_SESSION['usu_nome']) ?> </label>
             </div>
-            <div id="logout" class="config_logout">
-                <label> <a class="menu_acesso_rapido" href="../logout.php"> logout </a> </label>
-            </div>
-            <div id="config" class="config_logout">
-            	<label> <a class="menu_acesso_rapido" href="config_tarefas.php?pro_id=<?php echo $pro_id ?>"> Configurações </a> </label>
+            
+            <div id="acessiobilidade" >
+                <label > <a class="menu_acesso_rapido" href="../logout.php"> logout </a> </label>
             </div>
 
         </header>
@@ -213,7 +128,7 @@
         <nav id="options_menu">
         
             <ul>
-                <li> Mostrar somente minhas tarefas: <input type="checkbox" name="mostrar_tarefas" value="Bike"> </li>
+                <li> Mostrááááár somente minhas tarefas: <input type="checkbox" name="mostrar_tarefas" value="Bike"> </li>
                 <li> Mostrar somente tarefas atrasadas:  <input type="checkbox" name="mostrar_tarefas" value="Car"> </li>
                 <li>
                		Mostrar Tarefas de:
@@ -244,8 +159,7 @@
 				?>
                 <div id="1" class="quadro" ondrop="drop(event, <?php echo $GLOBALS['numero_tarefas_backlog'] ?>, <?php echo $GLOBALS['maximo_tarefas_backlog'] ?> )" ondragover="allowDrop(event)" >
                 	<label class="texto" > BACKLOG </label> <br>
-                    <label class="texto" > [ <?php echo $GLOBALS['maximo_tarefas_backlog'], ' /  <input type="text" class="edit_max_tarefas" name="max" onkeypress="return enter(this)" value="', $GLOBALS['maximo_tarefas_backlog'], '" required>'  ?> ]  </label> <br>
-                    <a class="modalbox" href="#tarefa_inline"> Editar </a>
+                    <label class="texto" > [ <?php echo $GLOBALS['maximo_tarefas_backlog'], ' / ', $GLOBALS['maximo_tarefas_backlog']; ?> ]  </label> <br>
                     <?php
 						while ( $row_tarefas = mysqli_fetch_array($data_tarefa)) {
 							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event)" > ID:' , $row_tarefas['tar_id'] , '</div>';
@@ -442,20 +356,6 @@
 	</form>
 	</div>
 
-	<!-- invisivel inline form -->
-	<div id="tarefa_inline">
-	<h2> Máximo Tarefa </h2> <br />
-    
-	<form id="contact" name="contact" method="post" action="add_tarefa.php?pro_id=<?php echo $pro_id; ?>" >
-		<table class="add_projeto" >
-            <tr> <td>  <label for="max" class="negrito">Máximo:</label> </td>  </tr>
-            <tr> <td>  <input type="text" id="max" name="max" placeholder="Ex: 4" required>  </td> </tr> 
-            <tr> <td> <br> </td> </tr>
-            <tr> <td> <input class="blue_button" type="submit" value="Salvar" name="save" id="save" />  </td> </tr>  
-         </table>
-	</form>
-	</div>
-
     <!-- basic fancybox setup -->
     <script type="text/javascript">
     
@@ -504,5 +404,6 @@
         });
     </script>
 
-	</body>
+
+</body>
 </html>

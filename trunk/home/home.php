@@ -1,23 +1,22 @@
 <?php
 	require_once('../connect/connect_vars.php');
 	require_once('../sessao_php/inicia_sessao.php');
-	
-	$usu_id =  $_SESSION['usu_id'];
-	
+
 	// se a sessão for válida
 	if (isset($_SESSION['usu_id'])) 
 	{
+		$usu_id =  $_SESSION['usu_id'];
+		
 		// conectar ao banco de dados
 		$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 			die('Erro ao conectar ao BD!');
 		
 		
 		// consulta que retorna todos os dados do usuário logado no sistema
-		$query = 'SELECT u.usu_id, tu.tip_descricao, u.usu_nome, u.usu_email, u.usu_senha, u.usu_dt_cadastro, u.usu_foto
+		$query = 'SELECT u.usu_id, u.usu_nome, u.usu_email, u.usu_senha, u.usu_dt_cadastro, u.usu_dt_cadastro, u.usu_foto
 				  FROM usuario u
-				  NATURAL JOIN tipo_usuario tu
 				  WHERE usu_id =%s'
-				 or die ('Erro ao construir a query');
+				     or die ('Erro ao construir a query');
 		
 		// alimenta os parametros da conculta
 		$query = sprintf($query, $usu_id ); 	
@@ -25,6 +24,7 @@
 		
 		// executa consulta
 		$data = mysqli_query($dbc, $query);
+		
 		$row = mysqli_num_rows($data);
 		
 		// verifica se foi retornado apenas um registro do banco
@@ -37,7 +37,6 @@
 			{
 				// recupera os dados
 				$usu_nome = $row['usu_nome'];
-				$usu_tipo = $row['tip_descricao'];
 				$usu_email = $row['usu_email'];
 			}
 		}
@@ -55,12 +54,10 @@
 			$nome = trim ($_POST['nome']);	
 			$email = trim($_POST['email']);
 			$senha = trim($_POST['senha']);
-			$tipo = trim($_POST['tipo']);
-			$data_hora = date("d/m/Y h:i:s");
 			
-			if ( !empty($nome) && !empty($email) && !empty($senha) && !empty($tipo) )
+			if ( !empty($nome) && !empty($email) && !empty($senha))
 			{
-				$query = "INSERT INTO usuario (tip_id, usu_nome, usu_email, usu_senha, usu_dt_cadastro ) VALUES ('$tipo', '$nome', '$email', SHA('$senha'), '$data_hora' )" or 
+				$query = "INSERT INTO usuario ( usu_nome, usu_email, usu_senha, usu_dt_cadastro ) VALUES ( '$nome', '$email', SHA('$senha'), CURRENT_TIMESTAMP() )" or 
 					die ('Erro ao contruir a consulta');
 				
 				$result = mysqli_query($dbc, $query)
@@ -73,7 +70,8 @@
 ?>
 
 <!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+	<head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
     <title>easykanban</title>
     
@@ -100,7 +98,7 @@
         	<label> <?php echo ( $_SESSION['usu_nome']) ?> </label>
     	</div>
     	
-        <div id="acessiobilidade" >
+        <div id="logout" class="config_logout">
         	<label > <a class="menu_acesso_rapido" href="../logout.php"> logout </a> </label>
         </div>
     </header>
@@ -137,19 +135,23 @@
             ?>
             </td>
             </tr>
+            <tr> <td> <br> </td> </tr>
             
             <tr> <td> <strong class="nome_titulo"> <?php echo( $usu_nome ); ?> </strong> </td> </tr>
-            <tr> <td> <strong> Tipo do Usuário: </strong> <?php echo( $usu_tipo ); ?> </td> </tr>
             <tr> <td> <strong> E-mail: </strong> <?php echo( $usu_email ); ?>  </td> </tr>
-            
-            <tr> <td> <a href="#edit_inline" class="gray_button">Editar Perfil</a> </td> </tr>
-
+            <tr> <td> <br> </td> </tr>
             </table>
+            
+            <div id="edit_user">
+				<a href="#edit_inline" class="gray_button">Editar Perfil</a>
+            </div>
+            
         </div>
     
         <div id="container_projetos" class="info" >
             <strong class="label_titulo" > Meus Projetos </strong>
             
+            <div class="barra_de_rolagem">
             <?php
                 // conecta ao banco de dados
                 $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
@@ -158,7 +160,7 @@
                     
                 $query = 'SELECT p.pro_id, ts.tip_situacao, p.pro_nome, p.pro_descricao, p.pro_dt_inicio, p.pro_dt_fim  
 						  FROM projeto p 
-						  JOIN usuario_projeto up on up.pro_id = p.pro_id 
+						  JOIN usuario_projeto_tipo up on up.pro_id = p.pro_id 
 						  JOIN usuario u on u.usu_id = up.usu_id 
 						  JOIN tipo_situacao ts on ts.tip_id = p.tip_id 
 						  WHERE u.usu_id =%s AND ts.tip_id = 1 
@@ -189,13 +191,15 @@
 				// fecha conexão com o bd
                 mysqli_close($dbc);
         ?>
+        </div>
             
         </div>
 
         <div id="container_tarefas" class="info">   
             <strong class="label_titulo" > Minhas Tarefas </strong>	
-       
-		<?php
+            
+       		<div class="barra_de_rolagem">
+			<?php
 
                 // conecta ao banco de dados
                 $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
@@ -204,7 +208,7 @@
                 // seleciona a quantidade de projetos ligados ao usuario que está logado   
 				$query = 'SELECT p.pro_id, p.pro_nome 
 						  FROM projeto p
-						  JOIN usuario_projeto up on up.pro_id = p.pro_id
+						  JOIN usuario_projeto_tipo up on up.pro_id = p.pro_id
 						  JOIN usuario u on u.usu_id = up.usu_id
 						  WHERE u.usu_id=%s'
 						  or die ('Erro ao construir a consulta');
@@ -221,7 +225,7 @@
 							 FROM tarefa t 
 							 JOIN situacao s on s.sit_id = t.sit_id 
 							 JOIN projeto p on p.pro_id = t.pro_id 
-							 JOIN usuario_projeto up on up.pro_id = p.pro_id 
+							 JOIN usuario_projeto_tipo up on up.pro_id = p.pro_id 
 							 JOIN usuario u on u.usu_id = up.usu_id 
 							 LEFT JOIN meta m on m.met_id = t.met_id 
 							 WHERE u.usu_id =%s and p.pro_id=%s 
@@ -257,8 +261,8 @@
 					}
 				}
                 mysqli_close($dbc);
-        ?>
-            
+       		?>
+        	</div>   
         </div>
         
     </div>
@@ -315,34 +319,25 @@
                         <tr>
                             <td> <input type="password" id="senha" name="senha" placeholder="" required> </td>
                             <td>  <label </label> </td>
-                            <td> <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="" oninput="check_senha(this)" required> </td>
+                            <td> <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="" onChange="return validarSenha();" required> </td>
                         </tr>
                     </table>
                </td>
             </tr>
-            
-         	<tr> <td>  <label class="negrito" >Tipo:</label> </td> </tr>
             
             <tr>
             	<td>
                     <table class="border_space">
                         <tr>
-                            <td> 
-                           		Administrador: <input name="tipo" type="radio" value="1" required />
-                            </td>
-                           	
-                            <td>
-                            	Colaborador: <input name="tipo" type="radio" value="2" required />
-                            </td>
+                            <tr>
+                            <td> <input class="blue_button" type="submit" value="Cadastrar" name="send" id="send" /> </td>
+                            </tr>
                         </tr>
                     </table>
-                    <br />	
                </td>
             </tr>
             
-            <tr>
-            <td> <input class="blue_button" type="submit" value="Cadastrar" name="send" id="send" /> </td>
-            </tr>
+
             
          </table>
 	</form>
@@ -364,6 +359,11 @@
 		  break;
 		}
 	  }
+	}
+	
+	function validarSenha(){
+
+		document.getElementById("#senha").innerHTML='Os campos de não podem ser diferente';
 	}
 
 	$(document).ready(function() {
@@ -388,6 +388,11 @@
 </html>
 
 <?php
+	}
+	else
+	{
+		$index_url = '../index.php';
+		header('Location: ' . $index_url);
 	}
 	
 ?>

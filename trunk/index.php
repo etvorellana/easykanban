@@ -36,11 +36,9 @@
 					// O log-in está OK, então configuramos as variáveis de sessão e cookies do usu_id e usu_nome e redirecionamo o usuário para a página de abertura
 					$row = mysqli_fetch_array($data);
 					$_SESSION['usu_id'] = $row['usu_id'];
-					$_SESSION['usu_nome'] = $row['usu_nome'];
-					$_SESSION['tip_id'] = $row['tip_id'];
+					$_SESSION['usu_nome'] = $row['usu_nome'];;
 					setcookie('usu_id', $row['usu_id'], time() + (60 * 60 * 24 * 30));    // expires in 30 days
 					setcookie('usu_nome', $row['usu_nome'], time() + (60 * 60 * 24 * 30));  // expires in 30 days
-					setcookie('tip_id', $row['tip_id'], time() + (60 * 60 * 24 * 30));  // expires in 30 days
 					$home_url = 'home/home.php';
 					header('Location: ' . $home_url);
 				}
