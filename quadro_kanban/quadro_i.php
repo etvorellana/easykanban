@@ -168,7 +168,7 @@
         <nav id="options_menu">
         
             <ul>
-                <li> Mostrar somente minhas tarefas: <input type="checkbox" name="mostrar_tarefas" value="Bike"> </li>
+                <li> Mostréééér somente minhas tarefas: <input type="checkbox" name="mostrar_tarefas" value="Bike"> </li>
                 <li> Mostrar somente tarefas atrasadas:  <input type="checkbox" name="mostrar_tarefas" value="Car"> </li>
                 <li>
                		Mostrar Tarefas de:

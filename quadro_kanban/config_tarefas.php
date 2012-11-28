@@ -1,3 +1,4 @@
+
 <?php
 	require_once('../connect/connect_vars.php');
 	require_once('../sessao_php/inicia_sessao.php');
@@ -52,11 +53,11 @@
 
 ?>
 
-<!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-	<head>
+<!doctype html>
+<html>
+<head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-    <title>easykanban</title>
+    <title>Gerência de Tarefas</title>
 
     <link rel="stylesheet" type="text/css" media="all" href="../css/formulario.css">
     <link rel="stylesheet" type="text/css" media="all" href="../fancybox/jquery.fancybox.css">
@@ -64,14 +65,13 @@
     <script type="text/javascript" src="../fancybox/jquery.fancybox.js?v=2.0.6"></script>
     
     <link rel="stylesheet" type="text/css" href="../css/main.css" />
-    <link rel="stylesheet" type="text/css" href="../css/config_company.css" />
+    <link rel="stylesheet" type="text/css" href="../css/config_tarefas.css" />
   	
     <script type="text/javascript" src="../js/table_row.js"></script>
     
 	</head> 
 
-  	<body>
-    
+<body>
 	<div id="container-cabecalho">
     <header>
 		<div id="nome_usuario" class="menu_acesso_rapido">
@@ -94,168 +94,94 @@
         
     </div>
     
+</head>
+<body>    
     <div id="main">
 <?php
         // conectar ao banco de dados
         $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
             die('Erro ao conectar ao BD!');
                 
-        $query = 'SELECT p.pro_id, ts.tip_situacao, p.pro_nome, p.pro_descricao, p.pro_dt_inicio, p.pro_dt_fim, p.pro_dt_criacao, p.pro_usu_criador, up.tip_id
-                  FROM projeto p
-                  JOIN usuario_projeto_tipo up on up.pro_id = p.pro_id
-                  JOIN usuario u on u.usu_id = up.usu_id 
-                  JOIN tipo_situacao ts on ts.tip_id = p.tip_id
-                  WHERE u.usu_id=%s AND p.pro_id=%s'
+        $query = 'SELECT COUNT( t.`tar_id` )as total , t.`tar_id`, t.`tip_t_id` , t.`pri_id` , t.`met_id` , t.`sit_id` , t.`pro_id` , t.`tar_titulo` , 					t.`tar_descricao` , t.`tar_comentario` , t.`tar_data_inicio` , t.`tar_data_conclusao` , t.`tar_tempo_estimado` , t.`tar_data_criacao` , u.`usu_nome` , s.`sit_descricao` , p.`pro_nome`, u.`usu_nome`
+				FROM  `tarefa` AS t
+				JOIN  `projeto` p ON p.`pro_id` = t.`pro_id` 
+				JOIN  `responsavel` r ON r.`tar_id` = t.`tar_id` 
+				JOIN  `usuario` u ON u.`usu_id` = r.`usu_id` 
+				JOIN  `situacao` s ON s.`sit_id` = t.`sit_id` 
+				WHERE p.`pro_id` =%s '
                  or die ('Erro ao contruir a consulta');
                  
         // alimenta os parametros da conculta
-        $query = sprintf($query, $usu_id, $pro_id ); 	
+        $query = sprintf($query, $pro_id ); 	
         
         // executa consulta
         $data = mysqli_query($dbc, $query);
         
         // executa consulta
         $data = mysqli_query($dbc, $query) or die ('Erro ao execultar consulta');
-    
-        while ($row = mysqli_fetch_array($data)) 
-        {
-            echo '<div class="projeto_info_hover" id="menu_perfil">
-            	  <table width="100%" class="border_space">';
-            
-            
-            echo '<tr> <td> <strong class="nome_titulo">', $row['pro_nome'], '</strong> </td> </tr>
-            	  <tr> <td>  <strong> Descrição: </strong>', $row['pro_descricao'], '</td> </tr>';
-              
-            echo '<tr> <td width="60%"> <strong> Data de Início: </strong>', $row['pro_dt_inicio'], '</td>
-                  <td> <strong> Previsão de Término:   </strong>', $row['pro_dt_fim'], '</td> </tr>';
-            
-			echo '<tr> <td> <strong> Situação do Projeto: </strong>', $row['tip_situacao'], '</td>
-            <td> <strong> Sua Função: </strong>'; if ( $row['pro_usu_criador'] == $usu_id ) echo'Criador/Administradar'; else if ($row['tip_id'] == 1 ) echo'Administrador'; else echo'Colaborador'; echo '</td> </tr>';
-        
-            echo '</table>
-            
-                  <div id="botoes_projeto">
-                  	<a id="editar_projeto" class="modalbox" href="#inline" > Editar Projeto </a>
-            	  </div>
-            
-            </div>';
-        }
+    	
+		$row = mysqli_fetch_array($data);
+		
+		echo '<div class="projeto_info_hover" id="menu_perfil">
+			  <table width="100%" class="border_space">';
+
+		echo '<tr> <td> <strong class="nome_titulo">', $row['pro_nome'], '</strong> </td> </tr>
+			  <tr> <td>  <strong> Número de Tarefas: </strong>', $row['tar_titulo'], '</td> </tr>';
+		  
+		echo '<tr> <td width="60%"> <strong> Tarefas Concluídas: </strong>', $row['pro_dt_inicio'], '</td>
+			  <td> <strong> Previsão de Término:   </strong>', $row['pro_dt_fim'], '</td> </tr>';
+		
+		echo '<tr> <td> <strong> Situação do Projeto: </strong>', $row['tip_situacao'], '</td>
+		<td> <strong> Sua Função: </strong>'; if ( $row['pro_usu_criador'] == $usu_id ) echo'Criador/Administradar'; else if ($row['tip_id'] == 1 ) echo'Administrador'; else echo'Colaborador'; echo '</td> </tr>';
+	
+		echo '</table>
+		
+			  <div id="botoes_tarefas">
+				<a id="editar_projeto" class="modalbox" href="#inline" > Editar Quadro </a>
+			  </div>
+		
+		</div>';
+		
         mysqli_close($dbc);
+		echo $row['usu_nome'];
+		
  ?>
-        
-        <div id="colaboradores" class="info" >
-            <strong class="label_titulo" > Colaboradores não vinculados ao Projeto </strong> 
-            
-            <div class="css_colaboradores_usuarios">
-<?php	
-			// se a sessão do usuário estiver devidamente definida
-			if ( isset($_SESSION['usu_id']) ) 
-			{	
-				// conecta ao banco de dados
-				$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
-					die('Erro ao conectar ao BD!');
-				
-				// selecioma todos os usuários que não estão ligados ao projeto selecionado	
-				$query = 'SELECT u.usu_id, u.usu_nome
-						  FROM usuario u
-						  WHERE u.usu_id NOT 
-						  IN ( SELECT u.usu_id
-						  FROM usuario u
-						  JOIN usuario_projeto_tipo upt ON upt.usu_id = u.usu_id
-						  JOIN projeto p ON p.pro_id = upt.pro_id
-						  WHERE p.pro_id = %s )'
-							  or die ('Erro ao construir a consulta');
-			
-				// alimenta os parametros da conculta
-				$query = sprintf($query, $pro_id );	
-				
-				// executa consulta
-				$data = mysqli_query($dbc, $query) or die ('Erro ao executar consulta');
-				 
-				echo '<table class="tabela_zebrada" > 
-				<thead>
-				<tr>
-					<th>Nome</th>
-					<th>Inserir</th>
-				</tr>
-				</thead> ';
-				
-				while ($row = mysqli_fetch_array($data)) 
-				{
-					echo '<tr>
-						  <td width="100%">',
-					      $row['usu_nome'], '<br>
-						  </td>
-						
-						  <td align="center" >
-							  	<a href="inserir_remover_usuario_projeto.php?insert_user=' . $row['usu_id'] . "&pro_id=" . $pro_id . '&action=inserir"> <img class="images" src="../images/add.png" title="Inserir"/> </a>
-						  </td>
-						
-					      </tr>';		
-				}
-				echo '</table>';
-				
-				mysqli_close($dbc);
-			}
-?>    
-            </div>
-            
-        </div>
         
         <div id="usuarios" class="info">   
             <strong class="label_titulo" > Usuários </strong>	
             <div = class="css_colaboradores_usuarios">
 <?php	
-			// se a sessão do usuário estiver devidamente definida
-			if ( isset($_SESSION['usu_id']) ) 
-			{	
-				// conecta ao banco de dados
-				$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
-					die('Erro ao conectar ao BD!');
-					
-				$query = 'SELECT u.usu_id, u.usu_nome, up.tip_id
-						  FROM usuario u
-						  jOIN usuario_projeto_tipo up on up.usu_id = u.usu_id
-						  JOIN projeto p on p.pro_id = up.pro_id
-						  WHERE p.pro_id = %s'
-					         or die ('Erro ao construir a consulta');
-			
-				// alimenta os parametros da conculta
-				$query = sprintf($query, $pro_id );	
-				
-				// executa consulta
-				$data = mysqli_query($dbc, $query) or die ('Erro ao executar consulta');
-				 
-				echo '<table class="tabela_zebrada" > 
-				<thead>
-				<tr>
-					<th>Nome</th>
-					<th>Admin.</th>
-					<th>Remover</th>
-				</tr>
-				</thead> ';
-				 
-				while ($row = mysqli_fetch_array($data)) 
-				{
-					echo '<tr>
-						  <td width="90%">',
-					      $row['usu_nome'], '<br>
-						  </td>';
+			echo '<table class="tabela_zebrada" width="100%" > 
+			<thead>
+			<tr>
+				<th>Nome da Tarefa</th>
+				<th>Responsável</th>
+				<th>Status</th>
+				<th>Apagar</th>
+			</tr>
+			</thead> ';
+			 
+			while ($row = mysqli_fetch_array($data)) 
+			{
+				echo '<tr>
+					  <td>',
+					  $row['tar_'], '<br>
+					  </td>
+					  
+					  <td> <br> </td>';
 
-						echo '<td align="center" >';
-							echo '<a href="inserir_remover_usuario_projeto.php?edit_usu_id=', $row['usu_id'], "&pro_id=" . $pro_id, '&tip_id=' . $row['tip_id'] . '&action=changetype"> <img class="images" src="../images/'; if( $row['tip_id'] == ADMIN ) echo'checked.png'; else echo'unchecked.png'; echo '" /> </a>';
-						echo '</td>';
-						
-						echo '<td align="center">
-								<a href="inserir_remover_usuario_projeto.php?remove_user=', $row['usu_id'], "&pro_id=", $pro_id, '&action=remove"> <img src="../images/del.png" title="Inserir"/> </a>';
-						echo '</td>
-						
-					      </tr>';		
-				}
-				echo '</table>';
-				
-				mysqli_close($dbc);
+					echo '<td align="center" >';
+						echo '<a href="inserir_remover_usuario_projeto.php?edit_usu_id=', $row['usu_id'], "&pro_id=" . $pro_id, '&tip_id=' . $row['tip_id'] . '&action=changetype"> <img class="images" src="../images/'; if( $row['tip_id'] == ADMIN ) echo'checked.png'; else echo'unchecked.png'; echo '" /> </a>';
+					echo '</td>';
+					
+					echo '<td align="center">
+							<a href="inserir_remover_usuario_projeto.php?remove_user=', $row['usu_id'], "&pro_id=", $pro_id, '&action=remove"> <img src="../images/del.png" title="Inserir"/> </a>';
+					echo '</td>
+					
+					  </tr>';		
 			}
+			echo '</table>';
+			
 ?>    
            
             </div>
@@ -386,6 +312,3 @@
 
 </body>
 </html>
-
-
-

@@ -17,7 +17,7 @@
 	border-radius: 			8px;
 }
 
-#botoes_projeto{
+#botoes_tarefas{
 	padding-top:	5px;
 	padding-bottom:	5px;
 	width:			130px;
@@ -44,6 +44,7 @@
 	padding:					5px 5px 5px 5px;
 	
 	margin-top:  				30px;
+	margin-bottom:  			20px;
 	
 	border-bottom:  			solid;
 	border-bottom-width:		5px;
@@ -54,17 +55,11 @@
 /*					REGRAS CSS DOS PAINEIS		 */
 /*************************************************/
 
-/* Painel direito */
-#colaboradores{
-	float:						left;
-}
-
 .info{
 	color:						#F99D1C;
 	padding:					14px 5px 5px 5px;
-	margin-top:					20px;
 	
-	width:						410px;/* Propriedade obrigatória para todo elemento flutuante */
+	width:						800px;/* Propriedade obrigat�ria para todo elemento flutuante */
 	height:						350px;
 
 	background-image:			url('../images/home_barra.png');
@@ -83,7 +78,7 @@
 
 /* Painel Esquerdo */
 #usuarios{
-	margin-left:				435px;
+	margin:						0 auto;
 	overflow: 					auto;
 }
 
