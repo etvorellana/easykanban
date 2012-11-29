@@ -14,6 +14,10 @@
 			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 			die('Erro ao conectar ao BD!');
 			
+			// Seleciona o banco de dados
+			mysqli_select_db($dbc, "easykanban-bd")
+				or die ('Erro ao selecionar o Banco de Dados');
+			
 			// recupera os dados digitados no formulário
 			$nome = trim ($_POST['nome']);	
 			$descrição = trim($_POST['descricao']);
@@ -141,19 +145,20 @@
 					// conecta ao banco de dados
 					$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 						die('Erro ao conectar ao BD!');
+						
+					// Seleciona o banco de dados
+					mysqli_select_db($dbc, "easykanban-bd")
+						or die ('Erro ao selecionar o Banco de Dados');
 					
 					// constroi query de inserção
-					$query = "SELECT p.pro_id, ts.tip_situacao, p.pro_nome, p.pro_descricao, p.pro_dt_inicio, p.pro_dt_fim, p.pro_usu_criador, up.tip_id
-							  FROM projeto p
-							  JOIN usuario_projeto_tipo up on up.pro_id = p.pro_id
-							  JOIN usuario u on u.usu_id = up.usu_id 
-							  JOIN tipo_situacao ts on ts.tip_id = p.tip_id
-							  WHERE u.usu_id = '$usu_id'
-							  AND pro_nome LIKE '%$valor_busca%' ORDER BY (pro_nome)";
-							  
-					// executa consulta
-					$data = mysqli_query($dbc, $query) or die ('Erro ao execultar consulta')
-					or die ('Erro ao executar a consulta de seleção');
+					$query = "SELECT p.`pro_id`, ts.`tip_situacao`, p.`pro_nome`, p.`pro_descricao`, p.`pro_dt_inicio`, p.`pro_dt_fim`, p.`pro_usu_criador`, up.`tip_id`
+							  FROM `projeto` p
+							  JOIN `usuario_projeto_tipo` up on up.`pro_id` = p.`pro_id`
+							  JOIN `usuario` u on u.`usu_id` = up.`usu_id` 
+							  JOIN `tipo_situacao` ts on ts.`tip_id` = p.`tip_id`
+							  WHERE u.`usu_id` = '$usu_id'
+							  AND p.`pro_nome` LIKE '%$valor_busca%' ORDER BY (pro_nome)";
+					
 				} 
 				else 
 				{
@@ -161,13 +166,16 @@
 					$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 						die('Erro ao conectar ao BD!');
 						
+					// Seleciona o banco de dados
+					mysqli_select_db($dbc, "easykanban-bd")
+						or die ('Erro ao selecionar o Banco de Dados');	
 						
-					$query = 'SELECT p.pro_id, ts.tip_situacao, p.pro_nome, p.pro_descricao, p.pro_dt_inicio, p.pro_dt_fim, p.pro_usu_criador, up.tip_id
-							  FROM projeto p
-							  JOIN usuario_projeto_tipo up on up.pro_id = p.pro_id
-							  JOIN usuario u on u.usu_id = up.usu_id 
-							  JOIN tipo_situacao ts on ts.tip_id = p.tip_id
-							  WHERE u.usu_id=%s'
+					$query = 'SELECT p.`pro_id`, ts.`tip_situacao`, p.`pro_nome`, p.`pro_descricao`, p.`pro_dt_inicio`, p.`pro_dt_fim`, p.`pro_usu_criador`, up.`tip_id`
+							  FROM `projeto` p
+							  JOIN `usuario_projeto_tipo` up on up.`pro_id` = p.`pro_id`
+							  JOIN `usuario` u on u.`usu_id` = up.`usu_id` 
+							  JOIN `tipo_situacao` ts on ts.`tip_id` = p.`tip_id`
+							  WHERE u.`usu_id` = %s'
 								or die ('Erro ao contruir a consulta');
 							 
 					// alimenta os parametros da conculta
@@ -201,7 +209,7 @@
 					echo '</table>';
 					
 					echo '<div align="center" id="botoes_projeto">';
-						echo '<a href="../quadro_kanban/quadro.php?pro_id=' . $row['pro_id'] . ' " class="gray_button">Entrar</a>';
+						echo '<a href="../quadro_kanban/quadro.php?pro_id=' , $row['pro_id'] , ' &tip_id=' , $row['tip_id'] , '" class="gray_button">Entrar</a>';
 						
 						if ( $row['tip_id'] == ADMIN )
 							echo '<a id="config_button" href="config_projeto.php?pro_id=' . $row['pro_id'] . ' " class="gray_button">Configurações</a>';

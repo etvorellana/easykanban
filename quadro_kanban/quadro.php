@@ -6,33 +6,38 @@
 	{
 		$usu_id = $_SESSION['usu_id'];
 		$pro_id = $_GET['pro_id'];
-	
+		$permissao = $_GET['tip_id'];
+		
 		function get_tarefas_from_project( $parametro_pro_id, $parametro_sit_id )
 		{
-			if (isset($_SESSION['usu_id']) and isset($_GET['pro_id']))  
-			{
-				// conectar ao banco de dados
-				$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
-				die('Erro ao conectar ao BD!');
+			// conectar ao banco de dados
+			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
+			die('Erro ao conectar ao BD!');
+		
+			// Seleciona o banco de dados
+			mysqli_select_db($dbc, "easykanban-bd")
+				or die ('Erro ao selecionar o Banco de Dados');
+		
+			$query = 'SELECT t.`tar_id`, t.`tar_titulo`, r.`usu_id`
+					  FROM `tarefa` t
+					  JOIN `projeto` p ON p.`pro_id` = t.`pro_id`
+					  JOIN `situacao` s ON s.`sit_id` = t.`sit_id`
+					  JOIN `responsavel` r on r.`tar_id` = t.`tar_id` 
+					  JOIN `usuario` u on u.`usu_id` = r.`usu_id`
+					  WHERE t.`pro_id` = %s AND s.`sit_id`= %s'
+			or die ("Erro ao construir a consulta");
+					
+			// alimenta os parametros da conculta
+			$query = sprintf($query, $parametro_pro_id, $parametro_sit_id); 			
+					
+			//executa query de consulta na tabela tarefa
+			$result = mysqli_query($dbc, $query)
+				or die('Erro ao executar a consulta na tabela tarefa');
+
+			mysqli_close($dbc);
 			
-				$query = 'SELECT t.tar_id, t.tar_titulo
-						  FROM tarefa t
-						  JOIN projeto p ON p.pro_id = t.pro_id
-						  JOIN situacao s ON s.sit_id = t.sit_id
-						  WHERE t.pro_id = %s AND s.sit_id=%s'
-				or die ("Erro ao construir a consulta");
-						
-				// alimenta os parametros da conculta
-				$query = sprintf($query, $parametro_pro_id, $parametro_sit_id); 			
-						
-				//executa query de consulta na tabela tarefa
-				$result = mysqli_query($dbc, $query)
-					or die('Erro ao executar a inserção na tabela tarefa');
-	
-				mysqli_close($dbc);
-				
-				return $result;
-			}
+			return $result;
+			
 		} //fim função get_tarefas
 
 
@@ -42,12 +47,16 @@
 			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 			die('Erro ao conectar ao BD!');
 			
+			// Seleciona o banco de dados
+			mysqli_select_db($dbc, "easykanban-bd")
+				or die ('Erro ao selecionar o Banco de Dados');
+			
 			// selecioma todos os usuários logados ao projeto selecionado
-			$query = 'SELECT u.usu_id, u.usu_nome
-					  FROM usuario u 
-					  JOIN usuario_projeto_tipo up on up.usu_id = u.usu_id 
-					  JOIN projeto p on p.pro_id = up.pro_id
-					  WHERE p.pro_id=%s'
+			$query = 'SELECT u.`usu_id`, u.`usu_nome`
+					  FROM `usuario` u 
+					  JOIN `usuario_projeto_tipo` up on up.`usu_id` = u.`usu_id` 
+					  JOIN `projeto` p on p.`pro_id` = up.`pro_id`
+					  WHERE p.`pro_id`= %s'
 			or die ("Erro ao construir a consulta");
 			
 			// alimenta os parametros da conculta
@@ -73,12 +82,16 @@
 			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 			die('Erro ao conectar ao BD!');
 			
+			// Seleciona o banco de dados
+			mysqli_select_db($dbc, "easykanban-bd")
+				or die ('Erro ao selecionar o Banco de Dados');
+			
 			// selecioma todos os usuários logados ao projeto selecionado
-			$query = 'SELECT s.sit_id, l.lin_limite
-					  FROM limite_tarefa l
-					  JOIN projeto p on p.pro_id = l.pro_id
-					  JOIN situacao s on s.sit_id = l.sit_id
-					  WHERE p.pro_id =%s'
+			$query = 'SELECT s.`sit_id`, l.`lin_limite`
+					  FROM `limite_tarefa` l
+					  JOIN `projeto` p on p.`pro_id` = l.`pro_id`
+					  JOIN `situacao` s on s.`sit_id` = l.`sit_id`
+					  WHERE p.`pro_id` =%s'
 							or die ("Erro ao construir a consulta");
 			
 			// alimenta os parametros da conculta
@@ -114,6 +127,7 @@
         <link type="text/css" rel="stylesheet" href="../css/main.css" />
 		<link type="text/css" rel="stylesheet" href="../css/quadro.css" />
         
+        
 		<script type="text/javascript">
         	function alertselected(selectobj){
         		alert(selectobj.selectedIndex)
@@ -144,8 +158,16 @@
                 ev.preventDefault();
             }
             
-            function drag(ev)
+            function drag(ev, responsavel )
             {
+				var usuario_logado = <?php echo $_SESSION['usu_id'] ?>;
+				
+				if ( responsavel != usuario_logado ){
+					alert('Permissão negada!');
+					return false;	
+				}
+				
+				//alert("Responsavel" + responsavel);
                 ev.dataTransfer.setData("Text",ev.target.id);
             }
 			
@@ -155,7 +177,6 @@
 			function dragOver(ev) { 
 				return false; 
 			} 
-
             
             function drop(ev, numero_tarefas, maximo_tarefas)
             {
@@ -173,10 +194,12 @@
 				
 				var tar_id = String(data);
 				
+				
+				
 				alert( sit_id + " " + tar_id );
 
 				// se a tarefa for alocada de posição, o servidor é requisitado para fazer a atualização do status da tarefa
-				location.href= '<?php echo  'mudar_status_tarefa.php?pro_id=' , $pro_id , '&action=change_state&tar_id='; ?>' + tar_id + '<?php echo'&sit_id='; ?>' + sit_id;
+				location.href= '<?php echo  'mudar_status_tarefa.php?pro_id=' , $pro_id , '&tip_id=', $permissao, '&action=change_state&tar_id='; ?>' + tar_id + '<?php echo'&sit_id='; ?>' + sit_id;
 				
             }
         </script>
@@ -184,7 +207,7 @@
 	</head>
 	
 	<body>
-    	
+
         <div id="container-cabecalho">
         <header>
             <div id="nome_usuario" class="menu_acesso_rapido" >
@@ -193,21 +216,33 @@
             <div id="logout" class="config_logout">
                 <label> <a class="menu_acesso_rapido" href="../logout.php"> logout </a> </label>
             </div>
-            <div id="config" class="config_logout">
-            	<label> <a class="menu_acesso_rapido" href="config_tarefas.php?pro_id=<?php echo $pro_id ?>"> Configurações </a> </label>
-            </div>
-
+            
+            <?php
+            if ( $permissao == ADMIN )
+			echo '
+				<div id="config" class="config_logout">
+					<label> <a class="menu_acesso_rapido" href="config_tarefas.php?pro_id=', $pro_id ,'&tip_id=', $permissao, '"> Configurações </a> </label>
+				</div>
+			';
+			?>
+            
         </header>
         
         
         </div>
         
         <div id="container-menu">
-            <div id="nova-tarefa" >
-                <a id="bug" class="modalbox" href="#inline"> 
-                    <input class="orange_button" type="submit" value="+ Nova Tarefa" > 
-                </a>
-            </div>
+        	<?php
+			if ($permissao == ADMIN ) {
+            	echo '
+					<div id="nova-tarefa" >
+						<a id="bug" class="modalbox" href="#inline"> 
+							<input class="orange_button" type="submit" value="+ Nova Tarefa" > 
+						</a>
+					</div>
+				';
+			}
+			?>
     	</div>
         
         <nav id="options_menu">
@@ -244,11 +279,10 @@
 				?>
                 <div id="1" class="quadro" ondrop="drop(event, <?php echo $GLOBALS['numero_tarefas_backlog'] ?>, <?php echo $GLOBALS['maximo_tarefas_backlog'] ?> )" ondragover="allowDrop(event)" >
                 	<label class="texto" > BACKLOG </label> <br>
-                    <label class="texto" > [ <?php echo $GLOBALS['maximo_tarefas_backlog'], ' /  <input type="text" class="edit_max_tarefas" name="max" onkeypress="return enter(this)" value="', $GLOBALS['maximo_tarefas_backlog'], '" required>'  ?> ]  </label> <br>
-                    <a class="modalbox" href="#tarefa_inline"> Editar </a>
+                    <label class="texto" > [ <?php echo $GLOBALS['maximo_tarefas_backlog'], ' / ', $GLOBALS['maximo_tarefas_backlog'] ?> ]  </label> <br>
                     <?php
 						while ( $row_tarefas = mysqli_fetch_array($data_tarefa)) {
-							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event)" > ID:' , $row_tarefas['tar_id'] , '</div>';
+							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" > ID:' , $row_tarefas['tar_id'] , '</div>';
 						}
 					?>
                 </div>
@@ -267,7 +301,7 @@
                     <label class="texto" > [ <?php echo $GLOBALS['numero_tarefas_requisitado'], ' / ', $GLOBALS['maximo_tarefas_requisitado']; ?> ]  </label> <br>
                     <?php
 						while ( $row_tarefas = mysqli_fetch_array($data_tarefa)) {
-							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event)" > ID:' , $row_tarefas['tar_id'] , '</div>';
+							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" > ID:' , $row_tarefas['tar_id'] , '</div>';
 						}
 					?>
                 </div>
@@ -287,7 +321,7 @@
                     <label class="texto" > [ <?php echo $GLOBALS['numero_tarefas_processo'], ' / ', $GLOBALS['maximo_tarefas_processo']; ?> ]  </label> <br>
                     <?php
 						while ( $row_tarefas = mysqli_fetch_array($data_tarefa)) {
-							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event)" > ID:' , $row_tarefas['tar_id'] , '</div>';
+							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" > ID:' , $row_tarefas['tar_id'] , '</div>';
 						}
 					?>
                 </div>
@@ -305,7 +339,7 @@
                     <label class="texto" > [ <?php echo $GLOBALS['numero_tarefas_concluido'], ' / ', $GLOBALS['maximo_tarefas_concluido']; ?> ]  </label> <br>
                     <?php
 						while ( $row_tarefas = mysqli_fetch_array($data_tarefa)) {
-							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event)" > ID:' , $row_tarefas['tar_id'] , '</div>';
+							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" > ID:' , $row_tarefas['tar_id'] , '</div>';
 						}
 					?>
                 </div>
@@ -323,7 +357,7 @@
                     <label class="texto" > [ <?php echo $GLOBALS['numero_tarefas_arquivado'], ' / ', $GLOBALS['maximo_tarefas_arquivado']; ?> ]  </label> <br>
                     <?php
 						while ( $row_tarefas = mysqli_fetch_array($data_tarefa)) {
-							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="false" ondragstart="drag(event)" > ID:' , $row_tarefas['tar_id'] , '</div>';
+							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="false" > ID:' , $row_tarefas['tar_id'] , '</div>';
 						}
 					?>
                 </div>
@@ -339,7 +373,7 @@
 	<div id="inline">
 	<h2> Adicionar novo Projeto </h2> <br />
     
-	<form id="contact" name="contact" method="post" action="add_tarefa.php?pro_id=<?php echo $pro_id; ?>" >
+	<form id="contact" name="contact" method="post" action="add_tarefa.php?pro_id=<?php echo $pro_id, '&tip_id=', $permissao; ?>" >
 		<table class="add_projeto" >
          	
             <tr>
@@ -421,7 +455,6 @@
 								<option value="1">  Baixa </option>
                                 <option value="2">  Média </option>
                                 <option value="3">  Alta  </option>
-                                
 							</select>
                             </td>
                         </tr>
@@ -444,14 +477,14 @@
 
 	<!-- invisivel inline form -->
 	<div id="tarefa_inline">
-	<h2> Máximo Tarefa </h2> <br />
+	<h3> Limite de Tarefas </h3> <br />
     
-	<form id="contact" name="contact" method="post" action="add_tarefa.php?pro_id=<?php echo $pro_id; ?>" >
+	<form id="limite_tarefas" name="limite_tarefas" method="post" action="add_tarefa.php?pro_id=<?php echo $pro_id; ?>" >
 		<table class="add_projeto" >
             <tr> <td>  <label for="max" class="negrito">Máximo:</label> </td>  </tr>
-            <tr> <td>  <input type="text" id="max" name="max" placeholder="Ex: 4" required>  </td> </tr> 
+            <tr> <td>  <input type="text" id="max" name="max" value="" required>  </td> </tr> 
             <tr> <td> <br> </td> </tr>
-            <tr> <td> <input class="blue_button" type="submit" value="Salvar" name="save" id="save" />  </td> </tr>  
+            <tr> <td> <input class="blue_button" type="submit" value="Salvar" name="edit_limite_tarefas" id="edit_limite_tarefas" />  </td> </tr>  
          </table>
 	</form>
 	</div>
@@ -491,12 +524,20 @@
 
 				if ( atual_numero_de_tarefas >= maximo_numero_de_tarefas ){
 					$(this).before("<p><strong>Número m&aacute;ximo de tarefas excedido!</strong></p>"); // exibe mensagem de confirmação para o usu&aacute;rio
-
 					return false;
 				}
 			
                 $("#contact").fadeOut("slow", function(){
                     $(this).before("<p><strong>Projeto cadastrado com Sucesso!</strong></p>"); // exibe mensagem de confirmação para o usu&aacute;rio
+                    setTimeout("$.fancybox.close()", 1000); // fecha caixa de dialogo
+                });
+            });
+			
+			
+			$("#limite_tarefas").submit(function() {  // quando os dados forem submetidos...
+
+                $("#limite_tarefas").fadeOut("slow", function(){
+                    $(this).before("<p><strong>Alteração executada com sucesso!</strong></p>"); // exibe mensagem de confirmação para o usu&aacute;rio
                     setTimeout("$.fancybox.close()", 1000); // fecha caixa de dialogo
                 });
             });

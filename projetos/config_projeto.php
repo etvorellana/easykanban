@@ -15,6 +15,9 @@
 			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 			die('Erro ao conectar ao BD!');
 			
+			mysqli_select_db($dbc, "easykanban-bd")
+				or die ('Erro ao selecionar o Banco de Dados');
+			
 			// recupera os dados digitados no formulário
 			$pro_nome = trim ($_POST['nome']);	
 			$pro_descrição = trim($_POST['descricao']);
@@ -84,14 +87,10 @@
     </header>
     </div>
     
-	<div id="container-menu">
-    <ul>
-        <li><a href="../home/home.php">Home</a></li>
-        <li class="atual"><a href="projeto.php">Projetos</a></li>
-        <li><a href="#">Relatórios</a></li>
-        <li><a href="#">Configurações</a></li>
-    </ul>
-        
+	<div id="container_voltar">
+        <a id="bug" href="projeto.php"> 
+        	<input class="purple_button" type="submit" value="Voltar aos Projetos" > 
+        </a>
     </div>
     
     <div id="main">
@@ -99,6 +98,9 @@
         // conectar ao banco de dados
         $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
             die('Erro ao conectar ao BD!');
+			
+		mysqli_select_db($dbc, "easykanban-bd")
+			or die ('Erro ao selecionar o Banco de Dados');
                 
         $query = 'SELECT p.pro_id, ts.tip_situacao, p.pro_nome, p.pro_descricao, p.pro_dt_inicio, p.pro_dt_fim, p.pro_dt_criacao, p.pro_usu_criador, up.tip_id
                   FROM projeto p
@@ -151,6 +153,9 @@
 				// conecta ao banco de dados
 				$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 					die('Erro ao conectar ao BD!');
+				
+				mysqli_select_db($dbc, "easykanban-bd")
+					or die ('Erro ao selecionar o Banco de Dados');
 				
 				// selecioma todos os usuários que não estão ligados ao projeto selecionado	
 				$query = 'SELECT u.usu_id, u.usu_nome
@@ -210,6 +215,9 @@
 				$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 					die('Erro ao conectar ao BD!');
 					
+				mysqli_select_db($dbc, "easykanban-bd")
+					or die ('Erro ao selecionar o Banco de Dados');
+					
 				$query = 'SELECT u.usu_id, u.usu_nome, up.tip_id
 						  FROM usuario u
 						  jOIN usuario_projeto_tipo up on up.usu_id = u.usu_id
@@ -267,6 +275,9 @@
         // conectar ao banco de dados
         $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
             die('Erro ao conectar ao BD!');
+			
+		mysqli_select_db($dbc, "easykanban-bd")
+			or die ('Erro ao selecionar o Banco de Dados');
                 
         $query = 'SELECT p.pro_id, ts.tip_situacao, p.pro_nome, p.pro_descricao, p.pro_dt_inicio, p.pro_dt_fim, p.pro_dt_criacao, p.pro_usu_criador, up.tip_id
                   FROM projeto p
