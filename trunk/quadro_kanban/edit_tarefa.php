@@ -17,6 +17,9 @@
 		// conectar ao banco de dados
 		$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 			die('Erro ao conectar ao BD!');
+			
+		mysqli_select_db($dbc, "easykanban-bd")
+			or die ('Erro ao selecionar o Banco de Dados');
 				
 		$query = 'SELECT p.pro_id, ts.tip_situacao, p.pro_nome, p.pro_descricao, p.pro_dt_inicio, p.pro_dt_fim, p.pro_dt_criacao, p.pro_usu_criador, up.tip_id
 				  FROM projeto p
@@ -38,7 +41,7 @@
 	
      ?>
      
-        <form id="contact" name="contact" method="post" action="<?php echo $_SERVER['PHP_SELF'], '?pro_id=', $pro_id; ?>" >
+        <form id="contact" name="contact" method="post" action="<?php echo $_SERVER['PHP_SELF'], '?pro_id=', $pro_id, '&tip=', $permissao; ?>" >
              <table class="add_projeto" >
                 
                 <tr>

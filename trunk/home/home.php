@@ -156,14 +156,13 @@
                 // conecta ao banco de dados
                 $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
                     die('Erro ao conectar ao BD!');
-                    
-                    
-                $query = 'SELECT p.pro_id, ts.tip_situacao, p.pro_nome, p.pro_descricao, p.pro_dt_inicio, p.pro_dt_fim  
-						  FROM projeto p 
-						  JOIN usuario_projeto_tipo up on up.pro_id = p.pro_id 
-						  JOIN usuario u on u.usu_id = up.usu_id 
-						  JOIN tipo_situacao ts on ts.tip_id = p.tip_id 
-						  WHERE u.usu_id =%s AND ts.tip_id = 1 
+
+                $query = 'SELECT p.`pro_id`, ts.`tip_situacao`, p.`pro_nome`, p.`pro_descricao`, p.`pro_dt_inicio`, p.`pro_dt_fim`, p.`pro_usu_criador`, up.`tip_id`
+					      FROM `projeto` p
+						  JOIN `usuario_projeto_tipo` up on up.`pro_id` = p.`pro_id`
+						  JOIN `usuario` u on u.`usu_id` = up.`usu_id` 
+						  JOIN `tipo_situacao` ts on ts.`tip_id` = p.`tip_id`
+						  WHERE u.`usu_id` =%s AND ts.`tip_id` = 1 
 						  ORDER BY (p.pro_dt_fim)'
                           or die ('Erro ao contruir a consulta');
                 
@@ -182,7 +181,7 @@
 						echo '<tr> <td> <strong> Descrição: </strong>';     echo( $row['pro_descricao'] ); echo '</td> </tr>';
 						echo '<tr> <td> <strong> Situação: </strong>';     echo( $row['tip_situacao'] ); echo '</td> </tr>';
 						echo '<tr>';
-                 		echo '<tr> <td> <a href="../quadro_kanban/quadro.php?pro_id=' , $row['pro_id'] , ' " class="gray_button">Entrar</a> <tr> </td>';
+                 		echo '<tr> <td> <a href="../quadro_kanban/quadro.php?pro_id=' , $row['pro_id'] , ' &tip_id=' , $row['tip_id'] , '" class="gray_button">Entrar</a> <tr> </td>';
 						echo '</tr>';
                     echo '</table>';
                     echo '</div>';

@@ -4,12 +4,16 @@
 	if ( isset($_GET['pro_id']) ) 
 	{
 		$pro_id = $_GET['pro_id'];
+		$permissao = $_GET['tip_id'];
 		
 		if (isset($_POST['send'])) 
 		{
 			// conectar ao banco de dados
 			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 			die('Erro ao conectar ao BD!');
+			
+			mysqli_select_db($dbc, "easykanban-bd")
+				or die ('Erro ao selecionar o Banco de Dados');
 			
 			// recupera os dados digitados no formulário
 			$tip_tarefa = trim($_POST['tip_tarefa']);
@@ -28,8 +32,10 @@
 			{
 
 				// criando query de inserção na tabela tarefa
-				$query = "INSERT INTO tarefa ( tip_t_id, pri_id, met_id, sit_id, pro_id, tar_titulo, tar_descricao, tar_comentario, tar_data_inicio, tar_data_conclusao, tar_tempo_estimado, tar_data_criacao) VALUES ( '$tip_tarefa', '$prioridade', NULL, '1', '$pro_id', '$tar_titulo', '$tar_descricao', '$tar_comentario', '$tar_data_inicio', '$tar_data_conclusao', NULL, CURRENT_TIMESTAMP() );"
+				$query = "INSERT INTO `tarefa` ( `tip_t_id`, `pri_id`, `met_id`, `sit_id`, `pro_id`, `tar_titulo`, `tar_descricao`, `tar_comentario`, `tar_data_inicio`, `tar_data_conclusao`, `tar_tempo_estimado`, `tar_data_criacao`) VALUES ( '$tip_tarefa', '$prioridade', NULL, '1', '$pro_id', '$tar_titulo', '$tar_descricao', '$tar_comentario', '$tar_data_inicio', '$tar_data_conclusao', NULL, CURRENT_TIMESTAMP() );"
 				or die ('Erro ao contruir a consulta' . mysqli_error($dbc) );
+				
+				echo $query;
 				
 				//execulta query de inserção na tabela tarefa
 				$data = mysqli_query($dbc, $query)
@@ -38,7 +44,7 @@
 				// recupera o id da terefa inserida e insere na tabela responsável
 				$ultimo_tar_id = mysqli_insert_id($dbc);
 				
-				$query = "INSERT INTO responsavel(  tar_id, usu_id) VALUES ( '$ultimo_tar_id', '$usu_id_reponsavel' )"
+				$query = "INSERT INTO `responsavel`(  `tar_id`, `usu_id`) VALUES ( '$ultimo_tar_id', '$usu_id_reponsavel' )"
 				or die (  mysqli_error($dbc) );
 				
 				//execulta query de inserção na responsável
@@ -51,7 +57,7 @@
 	}
 	
 	// volta para o quadro kanban
-	$voltar_url = 'quadro.php?pro_id=' . $pro_id;
+	$voltar_url = 'quadro.php?pro_id=' . $pro_id . '&tip_id=' . $permissao;
 	header('Location: ' . $voltar_url ) xor die;
 		
 ?>

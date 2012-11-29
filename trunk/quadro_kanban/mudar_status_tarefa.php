@@ -3,6 +3,7 @@
 
 	$action = &$_REQUEST;
 	$pro_id = $_GET['pro_id'];
+	$permissao = $_GET['tip_id'];
 	
 	// se o status da tarefa foi modificado ...
 	if ( $action['action']=='change_state' and $_GET['tar_id'] and $_GET['sit_id'])
@@ -14,7 +15,10 @@
 		$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 		die('Erro ao conectar ao BD!');
 		
-		$query = 'UPDATE tarefa SET sit_id=' . $sit_id . ' WHERE tar_id =' . $tar_id
+		mysqli_select_db($dbc, "easykanban-bd")
+			or die ('Erro ao selecionar o Banco de Dados');
+		
+		$query = 'UPDATE `tarefa` SET `sit_id`=' . $sit_id . ' WHERE `tar_id` =' . $tar_id
 		or die ('Erro ao criar a consulta');
 		
 		// execulta query de inserção na tabela tarefa
@@ -26,7 +30,7 @@
 	}
 	
 	// volta para o quadro kanban
-	$voltar_url = 'quadro.php?pro_id=' . $pro_id;
+	$voltar_url = 'quadro.php?pro_id=' . $pro_id . '&tip_id=' . $permissao;
 	header('Location: ' . $voltar_url );
 ?>
 		

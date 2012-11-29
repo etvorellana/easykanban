@@ -68,7 +68,7 @@ input[type=color]{
 
 #edit_inline { display: none; width: 600px; }
 
-#tarefa_inline { display: none; width: 600px; }
+#tarefa_inline { display: none; width: 200px; }
 
 /************************************************/
 /*			CSS CAMPOS E BOTOES DE FORMULÁRIOS	*/

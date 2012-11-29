@@ -8,6 +8,7 @@
 		$usu_id = $_SESSION['usu_id'];
 		$usu_nome = $_SESSION['usu_nome'];
 		$pro_id = $_GET['pro_id'];
+		$permissao = $_GET['tip_id'];
 		
 				// Quando o usuário submeter os dados de cadastro de nova empresa
 		if (isset($_POST['edit'])) 
@@ -15,6 +16,9 @@
 			// conectar ao banco de dados
 			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 			die('Erro ao conectar ao BD!');
+			
+			mysqli_select_db($dbc, "easykanban-bd")
+				or die ('Erro ao selecionar o Banco de Dados');
 			
 			// recupera os dados digitados no formulário
 			$pro_nome = trim ($_POST['nome']);	
@@ -95,14 +99,10 @@
     </header>
     </div>
     
-	<div id="container-menu">
-    <ul>
-        <li><a href="../home/home.php">Home</a></li>
-        <li class="atual"><a href="projeto.php">Projetos</a></li>
-        <li><a href="#">Relatórios</a></li>
-        <li><a href="#">Configurações</a></li>
-    </ul>
-        
+	<div id="container_voltar">
+        <a id="bug" href="quadro.php?pro_id=<?php echo $pro_id, '&tip_id=', $permissao ?> "> 
+        	<input class="purple_button" type="submit" value="Voltar ao Quadro" > 
+        </a>
     </div>
     
 </head>
@@ -112,6 +112,9 @@
         // conectar ao banco de dados
         $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
             die('Erro ao conectar ao BD!');
+			
+		mysqli_select_db($dbc, "easykanban-bd")
+			or die ('Erro ao selecionar o Banco de Dados');
 			
 			
         $query = 'SELECT t.`tar_id`, t.`tip_t_id` , t.`pri_id` , t.`met_id` , t.`sit_id` , t.`pro_id` , t.`tar_titulo` , t.`tar_descricao` , t.`tar_comentario` , t.`tar_data_inicio` , t.`tar_data_conclusao` , t.`tar_tempo_estimado` , t.`tar_data_criacao` , u.`usu_nome` , s.`sit_descricao` , p.`pro_id`, p.`pro_nome`, p.`pro_descricao`, p.`pro_dt_inicio`, p.`pro_dt_fim`, p.`pro_dt_criacao`, p.`pro_usu_criador`, u.`usu_nome`
@@ -203,12 +206,6 @@
     </div>
     
     <?php 
-    
-		$tar_id_edit = 0; 
-		$tar_id_edit = "<script> document.write(tar_id_edit)</script>"; 
-		echo 'Aqui - ' . $tar_id_edit;
-	
-		
 		include_once('edit_tarefa.php');
 	?>
 	
