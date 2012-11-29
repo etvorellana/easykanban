@@ -30,7 +30,11 @@
 	}
 	
 	// volta para o quadro kanban
-	$voltar_url = 'quadro.php?pro_id=' . $pro_id . '&tip_id=' . $permissao;
+	$voltar_url = 'quadro.php?pro_id=' . $pro_id . '&tip_id=' . $permissao; 
+	
+	if(isset($_GET['usu_id_selecionado'])) 
+		echo $voltar_url . '&usu_id_selecionado=' . $_GET['usu_id_selecionado'];
+	
 	header('Location: ' . $voltar_url );
 ?>
 		
