@@ -110,10 +110,7 @@
                  
         // alimenta os parametros da conculta
         $query = sprintf($query, $usu_id, $pro_id ); 	
-        
-        // executa consulta
-        $data = mysqli_query($dbc, $query);
-        
+       
         // executa consulta
         $data = mysqli_query($dbc, $query) or die ('Erro ao execultar consulta');
     
@@ -135,7 +132,7 @@
             echo '</table>
             
                   <div id="botoes_projeto">
-                  	<a id="editar_projeto" class="modalbox" href="#inline" > Editar Projeto </a>
+                  	<a id="botao_editar" class="modalbox" href="#inline" > Editar Projeto </a>
             	  </div>
             
             </div>';
