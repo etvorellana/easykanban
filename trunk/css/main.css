@@ -176,14 +176,14 @@ input[type="submit"]:hover{
 #logout a{
 	background-image: url('../images/logout.png');
 	background-repeat:	no-repeat;
-	background-position: bottom left;
+	background-position: center left;
 }
 
 .config_logout a{
 	float:				right;
-	padding-top:		13px;
+	margin-top:			11px;
 	padding-right:		20px;
-	padding-left:		25px;
+	padding-left:		24px;
 	
 	background-color:	transparent; /* para o IE */
 	text-decoration: 	none;
@@ -192,7 +192,7 @@ input[type="submit"]:hover{
 #config a{
 	background-image: url('../images/configuracao.png');
 	background-repeat:	no-repeat;
-	background-position: bottom left;	
+	background-position: center left;	
 }
 
 #nome_usuario{

@@ -21,25 +21,15 @@
 		// alimenta os parametros da conculta
 		$query = sprintf($query, $usu_id ); 	
 		
-		
 		// executa consulta
 		$data = mysqli_query($dbc, $query);
 		
-		$row = mysqli_num_rows($data);
+		// captura os dadas deste registro
+		$dados_usuario = mysqli_fetch_array($data);
 		
-		// verifica se foi retornado apenas um registro do banco
-		if ( $row == 1) 
-		{
-			// captura os dadas deste registro
-			$row = mysqli_fetch_array($data);
-			
-			if ( $row != NULL ) 
-			{
-				// recupera os dados
-				$usu_nome = $row['usu_nome'];
-				$usu_email = $row['usu_email'];
-			}
-		}
+		// recupera os dados
+		$usu_nome = $dados_usuario['usu_nome'];
+		$usu_email = $dados_usuario['usu_email'];
 	
 		/* Fecha conexão com o banco */
 		mysqli_close($dbc);
@@ -143,7 +133,7 @@
             </table>
             
             <div id="edit_user">
-				<a href="#edit_inline" class="gray_button">Editar Perfil</a>
+				<a  id="botao_editar" class="modalbox" href="#edit_inline" class="gray_button">Editar Perfil</a>
             </div>
             
         </div>
@@ -268,10 +258,66 @@
     
     </div>
     
-    <
-	<!-- invisivel inline form -->
+	<!-- Invisivel inline form -->
+    <!-- Editar Usuário -->
 	<div id="edit_inline">
-    	<?php require_once('edit_user.php') ?>
+    
+    <h2> Editar Usuário </h2><br />
+    <form id="editar_usuario_formulario" name="editar_usuario_formulario" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" >
+    <table class="border_space" >
+    <tr>
+        <td>
+            <table class="border_space" >
+                <tr> <td>  <label for="nome" class="negrito">Nome completo:</label> </td> </tr>
+                <tr> <td>  <input type="text" id="nome" name="nome" value="<?php echo $dados_usuario['usu_nome'] ?>" required>  </td> </tr>
+            </table>
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+            <table class="border_space">
+                <tr>
+                    <td>  <label class="negrito" >Endereço de e-mail:</label> </td>
+                    <td>  <label class="negrito" >Confirmar e-mail:</label> </td>
+                </tr>
+                <tr>
+                    <td> <input type="email" id="email" name="email" value="<?php echo $dados_usuario['usu_email'] ?>" required> </td>
+                    <td> <input type="email" id="confirmar_email" name="confirmar_email"  value="<?php echo $dados_usuario['usu_email'] ?>" required oninput="check_email(this)"> </td>
+                </tr>
+            </table>
+       </td>
+    </tr>
+    
+    <tr>
+        <td>
+            <table class="border_space">
+                <tr>
+                    <td> <label class="negrito" >Senha:</label> </td>
+                    <td> <label class="negrito" >Confirmar Senha:</label> </td>
+                </tr>
+                <tr>
+                    <td> <input type="password" id="senha" name="senha" value="<?php echo $dados_usuario['usu_nome'] ?>" required> </td>
+                    <td> <input type="password" id="confirmar_senha" name="confirmar_senha" value="<?php echo $dados_usuario['usu_nome'] ?>" onChange="return validarSenha();" required> </td>
+                </tr>
+            </table>
+       </td>
+    </tr>
+    
+    <tr>
+        <td>
+            <table class="border_space">
+                <tr>
+                    <tr>
+                    <td> <input class="blue_button" type="submit" value="Editar" name="send" id="send" /> </td>
+                    </tr>
+                </tr>
+            </table>
+       </td>
+    </tr>
+       
+    </table>
+    </form>
     </div>
     
     
@@ -295,12 +341,10 @@
                     <table class="border_space">
                         <tr>
                             <td>  <label class="negrito" >Endereço de e-mail:</label> </td>
-                            <td>  <label </label> </td>
                             <td>  <label class="negrito" >Confirmar e-mail:</label> </td>
                         </tr>
                         <tr>
                             <td> <input type="email" id="email" name="email" placeholder="Ex: thalles@easykanban.com" required> </td>
-                            <td>  <label </label> </td>
                             <td> <input type="email" id="confirmar_email" name="confirmar_email" required oninput="check_email(this)"> </td>
                         </tr>
                     </table>
@@ -312,12 +356,10 @@
                     <table class="border_space">
                         <tr>
                             <td> <label class="negrito" >Senha:</label> </td>
-                            <td>  <label </label> </td>
                             <td> <label class="negrito" >Confirmar Senha:</label> </td>
                         </tr>
                         <tr>
                             <td> <input type="password" id="senha" name="senha" placeholder="" required> </td>
-                            <td>  <label </label> </td>
                             <td> <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="" onChange="return validarSenha();" required> </td>
                         </tr>
                     </table>
@@ -379,10 +421,17 @@
 				setTimeout("$.fancybox.close()", 1000); // fecha caixa de dialogo
 			});
 		});
+		
+		$("#editar_usuario_formulario").submit(function() {  // quando os dados forem submetidos...
+			$("#editar_usuario_formulario").fadeOut("slow", function(){
+				$(this).before("<p><strong>Usuário cadastrado com Sucesso!</strong></p>"); // exibe mensagem de confirmação para o usuário
+				setTimeout("$.fancybox.close()", 1000); // fecha caixa de dialogo
+			});
+		});
 
 	});
 </script>
-  
+
 </body>
 </html>
 

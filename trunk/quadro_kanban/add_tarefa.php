@@ -26,7 +26,6 @@
 			$tar_tempo_estimado = trim($_POST['tempo_estimado']);
 			
 			$usu_id_reponsavel = trim($_POST['tipo_situacao']);
-			echo $usu_id_reponsavel;
 			
 			if ( !empty($tar_titulo) )
 			{

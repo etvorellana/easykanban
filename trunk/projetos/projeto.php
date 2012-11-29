@@ -24,7 +24,7 @@
 			$data_inicio = trim($_POST['data_inicio']);
 			$data_fim = trim($_POST['data_fim']);
 			$tip_situacao = trim ($_POST['tipo_situacao']);	
-
+			
 			if ( !empty($nome) && !empty($data_inicio) && !empty($data_fim) && !empty($tip_situacao) )
 			{
 				$por_usu_criador = $usu_id;
@@ -79,7 +79,24 @@
     <link rel="stylesheet" type="text/css" href="../css/main.css" />
     <link rel="stylesheet" type="text/css" href="../css/projeto.css" />
     
-    
+   <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+    <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+    <link rel="stylesheet" href="/resources/demos/style.css" />
+    <script>	
+        $(function() {
+            $("#data_inicio").datepicker({ dateFormat: "dd/mm/yy" }).val()
+            $("#data_fim").datepicker({ dateFormat: "dd/mm/yy" }).val()
+        });
+        
+        $(function() {
+            $( "#data_inicio" ).datepicker();
+        });
+        
+        $(function() {
+            $( "#data_fim" ).datepicker();
+        });
+    </script>
+        
 	<script type="text/javascript">  
         function enter(ev) {  
             if(window.event && window.event.keyCode == 13) {  
@@ -262,8 +279,9 @@
                             <td> <label class="negrito" >Situação:</label> </td>
                         </tr>
                         <tr>
-                            <td> <input type="date" id="data_inicio" name="data_inicio" required> </td>
-                            <td> <input type="date" id="data_fim" name="data_fim" required> </td>
+                            <td> <input class="selector" type="text" id="data_inicio" name="data_inicio" /> </td>
+                            <td> <input class="selector" type="text" id="data_fim" name="data_fim" /> </td>
+                            
                             <td>
                             <select id="tipo_situacao" name="tipo_situacao" required>
                                 <option value="1">Em andamento</option>
