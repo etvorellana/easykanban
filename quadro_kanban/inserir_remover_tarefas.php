@@ -21,7 +21,7 @@
 			
 			// execulta query de inserção na tabela usuario_projeto
 			$data = mysqli_query($dbc, $query)
-				or die('Erro ao executar a inserção na tabela usuario_projeto_tipo');
+				or die('Erro ao execultar a inserção na tabela usuario_projeto_tipo');
 			
 			/* Fecha conexão com o banco */
 			mysqli_close($dbc);
@@ -29,21 +29,24 @@
 		
 		if ( $action['action'] == 'remove')
 		{
-			$remove_user = $_GET['remove_user'];
+			$remove_tar_id = $_GET['tar_id'];
 			
 			// conectar ao banco de dados
 			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 			die('Erro ao conectar ao BD!');
 			
-			$query = "DELETE FROM usuario_projeto_tipo WHERE usu_id =%s AND pro_id = %s"
+			mysqli_select_db($dbc, "easykanban-bd")
+				or die ('Erro ao selecionar o Banco de Dados');
+				
+			$query = "DELETE FROM tarefa WHERE tar_id =%s"
 			or die ('Erro ao criar a consulta');
 			
 			// alimenta os parametros da conculta
-			$query = sprintf($query, $remove_user, $pro_id );	
+			$query = sprintf($query, $remove_tar_id );	
 			
-			// execulta query de remoção na tabela usuario_projeto
+			// execulta query de remoção na tabela tarefa
 			$data = mysqli_query($dbc, $query)
-				or die('Erro ao execultar a inserção na tabela usuario_projeto');
+				or die('Erro ao executar a inserção na tabela tarefa');
 			
 			/* Fecha conexão com o banco */
 			mysqli_close($dbc);	
@@ -82,7 +85,7 @@
 			/* Fecha conexão com o banco */
 			mysqli_close($dbc);	
 		}
-		header("Location: http://".move_header('config_projeto.php?pro_id=' . $pro_id));
+		header("Location: http://".move_header('config_tarefas.php?pro_id=' . $pro_id));
 		
 	}
 	
@@ -92,6 +95,5 @@
 		$uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
 		return ($host.$uri.'/'.$str); 
 	}
-
 	
 ?>

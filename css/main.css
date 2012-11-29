@@ -183,7 +183,7 @@ input[type="submit"]:hover{
 	float:				right;
 	padding-top:		13px;
 	padding-right:		20px;
-	padding-left:		35px;
+	padding-left:		28px;
 	
 	background-color:	transparent; /* para o IE */
 	text-decoration: 	none;
@@ -269,7 +269,7 @@ input[type="submit"]:hover{
 /*************************************************/
 
 
-.gray_button, #editar_projeto {
+.gray_button, #botao_editar {
 	-moz-box-shadow:				inset 0px 1px 0px 0px #ffffff;
 	-webkit-box-shadow:				inset 0px 1px 0px 0px #ffffff;
 	box-shadow:						inset 0px 1px 0px 0px #ffffff;
@@ -291,14 +291,14 @@ input[type="submit"]:hover{
 	text-shadow:					1px 1px 0px #ffffff;
 }
 
-.gray_button:hover , #editar_projeto:hover {
+.gray_button:hover , #botao_editar:hover {
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
 	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
 	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
 	background-color:#dfdfdf;
 }
 
-.gray_button:active, , #editar_projeto:active  {
+.gray_button:active, , #botao_editar:active  {
 	position:relative;
 	top:1px;
 }
