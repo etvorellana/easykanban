@@ -18,7 +18,7 @@
 /*         	 	CSS DO MENU DE OPÇOES           */
 /************************************************/
 #options_menu{
-	background-color: 		#996;
+	background-color: 		#FFF;
 	height: 				25px;
 	width:					100%;
 	border-top:				1px solid #D8D3CD;
@@ -97,6 +97,16 @@
 	background-image: 	url('../images/postit.png');
 	width:				128px;
 	height:				128px;	
+}
+
+.opcoes{
+	width:				128px;
+	bottom: 			0;
+	height:				70px;
+}
+
+.tarefa.over {
+  border: 				2px dashed #000;
 }
 
 /************************************************/
