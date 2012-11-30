@@ -95,10 +95,16 @@ header{
 }
 
 .tarefa{
-	background-image: 	url('../images/postit.png');	
+	background-image: 	url('../images/postit.png');
 	width:				128px;
 	height:				128px;
+	
+}
 
+.opcoes{
+	width:				128px;
+	bottom: 			0;
+	height:				88px;
 }
 
 #inline { display: none; width: 600px; }

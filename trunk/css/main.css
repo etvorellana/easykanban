@@ -320,3 +320,11 @@ input[type="submit"]:hover{
 	margin: 			0 auto;
 	margin-top:			10px;
 }
+
+.corrigir_campos{
+	width:				105%;	
+}
+
+#tip_tarefa{
+	width: 102%;	
+}

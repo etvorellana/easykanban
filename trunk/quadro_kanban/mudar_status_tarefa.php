@@ -21,6 +21,8 @@
 		$query = 'UPDATE `tarefa` SET `sit_id`=' . $sit_id . ' WHERE `tar_id` =' . $tar_id
 		or die ('Erro ao criar a consulta');
 		
+		echo $query;
+		
 		// execulta query de inserção na tabela tarefa
 		$data = mysqli_query($dbc, $query)
 			or die('Erro ao executar a inserção na tabela tarefa');
@@ -30,7 +32,7 @@
 	}
 	
 	// volta para o quadro kanban
-	$voltar_url = 'quadro.php?pro_id=' . $pro_id . '&tip_id=' . $permissao; 
+	$voltar_url = 'candidato.php?pro_id=' . $pro_id . '&tip_id=' . $permissao; 
 	
 	if(isset($_GET['usu_id_selecionado'])) 
 		echo $voltar_url . '&usu_id_selecionado=' . $_GET['usu_id_selecionado'];

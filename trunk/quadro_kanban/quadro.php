@@ -164,8 +164,8 @@
         <link rel="stylesheet" href="/resources/demos/style.css" />
         <script>	
 			$(function() {
-				$("#data_inicio").datepicker({ dateFormat: "dd/mm/yy" }).val()
-				$("#data_fim").datepicker({ dateFormat: "dd/mm/yy" }).val()
+				$("#data_inicio").datepicker({ dateFormat: "yy-mm-dd" }).val()
+				$("#data_fim").datepicker({ dateFormat: "yy/mm/dd" }).val()
 			});
 			
 			$(function() {
@@ -275,8 +275,6 @@
 			?>
             
         </header>
-        
-        
         </div>
         
         <div id="container-menu">
@@ -342,7 +340,7 @@
                     <label class="texto" > [ <?php echo $GLOBALS['numero_tarefas_backlog'], ' / ', $GLOBALS['maximo_tarefas_backlog'] ?> ]  </label> <br>
                     <?php
 						while ( $row_tarefas = mysqli_fetch_array($data_tarefa)) {
-							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" > ID:' , $row_tarefas['tar_id'] , '</div>';
+							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" > <div class="opcoes"> </div>  <a href="editar_tarefas.php?pro_id=', $pro_id, '&tar_id=', $row_tarefas['tar_id'], '&tip_id=', $permissao, '"> <img src="../images/edit_button.png" alt="configurações" /> ID:  ' , $row_tarefas['tar_id'] , ' </a> </div>';
 						}
 					?>
                 </div>
