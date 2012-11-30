@@ -27,7 +27,7 @@ input[type=date], input[type=color]{
 	padding-left:				3px;
 }
 
-select#mostrar_tarefas {
+select .tipo_situacao {
 	border:						1px solid #ccc;
 	width:						100%;
 	min-height:					20px;

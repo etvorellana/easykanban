@@ -117,7 +117,7 @@
 			or die ('Erro ao selecionar o Banco de Dados');
 			
 			
-        $query = 'SELECT t.`tar_id`, t.`tip_t_id` , t.`pri_id` , t.`met_id` , t.`sit_id` , t.`pro_id` , t.`tar_titulo` , t.`tar_descricao` , t.`tar_comentario` , t.`tar_data_inicio` , t.`tar_data_conclusao` , t.`tar_tempo_estimado` , t.`tar_data_criacao` , u.`usu_nome` , s.`sit_descricao` , p.`pro_id`, p.`pro_nome`, p.`pro_descricao`, p.`pro_dt_inicio`, p.`pro_dt_fim`, p.`pro_dt_criacao`, p.`pro_usu_criador`, u.`usu_nome`
+        $query = 'SELECT t.`tar_id`, t.`tip_t_id` , t.`pri_id` , t.`met_id` , t.`sit_id` , t.`pro_id` , t.`tar_titulo` , t.`tar_descricao` , t.`tar_comentario` , t.`tar_data_inicio` , t.`tar_data_conclusao` , t.`tar_tempo_estimado` , t.`tar_data_criacao` , u.`usu_nome` , s.`sit_descricao` , p.`pro_id`, p.`pro_nome`, p.`pro_descricao`, p.`pro_dt_inicio`, p.`pro_dt_fim`, p.`pro_dt_criacao`, p.`pro_usu_criador`
 				FROM  `tarefa` AS t
 				JOIN  `projeto` p ON p.`pro_id` = t.`pro_id` 
 				JOIN  `responsavel` r ON r.`tar_id` = t.`tar_id` 
@@ -130,7 +130,7 @@
         $query = sprintf($query, $pro_id ); 	
         
         // executa consulta
-        $data = mysqli_query($dbc, $query) or die ('Erro ao execultar consulta');
+        $data = mysqli_query($dbc, $query) or die ('Erro ao executar consulta');
     
 		$num_tarefas = mysqli_num_rows($data);
 
@@ -187,7 +187,7 @@
 				  <td>', $row['sit_descricao'], '</td>';
 			
 			echo '<td align="center">
-					<a class="modalbox" href="#inline" onClick="return getTarId(',$row['tar_id'],')" > <img src="../images/edit_button.png" title="Remover"/> </a>
+					<a href="editar_tarefas.php?tar_id=', $row['tar_id'], '&pro_id=', $row['pro_id'], '&tip_id=', $permissao, '"> <img src="../images/edit_button.png" title="Editar"/> </a>
 				  </td>';
 							
 			echo '<td align="center">

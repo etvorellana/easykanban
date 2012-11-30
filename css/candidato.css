@@ -1,0 +1,104 @@
+#main{
+	width:					100%;
+	height:					100%;
+	background-color:		#FFF;
+	margin:					0px;
+	padding:				0px;
+}
+
+#container-menu-tarefas{
+	background-color: 		white;
+	height: 				40px;
+	width:					100%;
+	height:					50px;
+}
+
+
+/************************************************/
+/*         	 	CSS DO MENU DE OPÇOES           */
+/************************************************/
+#options_menu{
+	background-color: 		#996;
+	height: 				25px;
+	width:					100%;
+	border-top:				1px solid #D8D3CD;
+	font-weight:			bold;
+}
+
+#options_menu ul {
+    padding:			0px;
+	margin:				0px;
+    float: 				left;
+    width: 				100%;
+    list-style:			none;
+}
+
+#options_menu ul li { 
+    padding:			0px 0px 0px 10px;
+	display: 			inline; 
+}
+/************************************************/
+/*         	FIM CSS DO MENU DE OPÇOES           */
+/************************************************/
+
+#mostrar_tarefas {
+	border:						1px solid #ccc;
+	width:						200px;
+	min-height:					20px;
+	margin-bottom:				1px;
+	margin-top:					1px;
+	outline: 					none;
+	
+	-webkit-border-radius:		5px;
+	-moz-border-radius:			5px;
+	-o-border-radius:			5px;
+	-ms-border-radius:			5px;
+	border-radius:				5px;
+	padding-left:				3px;
+}
+
+/************************************************/
+/*         	 CSS DO QUADRO DE KANBAN            */
+/************************************************/
+
+#div_quadro{
+    background-color: 		#EEEDE9;  /* Cor de fundo */
+	width:  				100%;
+	height: 				100%;
+	border-style: 			none;
+	overflow: 				auto;
+	margin-top:				0px;
+
+}
+
+#div_scroll_quadro{
+    background-color: 		#EEEDE9;  /* Cor de fundo */
+	min-height: 			700px;
+	height: 				100%;
+	
+	float:					left;
+    margin-right:			-30000px;/*Be safe with Opera's limited negative margin of 32695px (-999em could cause problems with large font sizes)*/
+}
+
+.quadro {
+	float:					left;
+	width: 					450px;
+	min-height: 			700px;
+	height: 				100%;
+	border-style: 			solid ;
+
+	border-color: 			#999;
+	border-width: 			1px thin;
+	
+	text-align: 			center;
+}
+
+.tarefa{
+	background-image: 	url('../images/postit.png');
+	width:				128px;
+	height:				128px;	
+}
+
+/************************************************/
+/*         	FIM CSS DO QUADRO DE KANBAN         */
+/************************************************/
