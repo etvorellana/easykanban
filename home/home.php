@@ -13,9 +13,7 @@
 		
 		
 		// consulta que retorna todos os dados do usuário logado no sistema
-		$query = 'SELECT u.usu_id, u.usu_nome, u.usu_email, u.usu_senha, u.usu_dt_cadastro, u.usu_dt_cadastro, u.usu_foto
-				  FROM usuario u
-				  WHERE usu_id =%s'
+		$query = 'SELECT `usu_id`, `usu_nickname`, `usu_nome`, `usu_email`, `usu_senha`, `usu_dt_cadastro`, `usu_foto` FROM `usuario` WHERE `usu_id` = %s'
 				     or die ('Erro ao construir a query');
 		
 		// alimenta os parametros da conculta
@@ -30,6 +28,7 @@
 		// recupera os dados
 		$usu_nome = $dados_usuario['usu_nome'];
 		$usu_email = $dados_usuario['usu_email'];
+		$usu_nickname = $dados_usuario['usu_nickname'];
 	
 		/* Fecha conexão com o banco */
 		mysqli_close($dbc);
@@ -42,12 +41,14 @@
 			die('Erro ao conectar ao BD!');
 			
 			$nome = trim ($_POST['nome']);	
+			$nickname = trim($_POST['nickname']);
 			$email = trim($_POST['email']);
 			$senha = trim($_POST['senha']);
 			
-			if ( !empty($nome) && !empty($email) && !empty($senha))
+			if ( !empty($nome) && !empty($email) && !empty($senha) && !empty($nickname) )
 			{
-				$query = "INSERT INTO usuario ( usu_nome, usu_email, usu_senha, usu_dt_cadastro ) VALUES ( '$nome', '$email', SHA('$senha'), CURRENT_TIMESTAMP() )" or 
+				$query = "INSERT INTO `usuario` ( `usu_nickname`, `usu_nome`, `usu_email`, `usu_senha`, `usu_dt_cadastro`, `usu_foto` ) 
+				VALUES ( '$nickname', '$nome', '$email', SHA('$senha'), CURRENT_TIMESTAMP() )" or 
 					die ('Erro ao contruir a consulta');
 				
 				$result = mysqli_query($dbc, $query)
@@ -128,6 +129,7 @@
             <tr> <td> <br> </td> </tr>
             
             <tr> <td> <strong class="nome_titulo"> <?php echo( $usu_nome ); ?> </strong> </td> </tr>
+			<tr> <td> <strong> Nickname: </strong> <?php echo( $usu_nickname ); ?>  </td> </tr>
             <tr> <td> <strong> E-mail: </strong> <?php echo( $usu_email ); ?>  </td> </tr>
             <tr> <td> <br> </td> </tr>
             </table>
@@ -332,6 +334,9 @@
                 	<table class="border_space" >
                     	<tr> <td>  <label for="nome" class="negrito">Nome completo:</label> </td> </tr>
                     	<tr> <td>  <input type="text" id="nome" name="nome" placeholder="Ex: Thalles Santos Silva" required>  </td> </tr>
+						
+                    	<tr> <td>  <label for="nickname" class="negrito">Nickname:</label> </td> </tr>
+                    	<tr> <td>  <input type="text" id="nickname" name="nickname" placeholder="Ex: thalles" required>  </td> </tr>
                     </table>
                 </td>
             </tr>

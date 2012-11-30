@@ -22,7 +22,7 @@
 		for ( $colunaID = 1; $colunaID <= 5; $colunaID++ ) {
 			$nome = 'coluna' . $colunaID; 
 			echo $nome;
-			$query = "UPDATE  `limite_tarefa` SET  `lin_limite` =" . $array[$colunaID] . " WHERE  `limite_tarefa`.`lin_id` =" . $colunaID
+			$query = "UPDATE  `limite_tarefa` SET  `lin_limite` =" . $array[$colunaID] . " WHERE  `limite_tarefa`.`sit_id` =" . $colunaID . " AND `pro_id`=" . $pro_id
 			or die ('Erro ao contruir a consulta');
 
 			//execulta query de atualização na tabela tarefa
