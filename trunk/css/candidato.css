@@ -62,7 +62,7 @@
 /************************************************/
 
 #div_quadro{
-    background-color: 		#EEEDE9;  /* Cor de fundo */
+    background-color: 		transparent;  /* Cor de fundo */
 	width:  				100%;
 	height: 				100%;
 	border-style: 			none;
@@ -72,19 +72,24 @@
 }
 
 #div_scroll_quadro{
-    background-color: 		#EEEDE9;  /* Cor de fundo */
+    background-color: 		transparent;  /* Cor de fundo */
 	min-height: 			700px;
 	height: 				100%;
-	
 	float:					left;
     margin-right:			-30000px;/*Be safe with Opera's limited negative margin of 32695px (-999em could cause problems with large font sizes)*/
+}
+
+.quadro:hover{
+	background-color: 		#FFF;  /* Cor de fundo */	
 }
 
 .quadro {
 	float:					left;
 	width: 					450px;
 	min-height: 			700px;
-	height: 				100%;
+	height: 				700px;
+	
+	overflow: 				auto;
 	border-style: 			solid ;
 
 	border-color: 			#999;
@@ -94,9 +99,9 @@
 }
 
 .tarefa{
-	background-image: 	url('../images/postit.png');
-	width:				128px;
-	height:				128px;	
+	background-image: 	url('../images/pastit-1.png');
+	width:				270px;
+	height:				179px;	
 }
 
 .opcoes{
@@ -105,9 +110,7 @@
 	height:				70px;
 }
 
-.tarefa.over {
-  border: 				2px dashed #000;
-}
+
 
 /************************************************/
 /*         	FIM CSS DO QUADRO DE KANBAN         */

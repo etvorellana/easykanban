@@ -208,7 +208,7 @@
                 mysqli_select_db($dbc, "easykanban-bd")
                     or die ('Erro ao selecionar o Banco de Dados');
             
-                $query = "SELECT s.`sit_id`, t.`tar_id`, t.`tar_titulo`, r.`usu_id`
+                $query = "SELECT s.`sit_id`, t.`tar_id`, t.`tar_titulo`, r.`usu_id`, u.`usu_nickname`
 							FROM `tarefa` t
 							JOIN `projeto` p ON p.`pro_id` = t.`pro_id`
 							JOIN `situacao` s ON s.`sit_id` = t.`sit_id`
@@ -280,8 +280,8 @@
             ?>  
             
             <div id="1" class="quadro" ondrop="drop(event, <?php echo $max_tarefas[0], ',', $atual_num_tarefas[0] ?> )" ondragover="allowDrop(event)" >
-                <label class="texto" > BACKLOG </label> <br/>
-				<label class="texto" > [ <?php echo $atual_num_tarefas[0], ' / ', $max_tarefas[0] ?> ]  </label> <br>				
+				<label class="texto" > <strong> BACKLOG </strong> </label> <br/>
+				<label class="texto" > [ <?php echo $atual_num_tarefas[0], ' / ', $max_tarefas[0] ?> ]  </label> <br>	
                 <?php
                     $row_tarefas = mysqli_fetch_array($data);
                     $linha = 0;
@@ -289,7 +289,7 @@
                         do {
                             echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" >
 							<div class="opcoes"> </div>  <a href="editar_tarefas.php?pro_id=', $pro_id, '&tar_id=', $row_tarefas['tar_id'], '&tip_id=', $permissao, '"> 
-							<strong> ID:  ' , $row_tarefas['tar_id'] , ' </strong> <br/> <img src="../images/edit_button.png" alt="configurações" /> </a> </div>';
+							<strong>', $row_tarefas['usu_nickname'], '<br/> ID:  ' , $row_tarefas['tar_id'] , '</strong> <br/> <img src="../images/edit_button.png" alt="configurações" /> </a> </div>';
 							
                             $linha++;
                             $row_tarefas = mysqli_fetch_array($data);
@@ -307,7 +307,7 @@
             
 
             <div id="2" class="quadro" ondrop="drop(event, <?php echo $max_tarefas[1], ',', $atual_num_tarefas[1] ?> )" ondragover="allowDrop(event)" >
-                <label class="texto"> REQUISITADO </label><br/>
+                <label class="texto"> <strong>  REQUISITADO </strong> </label><br/>
 				<label class="texto" > [ <?php echo $atual_num_tarefas[1], ' / ', $max_tarefas[1] ?> ]  </label> <br>
                 <?php
                     if ( $row_tarefas['sit_id'] == 2 ){
@@ -332,7 +332,7 @@
             
 
             <div id="3" class="quadro" ondrop="drop(event, <?php echo $max_tarefas[2], ',', $atual_num_tarefas[3] ?>)" ondragover="allowDrop(event)" >
-                <label class="texto"> EM PROCESSO </label><br/>
+                <label class="texto"> <strong>  EM PROCESSO </strong> </label><br/>
 				<label class="texto" > [ <?php echo $atual_num_tarefas[2], ' / ', $max_tarefas[2] ?> ]  </label> <br>
                 <?php
                     
@@ -359,7 +359,7 @@
 
 
             <div id="4" class="quadro" ondrop="drop(event, <?php echo $max_tarefas[3], ',', $atual_num_tarefas[3] ?>)" ondragover="allowDrop(event)" >
-                <label class="texto"> CONCLUIDO </label><br/>
+                <label class="texto"> <strong>  CONCLUIDO </strong> </label><br/>
 				<label class="texto" > [ <?php echo $atual_num_tarefas[3], ' / ', $max_tarefas[3] ?> ]  </label> <br>
                 <?php
                     
@@ -385,7 +385,7 @@
             
          
             <div id="5" class="quadro" ondrop="drop(event, <?php echo $max_tarefas[4], ',', $atual_num_tarefas[4] ?>)" ondragover="allowDrop(event)" >
-                <label class="texto"> ARQUIVADO </label><br/>
+                <label class="texto"> <strong>  ARQUIVADO </strong> </label><br/>
 				<label class="texto" > [ <?php echo $atual_num_tarefas[4], ' / ', $max_tarefas[4] ?> ]  </label> <br>
                 <?php
             
