@@ -63,7 +63,7 @@
     <script>	
         $(function() {
             $("#data_inicio").datepicker({ dateFormat: "yy-mm-dd" }).val()
-            $("#data_fim").datepicker({ dateFormat: "yy/mm/dd" }).val()
+            $("#data_fim").datepicker({ dateFormat: "yy-mm-dd" }).val()
         });
         
         $(function() {
@@ -75,21 +75,6 @@
         });
     </script>
 
-	
-    <script type="text/javascript" language="javascript">
-		$(document).ready(function(){
-			$('.fancybox').fancybox();
-			
-            $("#contact").submit(function() {  // quando os dados forem submetidos...
-                $("#contact").fadeOut("slow", function(){
-                    $(this).before("<p><strong>Tarefa inserida com Sucesso!</strong></p>"); // exibe mensagem de confirmação para o usuário
-                    setTimeout("$.fancybox.close()", 1000); // fecha caixa de dialogo
-                });
-            });
-			
-		});
-	</script>
-    
 	<script>
         function allowDrop(ev)
         {
@@ -115,17 +100,19 @@
         function dragOver(ev) { 
             return false; 
         } 
-        
-        function drop(ev, numero_tarefas, maximo_tarefas)
+
+        function drop(ev, maximo_tarefas, quantidade_atual )
         {
-            //alert( String(numero_tarefas) + ' >= ' + String(maximo_tarefas) );
-            
-            if ( numero_tarefas >= maximo_tarefas ){
-                return false;
-            }
-            
+            //alert( 'Máximo de Tarefas =' + String(maximo_tarefas) );
+			//alert( 'Quantidade atual =' + String(quantidade_atual) );
+			
+			if ( quantidade_atual >= maximo_tarefas ){
+				alert('Limite de tarefas excedido!');
+				return false;
+			}
+			
             ev.preventDefault();
-            var data=ev.dataTransfer.getData("Text");
+            var data = ev.dataTransfer.getData("Text");
             ev.target.appendChild(document.getElementById(data));
             
             var sit_id = String(ev.target.id);
@@ -222,12 +209,13 @@
                     or die ('Erro ao selecionar o Banco de Dados');
             
                 $query = "SELECT s.`sit_id`, t.`tar_id`, t.`tar_titulo`, r.`usu_id`
-                        FROM `tarefa` t
-                        JOIN `projeto` p ON p.`pro_id` = t.`pro_id`
-                        JOIN `situacao` s ON s.`sit_id` = t.`sit_id`
-                        JOIN `responsavel` r on r.`tar_id` = t.`tar_id` 
-                        JOIN `usuario` u on u.`usu_id` = r.`usu_id`
-                        WHERE t.`pro_id` = '$pro_id'"
+							FROM `tarefa` t
+							JOIN `projeto` p ON p.`pro_id` = t.`pro_id`
+							JOIN `situacao` s ON s.`sit_id` = t.`sit_id`
+							JOIN `responsavel` r on r.`tar_id` = t.`tar_id` 
+							JOIN `usuario` u on u.`usu_id` = r.`usu_id`
+							WHERE t.`pro_id` = '$pro_id'
+							ORDER BY(s.`sit_id`)"
                 or die ("Erro ao construir a consulta");		
                         
                 //executa query de consulta na tabela tarefa
@@ -237,10 +225,10 @@
 				
 				// seleciona o limite de tarefa de cada uma das colunas do quadro kanban
 				$query = 'SELECT s.`sit_id`, l.`lin_limite`
-						  FROM `limite_tarefa` l
-						  JOIN `projeto` p on p.`pro_id` = l.`pro_id`
-						  JOIN `situacao` s on s.`sit_id` = l.`sit_id`
-						  WHERE p.`pro_id` =%s'
+							FROM `limite_tarefa` l
+							JOIN `projeto` p on p.`pro_id` = l.`pro_id`
+							JOIN `situacao` s on s.`sit_id` = l.`sit_id`
+							WHERE p.`pro_id` = %s'
 								or die ("Erro ao construir a consulta");
 				
 				// alimenta os parametros da conculta
@@ -252,25 +240,57 @@
 	
                 mysqli_close($dbc);
                 
-				$row_limite_tarefa = mysqli_fetch_array($data_limite_tarefas);
+				// pega os valores máximos que cada coluna suporta em um array, [0] Backlog, [1]Requisitado ...
+				$max_tarefas = array();
+				while ( $row_limite_tarefa = mysqli_fetch_array($data_limite_tarefas) )
+					$max_tarefas[] = $row_limite_tarefa['lin_limite'];
 				
-                $linhas = mysqli_num_rows($data);
-            
-				$GLOBALS['numero_tarefas_backlog'] = mysqli_num_rows($data_limite_tarefas);
-				$GLOBALS['maximo_tarefas_backlog'] = $row_limite_tarefa['lin_limite'];
+				$linhas = mysqli_num_rows($data);
+				
+				$num_tarefas_backlog = 0;
+				$num_tarefas_requisitado = 0;
+				$num_tarefas_processo = 0;
+				$num_tarefas_concluido = 0;
+				$num_tarefas_arquivado = 0;
+				
+				// array guarda a quantidade atual de tarefas em cada uma das colunas do quadro
+				$atual_num_tarefas = array(0, 0, 0, 0, 0);
+				
+				while( $row_tarefas = mysqli_fetch_array($data) )
+				{
+					switch( $row_tarefas['sit_id'] ){
+						case 1:
+							$atual_num_tarefas[0]++;
+							break;
+						case 2:
+							$atual_num_tarefas[1]++;
+							break;
+						case 3:
+							$atual_num_tarefas[2]++;
+							break;
+						case 4:
+							$atual_num_tarefas[3]++;
+							break;
+						case 5:
+							$atual_num_tarefas[4]++;
+							break;
+					}
+				}
+				mysqli_data_seek( $data, 0 );
             ?>  
             
-            <div id="1" class="quadro" ondrop="drop(event)" ondragover="allowDrop(event)" >
-                <label class="texto" > BACKLOG </label> 
-                <label class="texto" > [ <?php echo $GLOBALS['numero_tarefas_backlog'], ' / ', $GLOBALS['maximo_tarefas_backlog'] ?> ]  </label> <br>
+            <div id="1" class="quadro" ondrop="drop(event, <?php echo $max_tarefas[0], ',', $atual_num_tarefas[0] ?> )" ondragover="allowDrop(event)" >
+                <label class="texto" > BACKLOG </label> <br/>
+				<label class="texto" > [ <?php echo $atual_num_tarefas[0], ' / ', $max_tarefas[0] ?> ]  </label> <br>				
                 <?php
                     $row_tarefas = mysqli_fetch_array($data);
                     $linha = 0;
-                    
                     if ( $row_tarefas['sit_id'] == 1 ){
                         do {
-                            echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" > ID:' , $row_tarefas['tar_id'] , '</div>';
-                            
+                            echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" >
+							<div class="opcoes"> </div>  <a href="editar_tarefas.php?pro_id=', $pro_id, '&tar_id=', $row_tarefas['tar_id'], '&tip_id=', $permissao, '"> 
+							<strong> ID:  ' , $row_tarefas['tar_id'] , ' </strong> <br/> <img src="../images/edit_button.png" alt="configurações" /> </a> </div>';
+							
                             $linha++;
                             $row_tarefas = mysqli_fetch_array($data);
 
@@ -286,12 +306,15 @@
             
             
 
-            <div id="2" class="quadro" ondrop="drop(event)" ondragover="allowDrop(event)" >
-                <label class="texto"> REQUISITADO </label>
+            <div id="2" class="quadro" ondrop="drop(event, <?php echo $max_tarefas[1], ',', $atual_num_tarefas[1] ?> )" ondragover="allowDrop(event)" >
+                <label class="texto"> REQUISITADO </label><br/>
+				<label class="texto" > [ <?php echo $atual_num_tarefas[1], ' / ', $max_tarefas[1] ?> ]  </label> <br>
                 <?php
                     if ( $row_tarefas['sit_id'] == 2 ){
                         do {
-                            echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" > ID:' , $row_tarefas['tar_id'] , '</div>';
+                            echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" >
+							<div class="opcoes"> </div>  <a href="editar_tarefas.php?pro_id=', $pro_id, '&tar_id=', $row_tarefas['tar_id'], '&tip_id=', $permissao, '"> 
+							<strong> ID:  ' , $row_tarefas['tar_id'] , ' </strong> <br/> <img src="../images/edit_button.png" alt="configurações" /> </a> </div>';
                             
                             $linha++;
                             $row_tarefas = mysqli_fetch_array($data);
@@ -308,71 +331,80 @@
             
             
 
-            <div id="3" class="quadro" ondrop="drop(event)" ondragover="allowDrop(event)" >
-                <label class="texto"> EM PROCESSO </label>
+            <div id="3" class="quadro" ondrop="drop(event, <?php echo $max_tarefas[2], ',', $atual_num_tarefas[3] ?>)" ondragover="allowDrop(event)" >
+                <label class="texto"> EM PROCESSO </label><br/>
+				<label class="texto" > [ <?php echo $atual_num_tarefas[2], ' / ', $max_tarefas[2] ?> ]  </label> <br>
                 <?php
                     
-                        if ( $row_tarefas['sit_id'] == 3 ){
-                            do {
-                                echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" > ID:' , $row_tarefas['tar_id'] , '</div>';
-                                
-                                $linha++;
-                                $row_tarefas = mysqli_fetch_array($data);
-    
-                            }while ( $row_tarefas['sit_id'] == 3 );
-                            
-                            mysqli_data_seek( $data, $linha);
-                            
-                            if ( $data != NULL )
-                                $row_tarefas = mysqli_fetch_array($data);
-                        }
+					if ( $row_tarefas['sit_id'] == 3 ){
+						do {
+							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" >
+							<div class="opcoes"> </div>  <a href="editar_tarefas.php?pro_id=', $pro_id, '&tar_id=', $row_tarefas['tar_id'], '&tip_id=', $permissao, '"> 
+							<strong> ID:  ' , $row_tarefas['tar_id'] , ' </strong> <br/> <img src="../images/edit_button.png" alt="configurações" /> </a> </div>';
+							
+							$linha++;
+							$row_tarefas = mysqli_fetch_array($data);
+
+						}while ( $row_tarefas['sit_id'] == 3 );
+						
+						mysqli_data_seek( $data, $linha);
+						
+						if ( $data != NULL )
+							$row_tarefas = mysqli_fetch_array($data);
+					}
                     
                 ?>
             </div>
             
 
 
-            <div id="4" class="quadro" ondrop="drop(event)" ondragover="allowDrop(event)" >
-                <label class="texto"> CONCLUIDO </label>
+            <div id="4" class="quadro" ondrop="drop(event, <?php echo $max_tarefas[3], ',', $atual_num_tarefas[3] ?>)" ondragover="allowDrop(event)" >
+                <label class="texto"> CONCLUIDO </label><br/>
+				<label class="texto" > [ <?php echo $atual_num_tarefas[3], ' / ', $max_tarefas[3] ?> ]  </label> <br>
                 <?php
                     
-                        if ( $row_tarefas['sit_id'] == 4 ){
-                            do {
-                                echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" > ID:' , $row_tarefas['tar_id'] , '</div>';
-                                
-                                $linha++;
-                                $row_tarefas = mysqli_fetch_array($data);
-    
-                            }while ( $row_tarefas['sit_id'] == 4 );
-                            
-                            mysqli_data_seek( $data, $linha);
-                            
-                            if ( $data != NULL )
-                                $row_tarefas = mysqli_fetch_array($data);
-                        }
+					if ( $row_tarefas['sit_id'] == 4 ){
+						do {
+							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" >
+							<div class="opcoes"> </div>  <a href="editar_tarefas.php?pro_id=', $pro_id, '&tar_id=', $row_tarefas['tar_id'], '&tip_id=', $permissao, '"> 
+							<strong> ID:  ' , $row_tarefas['tar_id'] , ' </strong> <br/> <img src="../images/edit_button.png" alt="configurações" /> </a> </div>';
+							
+							$linha++;
+							$row_tarefas = mysqli_fetch_array($data);
+
+						}while ( $row_tarefas['sit_id'] == 4 );
+						
+						mysqli_data_seek( $data, $linha);
+						
+						if ( $data != NULL )
+							$row_tarefas = mysqli_fetch_array($data);
+					}
                     
                 ?>
             </div>
             
          
-            <div id="5" class="quadro" ondrop="drop(event)" ondragover="allowDrop(event)" >
-                <label class="texto"> ARQUIVADO </label>
+            <div id="5" class="quadro" ondrop="drop(event, <?php echo $max_tarefas[4], ',', $atual_num_tarefas[4] ?>)" ondragover="allowDrop(event)" >
+                <label class="texto"> ARQUIVADO </label><br/>
+				<label class="texto" > [ <?php echo $atual_num_tarefas[4], ' / ', $max_tarefas[4] ?> ]  </label> <br>
                 <?php
             
-                        if ( $row_tarefas['sit_id'] == 5 ){
-                            do {
-                                echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" > ID:' , $row_tarefas['tar_id'] , '</div>';
-                                
-                                $linha++;
-                                $row_tarefas = mysqli_fetch_array($data);
-    
-                            }while ( $row_tarefas['sit_id'] == 5 );
-                            
-                            mysqli_data_seek( $data, $linha);
-                            
-                            if ( $data != NULL )
-                                $row_tarefas = mysqli_fetch_array($data);
-                        }
+					if ( $row_tarefas['sit_id'] == 5 ){
+						do {
+							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="false" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" >
+							<div class="opcoes"> </div>  <a href="editar_tarefas.php?pro_id=', $pro_id, '&tar_id=', $row_tarefas['tar_id'], '&tip_id=', $permissao, '"> 
+							<strong> ID:  ' , $row_tarefas['tar_id'] , ' </strong> <br/> <img src="../images/edit_button.png" alt="configurações" /> </a> </div>';
+							
+							$linha++;
+							$row_tarefas = mysqli_fetch_array($data);
+
+						}while ( $row_tarefas['sit_id'] == 5 );
+						
+						mysqli_data_seek( $data, $linha);
+						
+						if ( $data != NULL )
+							$row_tarefas = mysqli_fetch_array($data);
+					}
                     
                 ?>
             </div>
@@ -423,13 +455,20 @@
                         <tr>
                             <td> <label class="negrito" >Inicio:</label> </td>
                             <td> <label class="negrito" >Conclus&atilde;o:</label> </td>
-                            <td> <label class="negrito" >Tempo Estimado:</label> </td>
+                            <td> <label class="negrito" >Prioridade:</label> </td>
                         </tr>
                         <tr>
                             <td> <input class="selector" type="text" id="data_inicio" name="data_inicio" /> </td>
                             <td> <input class="selector" type="text" id="data_fim" name="data_fim" /> </td>
-                           
-                            <td> <input type="text" id="tempo_estimado" name="tempo_estimado" placeholder="Tempo em Horas. Ex: 2:00" required> </td>
+							
+                            <td>									
+                            <select class="tipo_situacao" name="prioridade" required>
+								<option value="1">  Baixa </option>
+                                <option value="2">  Média </option>
+                                <option value="3">  Alta  </option>
+							</select>
+                            </td>
+							
                         </tr>
                     </table>
                </td>
@@ -441,7 +480,6 @@
                         <tr>
                             <td> <label class="negrito" >Alocado para:</label> </td>
                             <td> <label class="negrito" >Tipo:</label> </td>
-                            <td> <label class="negrito" >Prioridade:</label> </td>
                         </tr>
                         <tr>
                             <td>     
@@ -461,15 +499,7 @@
                                 <option value="3"> Defeito  </option>
                                 <option value="4"> Melhoria  </option>
 							</select>
-                            </td>
-                            
-                            <td>									
-                            <select class="tipo_situacao" name="prioridade" required>
-								<option value="1">  Baixa </option>
-                                <option value="2">  Média </option>
-                                <option value="3">  Alta  </option>
-							</select>
-                            </td>
+                            </td> 
                         </tr>
                     </table>
                </td>
@@ -487,7 +517,34 @@
          </table>
 	</form>
 	</div>   
+	
+    <script type="text/javascript" language="javascript">
+		$(document).ready(function(){
+			$('.fancybox').fancybox();
+			
+            $("#contact").submit(function() {  // quando os dados forem submetidos...
 
+				var atual_numero_de_tarefas = "<?php echo $atual_num_tarefas[0] ?>";
+				var maximo_numero_de_tarefas = "<?php echo $max_tarefas[0] ?>";
+			
+				if ( atual_numero_de_tarefas >= maximo_numero_de_tarefas ){
+					$(this).before("<p><strong>Número máximo de tarefas exedido!</strong></p>");
+					return false;
+				}
+				
+                $("#contact").fadeOut("slow", function(){
+                    $(this).before("<p><strong>Tarefa inserida com Sucesso!</strong></p>"); // exibe mensagem de confirmação para o usuário
+                    setTimeout("$.fancybox.close()", 1000); // fecha caixa de dialogo
+                });
+            });
+			
+		});
+	</script>
+	
 </body>
 
 </html>
+
+	
+
+    

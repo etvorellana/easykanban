@@ -8,11 +8,9 @@
 <body>	
     	<!-- invisivel inline form -->
         <div id="inline">
-        <h2> Editar Projeto </h2> <br />
+        <h2> Editar Quadro Kanban </h2> <br />
         
     <?php	
-	
-		echo  $tar_id_edit;
 		
 		// conectar ao banco de dados
 		$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
@@ -21,68 +19,43 @@
 		mysqli_select_db($dbc, "easykanban-bd")
 			or die ('Erro ao selecionar o Banco de Dados');
 				
-		$query = 'SELECT p.pro_id, ts.tip_situacao, p.pro_nome, p.pro_descricao, p.pro_dt_inicio, p.pro_dt_fim, p.pro_dt_criacao, p.pro_usu_criador, up.tip_id
-				  FROM projeto p
-				  JOIN usuario_projeto_tipo up on up.pro_id = p.pro_id
-				  JOIN usuario u on u.usu_id = up.usu_id 
-				  JOIN tipo_situacao ts on ts.tip_id = p.tip_id
-				  WHERE u.usu_id=%s AND p.pro_id=%s'
-				 or die ('Erro ao contruir a consulta');
-				 
+		// seleciona o limite de tarefa de cada uma das colunas do quadro kanban
+		$query = 'SELECT s.`sit_id`, l.`lin_limite`
+					FROM `limite_tarefa` l
+					JOIN `projeto` p on p.`pro_id` = l.`pro_id`
+					JOIN `situacao` s on s.`sit_id` = l.`sit_id`
+					WHERE p.`pro_id` = %s'
+						or die ("Erro ao construir a consulta");
+
 		// alimenta os parametros da conculta
-		$query = sprintf($query, $usu_id, $pro_id ); 	
+		$query = sprintf($query, $pro_id );	
 		
 		// executa consulta
 		$data = mysqli_query($dbc, $query);
-	
-		$row = mysqli_fetch_array($data);
-	 
+
+		// fecha conexão com o bd
 		mysqli_close($dbc);
 	
      ?>
      
-        <form id="contact" name="contact" method="post" action="<?php echo $_SERVER['PHP_SELF'], '?pro_id=', $pro_id, '&tip=', $permissao; ?>" >
+        <form id="contact" name="contact" method="post" action="editar_quadro.php<?php echo '?pro_id=', $pro_id, '&tip_id=', $permissao; ?>" >
              <table class="add_projeto" >
-                
-                <tr>
-                    <td>
-                        <table class="add_projeto">
-                            <tr> <td>  <label for="nome" class="negrito">Nome:</label> </td> </tr>
-                            <tr> <td>  <input type="text" id="nome" name="nome" value="<?php echo($row['pro_nome']);?>" required>  </td> </tr>
-                        </table>
-                    </td>
-                </tr>
-                
                 <tr>
                     <td>
                         <table class="add_projeto">
                             <tr>
-                                <tr> <td>  <label for="descricao" class="negrito">Descri&ccedil;&atilde;o:</label> </td> </tr>
-                                <tr> <td>  <textarea id="descricao" rows="6" maxlength="250" name="descricao" required><?php echo $row['pro_descricao'] ?> </textarea>  </td> </tr>
-                            </tr>
-                        </table>
-                   </td>
-                </tr>
-                
-                <tr>
-                    <td>
-                        <table class="add_projeto">
-                            <tr>
-                                <td> <label class="negrito" >Inicio:</label> </td>
-                                <td> <label class="negrito" >Conclus&atilde;o:</label> </td>
-                                <td> <label class="negrito" >Situa&ccedil;&atilde;o:</label> </td>
+                                <td> <label class="negrito" >Backlog:</label> </td>
+                                <td> <label class="negrito" >Requisitado:</label> </td>
+                                <td> <label class="negrito" >Em Processo:</label> </td>
+								<td> <label class="negrito" >Concluido:</label> </td>
+								<td> <label class="negrito" >Arquivado:</label> </td>
                             </tr>
                             <tr>
-                                <td> <input type="date" disabled="disabled" id="data_inicio" name="data_inicio" value="<?php echo($row['pro_dt_inicio']);?>" required> </td>
-                                <td> <input type="date" id="data_fim" name="data_fim" value="<?php echo($row['pro_dt_fim']);?>" required> </td>
-                                <td>
-                                <select id="tipo_situacao" name="tipo_situacao" required>
-                                    <option value="1">Em andamento</option>
-                                    <option value="2">Conclu&iacute;do </option>
-                                    <option value="3">Parado</option>
-                                 </select>
-                                 </td>
-                            </tr>
+								<?php
+									while ( $row = mysqli_fetch_array($data) ) {
+										echo '<td> <input type="text" id="coluna', $row['sit_id'], '" name="coluna', $row['sit_id'], '"  value="', $row['lin_limite'], '" required> </td>';
+									}
+								?>
                         </table>
                    </td>
                 </tr>
@@ -91,7 +64,7 @@
                     <td>
                         <table class="add_projeto">
                             <tr>
-                            <td> <input class="blue_button" type="submit" value="Salvar" name="edit" id="edit" /> </td>
+                            <td> <input class="blue_button" type="submit" value="Editar" name="edit" id="edit" /> </td>
                             </tr>
                         </table>
                    </td>

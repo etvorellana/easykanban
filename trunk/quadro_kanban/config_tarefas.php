@@ -3,7 +3,7 @@
 	require_once('../connect/connect_vars.php');
 	require_once('../sessao_php/inicia_sessao.php');
 	
-	if ( isset($_SESSION['usu_id']) and isset($_GET['pro_id']) )
+	if ( isset($_SESSION['usu_id']) and isset($_GET['pro_id']) and isset($_GET['tip_id']) )
 	{
 		$usu_id = $_SESSION['usu_id'];
 		$usu_nome = $_SESSION['usu_nome'];
@@ -100,7 +100,7 @@
     </div>
     
 	<div id="container_voltar">
-        <a id="bug" href="quadro.php?pro_id=<?php echo $pro_id, '&tip_id=', $permissao ?> "> 
+        <a id="bug" href="candidato.php?pro_id=<?php echo $pro_id, '&tip_id=', $permissao ?> "> 
         	<input class="purple_button" type="submit" value="Voltar ao Quadro" > 
         </a>
     </div>
