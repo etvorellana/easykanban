@@ -2,10 +2,11 @@
 	require_once('../connect/connect_vars.php');
 	require_once('../sessao_php/inicia_sessao.php');
 	
-	if ( isset($_SESSION['usu_id']) and isset($_GET['pro_id']) )
+	if ( isset($_SESSION['usu_id']) and isset($_GET['pro_id']) and isset($_GET['tip_id']) )
 	{
 		$usu_id_logado = $_SESSION['usu_id'];
 		$pro_id = $_GET['pro_id'];
+		$permissao = $_GET['tip_id'];
 		$action = &$_REQUEST;		
 		
 		if ( $action['action']=='inserir')
@@ -85,7 +86,7 @@
 			/* Fecha conexão com o banco */
 			mysqli_close($dbc);	
 		}
-		header("Location: http://".move_header('config_tarefas.php?pro_id=' . $pro_id));
+		header("Location: http://".move_header('config_tarefas.php?pro_id=' . $pro_id . '&tip_id='. $permissao ));
 		
 	}
 	

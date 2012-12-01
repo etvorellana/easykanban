@@ -10,7 +10,7 @@
 		$pro_id = $_GET['pro_id'];
 		$permissao = $_GET['tip_id'];
 		
-				// Quando o usuário submeter os dados de cadastro de nova empresa
+		// Quando o usuário submeter os dados de cadastro de nova empresa
 		if (isset($_POST['edit'])) 
 		{
 			// conectar ao banco de dados
@@ -191,7 +191,7 @@
 				  </td>';
 							
 			echo '<td align="center">
-					<a href="inserir_remover_tarefas.php?tar_id=', $row['tar_id'], "&pro_id=", $pro_id, '&action=remove"> <img src="../images/del.png" title="Remover"/> </a>
+					<a href="inserir_remover_tarefas.php?tar_id=', $row['tar_id'], "&pro_id=", $pro_id, '&tip_id=', $permissao, '&action=remove"> <img src="../images/del.png" title="Remover"/> </a>
 				  </td>';
 						
 		}while ($row = mysqli_fetch_array($data));
