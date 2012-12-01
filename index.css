@@ -12,9 +12,10 @@
 }
 
 #container-cabecalho{
-	background-image:		url('images/marca.png');
-	background-repeat: 		no-repeat;
-	background-position: 	left;
+	background-color: 		#555;
+	background-image: 		url('images/linha.png');
+	background-repeat: 		repeat-x;
+	background-position: 	bottom;
 }
 
 #allcontent {

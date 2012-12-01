@@ -52,8 +52,6 @@
 			mysqli_close($dbc);
 		}
 	}
-	
-
 
 ?>
 
@@ -90,19 +88,13 @@
 	<div id="container-cabecalho">
     <header>
 		<div id="nome_usuario" class="menu_acesso_rapido">
-        	<label> <?php echo ( $usu_nome ) ?> </label>
+        	<a href="../home/home.php"> <?php echo ( $_SESSION['usu_nome'] ) ?> </a> / <?php echo '<a href="quadro_kanban.php?pro_id= ', $pro_id, '&tip_id=', $permissao, '">'; ?> Quadro Kanban </a> 
     	</div>
     	
         <div id="logout" class="config_logout">
         	<label > <a class="menu_acesso_rapido" href="../logout.php"> logout </a> </label>
         </div>
     </header>
-    </div>
-    
-	<div id="container_voltar">
-        <a id="bug" href="quadro_kanban.php?pro_id=<?php echo $pro_id, '&tip_id=', $permissao ?> "> 
-        	<input class="purple_button" type="submit" value="Voltar ao Quadro" > 
-        </a>
     </div>
     
 </head>
@@ -150,11 +142,12 @@
 		<td> <strong> Sua Função: </strong>'; if ( $row['pro_usu_criador'] == $usu_id ) echo'Criador/Administradar'; else if ($row['tip_id'] == 1 ) echo'Administrador'; else echo'Colaborador'; echo '</td> </tr>';
 	
 		echo '</table>
-		
-			  <div id="botoes_tarefas">
+
+			
+			<div id="botoes_tarefas">
 				<a id="botao_editar" class="modalbox" href="#inline" > Editar Quadro </a>
-			  </div>
-		
+			</div>
+
 		</div>';
         
 		// fecha conexão com o banco

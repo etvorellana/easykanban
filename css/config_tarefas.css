@@ -9,7 +9,7 @@
 	margin:					0 auto;
 	background-color:		white;
 	
-	margin-top:				10px;
+	margin-top:				40px;
 	
 	border-color: 			#D8D3CD; /* marron escuro */
 	border-width:			1px;
@@ -25,7 +25,7 @@
 }
 
 #config_button{
-	margin-left:	40px;	
+	margin-right:	40px;	
 }
 
 
