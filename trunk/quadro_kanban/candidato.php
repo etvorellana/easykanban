@@ -60,6 +60,15 @@
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
     <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
     <link rel="stylesheet" href="/resources/demos/style.css" />
+    
+    
+    <style>
+    .quadro.over {
+        border:             1px dashed #000;
+        background-color:   #FFFFE0;
+    }
+    </style>
+    
     <script>	
         $(function() {
             $("#data_inicio").datepicker({ dateFormat: "yy-mm-dd" }).val()
@@ -89,8 +98,7 @@
                 alert('Permissão negada!');
                 return false;	
             }
-            
-            //alert("Responsavel" + responsavel);
+
             ev.dataTransfer.setData("Text",ev.target.id);
         }
         
@@ -102,11 +110,13 @@
         } 
 		
 		function startAnim(ev){
-			document.getElementById(ev.target.id).style.backgroundColor="#CCC";
+			//document.getElementById(ev.target.id).style.backgroundColor="#CCC";
+			document.getElementById(ev.target.id).classList.add('over');
 		}
 		
 		function finishAnim(ev){
-			document.getElementById(ev.target.id).style.backgroundColor="#FFF";
+			//document.getElementById(ev.target.id).style.backgroundColor="#FFF";
+			document.getElementById(ev.target.id).classList.remove('over');
 		}
 
         function drop(ev, maximo_tarefas, quantidade_atual )
@@ -243,25 +253,25 @@
 				
 				// alimenta os parametros da conculta
 				$query = sprintf($query, $pro_id );	
+				
 						
 				//executa query na tabela limite_tarefa
 				$data_limite_tarefas = mysqli_query($dbc, $query)
 					or die('Erro ao execultar a inserção na tabela projeto');
 	
+	            // fecha conexão com o banco de dados
                 mysqli_close($dbc);
                 
-				// pega os valores máximos que cada coluna suporta em um array, [0] Backlog, [1]Requisitado ...
+                
+				// pega os valores máximo que cada coluna suporta em um array, [0] Backlog, [1]Requisitado ...
 				$max_tarefas = array();
 				while ( $row_limite_tarefa = mysqli_fetch_array($data_limite_tarefas) )
 					$max_tarefas[] = $row_limite_tarefa['lin_limite'];
 				
 				$linhas = mysqli_num_rows($data);
 				
-				$num_tarefas_backlog = 0;
-				$num_tarefas_requisitado = 0;
-				$num_tarefas_processo = 0;
-				$num_tarefas_concluido = 0;
-				$num_tarefas_arquivado = 0;
+				print_r($max_tarefas);
+				
 				
 				// array guarda a quantidade atual de tarefas em cada uma das colunas do quadro
 				$atual_num_tarefas = array(0, 0, 0, 0, 0);
@@ -533,23 +543,29 @@
 	</div>   
 	
     <script type="text/javascript" language="javascript">
+    
+        var atual_numero_de_tarefas = "<?php echo $atual_num_tarefas[0] ?>";
+        var maximo_numero_de_tarefas = "<?php echo $max_tarefas[0] ?>";
+    
 		$(document).ready(function(){
 			$('.fancybox').fancybox();
-			
+				
             $("#contact").submit(function() {  // quando os dados forem submetidos...
-
-				var atual_numero_de_tarefas = "<?php echo $atual_num_tarefas[0] ?>";
-				var maximo_numero_de_tarefas = "<?php echo $max_tarefas[0] ?>";
-			
-				if ( atual_numero_de_tarefas >= maximo_numero_de_tarefas ){
-					$(this).before("<p><strong>Número máximo de tarefas exedido!</strong></p>");
+			    
+			    alert( 'Atual - ' + atual_numero_de_tarefas );
+                alert( 'Maximo - ' + maximo_numero_de_tarefas );
+        
+				if ( atual_numero_de_tarefas < maximo_numero_de_tarefas ){
+                    $("#contact").fadeOut("slow", function(){
+                        $(this).before("<p><strong>Tarefa inserida com Sucesso!</strong></p>"); // exibe mensagem de confirmação para o usuário
+                        setTimeout("$.fancybox.close()", 1000); // fecha caixa de dialogo
+                    });
+                }
+                else{
+                    $(this).before("<p><strong>Número máximo de tarefas exedido!</strong></p>");
 					return false;
 				}
 				
-                $("#contact").fadeOut("slow", function(){
-                    $(this).before("<p><strong>Tarefa inserida com Sucesso!</strong></p>"); // exibe mensagem de confirmação para o usuário
-                    setTimeout("$.fancybox.close()", 1000); // fecha caixa de dialogo
-                });
             });
 			
 		});
