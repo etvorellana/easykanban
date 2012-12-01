@@ -169,28 +169,29 @@
 		// fecha conexão com o banco
         mysqli_close($dbc);
 		
+		
  		?>
  	</div>
     
         
 	<!-- invisivel inline form -->
-	<div id="inline" title="form_editar_tarefa">
+	<div id="inline" title="Editar Tarefa">
 	<h2> Editar Tarefa </h2> <br />
 	<form id="contact" name="contact" method="post" action="atualizar_deletar_tarefa.php<?php echo '?pro_id=', $pro_id, '&tip_id=', $permissao, '&tar_id=', $tar_id, '&res_id=', $row['res_id'], '&action=atualizar' ?>" >
 		<table class="add_projeto" >
          	
             <tr>
                 <td>
-                    <table class="add_projeto">
+                    <table title="Titulo da Tarefa" class="add_projeto">
                         <tr> <td>  <label for="titulo" class="negrito">T&iacute;tulo:</label> </td> </tr>
-                        <tr> <td>  <input type="text" id="titulo" name="titulo" value="<?php echo $row['tar_titulo'] ?>" required>  </td> </tr>
+                        <tr> <td>  <input type="text" maxlength="499" id="titulo" name="titulo" value="<?php echo $row['tar_titulo'] ?>" required>  </td> </tr>
                     </table>
                 </td>
             </tr>
             
             <tr>
             	<td>
-                    <table class="add_projeto">
+                    <table title="Descrição, máximo 250 caracteres" class="add_projeto">
                         <tr>
                        	 	<tr> <td>  <label for="descricao" class="negrito">Descri&ccedil;&atilde;o:</label> </td> </tr>
                         	<tr> <td>  <textarea id="descricao" rows="3" maxlength="250" name="descricao" ><?php echo $row['tar_descricao'] ?></textarea> </td> </tr>
@@ -201,7 +202,7 @@
             
             <tr>
             	<td>
-                    <table class="add_projeto">
+                    <table title="Comentários adicionais, máximo 250 caracteres" class="add_projeto">
                         <tr>
                        	 	<tr> <td>  <label for="comentario" class="negrito">Coment&aacute;rio:</label> </td> </tr>
                         	<tr> <td>  <textarea id="comentario" rows="3" maxlength="250" name="comentario" ><?php echo $row['tar_comentario'] ?></textarea>  </td> </tr>
@@ -220,10 +221,14 @@
                         </tr>
                         <tr>
                         	
-                            <td> <input disabled class="selector" type="text" id="data_inicio" name="data_inicio" value="<?php echo $row['tar_data_inicio'] ?>"/></td>	
-                            <td> <input class="selector" type="text" id="data_fim" name="data_fim" value="<?php echo $row['tar_data_conclusao'] ?>" /> </td>
+                            <td title="Data de Criação da Tarefa"> 
+                            <input disabled class="selector" type="text" id="data_inicio" name="data_inicio" value="<?php echo $row['tar_data_inicio'] ?>" required />
+                            </td>	
+                            <td title="Data de Conclusão da Tarefa"> 
+                            <input class="selector" type="text" id="data_fim" name="data_fim" value="<?php echo $row['tar_data_conclusao'] ?>" required /> 
+                            </td>
 
-                            <td>									
+                            <td title="Prioriade da Tarefa" >									
                             <select class="tipo_situacao corrigir_campos" name="prioridade" id="prioridade" required>
 								<option value="1" <?php if ($row['pri_id'] == 1 ) echo 'selected>', $row['pri_descricao']; else echo '> Baixa';?> </option>
                                 <option value="2" <?php if ($row['pri_id'] == 2 ) echo 'selected>', $row['pri_descricao']; else echo '> Média'; ?> </option>
@@ -243,7 +248,7 @@
                             <td> <label class="negrito" >Tipo:</label> </td>
                         </tr>
                         <tr>
-                            <td>     
+                            <td title="Responsável pela Tarefa" >     
                                 <select class="tipo_situacao" name="responsavel" required>  
                                 <?php  
 									echo '<option selected value="' , $row['usu_id'] , '"> ' , $row['usu_nome'] , '</option>';
@@ -252,7 +257,7 @@
                                 </select>          
                             </td>
                             
-                            <td>									
+                            <td title="Tipo da Tarefa" >									
                                 <select id="tip_tarefa" class="tipo_situacao" name="tip_tarefa" required>
                                     <option value="1" <?php if ($row['tip_t_id'] == 1 ) echo 'selected>', $row['tip_t_descricao']; else echo '> Tarefa';?> </option>
                                     <option value="2" <?php if ($row['tip_t_id'] == 2 ) echo 'selected>',$row['tip_t_descricao']; else echo '> Nova Característica';?> </option>
@@ -270,7 +275,7 @@
             	<td> 
                 	<table class="add_projeto" >
                     	<tr> <td> <br> </tr> </td>
-                		<tr> <td> <input class="blue_button" type="submit" value="editar_tarefa" name="editar_tarefa" />  </td> </tr>
+                		<tr> <td> <input class="blue_button" type="submit" value="Salvar" name="editar_tarefa" />  </td> </tr>
                     </table>
                 </td>
             </tr>

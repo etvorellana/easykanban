@@ -100,7 +100,7 @@
     </div>
     
 	<div id="container_voltar">
-        <a id="bug" href="candidato.php?pro_id=<?php echo $pro_id, '&tip_id=', $permissao ?> "> 
+        <a id="bug" href="quadro_kanban.php?pro_id=<?php echo $pro_id, '&tip_id=', $permissao ?> "> 
         	<input class="purple_button" type="submit" value="Voltar ao Quadro" > 
         </a>
     </div>

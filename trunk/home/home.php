@@ -173,7 +173,7 @@
 						echo '<tr> <td> <strong> Descrição: </strong>';     echo( $row['pro_descricao'] ); echo '</td> </tr>';
 						echo '<tr> <td> <strong> Situação: </strong>';     echo( $row['tip_situacao'] ); echo '</td> </tr>';
 						echo '<tr>';
-                 		echo '<tr> <td> <a href="../quadro_kanban/quadro.php?pro_id=' , $row['pro_id'] , ' &tip_id=' , $row['tip_id'] , '" class="gray_button">Entrar</a> <tr> </td>';
+                 		echo '<tr> <td> <a href="../quadro_kanban/quadro_kanban.php?pro_id=' , $row['pro_id'] , ' &tip_id=' , $row['tip_id'] , '" class="gray_button">Entrar</a> <tr> </td>';
 						echo '</tr>';
                     echo '</table>';
                     echo '</div>';
@@ -272,6 +272,9 @@
             <table class="border_space" >
                 <tr> <td>  <label for="nome" class="negrito">Nome completo:</label> </td> </tr>
                 <tr> <td>  <input type="text" id="nome" name="nome" value="<?php echo $dados_usuario['usu_nome'] ?>" required>  </td> </tr>
+                
+                <tr> <td>  <label for="nickname" class="negrito">Nickname:</label> </td> </tr>
+                <tr> <td>  <input type="text" maxlength="10" id="nickname" name="nickname" value="<?php echo $dados_usuario['usu_nickname'] ?>" required>  </td> </tr>
             </table>
         </td>
     </tr>
@@ -336,7 +339,7 @@
                     	<tr> <td>  <input type="text" id="nome" name="nome" placeholder="Ex: Thalles Santos Silva" required>  </td> </tr>
 						
                     	<tr> <td>  <label for="nickname" class="negrito">Nickname:</label> </td> </tr>
-                    	<tr> <td>  <input type="text" id="nickname" name="nickname" placeholder="Ex: thalles" required>  </td> </tr>
+                    	<tr> <td>  <input type="text" maxlength="10" id="nickname" name="nickname" placeholder="Ex: thalles" required>  </td> </tr>
                     </table>
                 </td>
             </tr>

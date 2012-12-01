@@ -50,13 +50,14 @@
 				$data = mysqli_query($dbc, $query)
 					or die( mysqli_error($dbc) );
 			}
+			
 			/* Fecha conexão com o banco */
 			mysqli_close($dbc);
 		}
 	}
 	
 	// volta para o quadro kanban
-	$voltar_url = 'candidato.php?pro_id=' . $pro_id . '&tip_id=' . $permissao;
+	$voltar_url = 'quadro_kanban.php?pro_id=' . $pro_id . '&tip_id=' . $permissao;
 	header('Location: ' . $voltar_url ) xor die;
 		
 ?>

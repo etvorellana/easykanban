@@ -55,7 +55,7 @@
     <script type="text/javascript" src="../fancybox/jquery.fancybox.js?v=2.0.6"></script>
     
     <link type="text/css" rel="stylesheet" href="../css/main.css" />
-    <link type="text/css" rel="stylesheet" href="../css/candidato.css" />
+    <link type="text/css" rel="stylesheet" href="../css/quadro_kanban.css" />
     
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
     <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
@@ -166,7 +166,10 @@
     <!-- Fim cabeçalho -->
     
     <!-- Barra de Menu -->
-    <div id="container-menu-tarefas">
+    <div id="container-menu">
+    <ul>
+        <li><a href="../projetos/projeto.php">Projetos</a></li>
+    </ul>
     <?php
         if ($permissao == ADMIN ) {
             echo '
