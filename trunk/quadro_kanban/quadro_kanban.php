@@ -147,7 +147,7 @@
     <div id="container-cabecalho">
     <header>
         <div id="nome_usuario" class="menu_acesso_rapido" >
-            <label> <?php echo ( $_SESSION['usu_nome'] ) ?> </label>
+            <a href="../home/home.php"> <?php echo ( $_SESSION['usu_nome'] ) ?> </a> / <a href="../projetos/projeto.php"> Projetos </a> 
         </div>
         
         <div id="logout" class="config_logout">
@@ -167,9 +167,6 @@
     
     <!-- Barra de Menu -->
     <div id="container-menu">
-    <ul>
-        <li><a href="../projetos/projeto.php">Projetos</a></li>
-    </ul>
     <?php
         if ($permissao == ADMIN ) {
             echo '
@@ -296,8 +293,10 @@
             ?>  
             
             <div id="1" class="quadro" ondragenter="startAnim(event)" ondragleave=" finishAnim(event)" ondrop="drop(event, <?php echo $max_tarefas[0], ',', $atual_num_tarefas[0] ?> )" ondragover="allowDrop(event)" >
-				<label class="texto" > <strong> BACKLOG </strong> </label> <br/>
-				<label class="texto" > [ <?php echo $atual_num_tarefas[0], ' / ', $max_tarefas[0] ?> ]  </label> <br>	
+
+                <label style="color:#039" class="texto" > <strong> BACKLOG </strong> </label> <br/>
+                <label style="color:#039" class="texto" > [ <?php echo $atual_num_tarefas[0], ' / ', $max_tarefas[0] ?> ]  </label> <br>	
+
                 <?php
                     $row_tarefas = mysqli_fetch_array($data);
                     $linha = 0;
@@ -306,7 +305,7 @@
                             echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" >
 							<div class="info_tarefa">  
 								<strong class="tar_titulo">', substr( $row_tarefas['tar_titulo'], 0, 40), '... </strong> <br/> <strong>', $row_tarefas['usu_nickname'], '<br/> ID:  ' , $row_tarefas['tar_id'] , '</strong>
-								<a href="editar_tarefas.php?pro_id=', $pro_id, '&tar_id=', $row_tarefas['tar_id'], '&tip_id=', $permissao, '"> 
+								<a href="editar_tarefas.php?quadro_kanban&pro_id=', $pro_id, '&tar_id=', $row_tarefas['tar_id'], '&tip_id=', $permissao, '"> 
 								<br/> <img src="../images/edit_button.png" alt="configurações" /> </a> 
 							</div> 
 							</div>';
@@ -326,9 +325,11 @@
             
             
 
-            <div id="2" class="quadro" ondragenter="startAnim(event)" ondragleave=" finishAnim(event)" ondrop="drop(event, <?php echo $max_tarefas[1], ',', $atual_num_tarefas[1] ?> )" ondragover="allowDrop(event)" >
-                <label class="texto"> <strong>  REQUISITADO </strong> </label><br/>
-				<label class="texto" > [ <?php echo $atual_num_tarefas[1], ' / ', $max_tarefas[1] ?> ]  </label> <br>
+            <div id="2" class="quadro requisitado" ondragenter="startAnim(event)" ondragleave=" finishAnim(event)" ondrop="drop(event, <?php echo $max_tarefas[1], ',', $atual_num_tarefas[1] ?> )" ondragover="allowDrop(event)" >
+
+                <label style="color:#F89C20" class="texto"> <strong>  REQUISITADO </strong> </label><br/>
+                <label style="color:#F89C20" class="texto" > [ <?php echo $atual_num_tarefas[1], ' / ', $max_tarefas[1] ?> ]  </label> <br>
+            
                 <?php
                     if ( $row_tarefas['sit_id'] == 2 ){
                         do {
@@ -355,9 +356,11 @@
             
             
 
-            <div id="3" class="quadro" ondragenter="startAnim(event)" ondragleave=" finishAnim(event)" ondrop="drop(event, <?php echo $max_tarefas[2], ',', $atual_num_tarefas[3] ?>)" ondragover="allowDrop(event)" >
-                <label class="texto"> <strong>  EM PROCESSO </strong> </label><br/>
-				<label class="texto" > [ <?php echo $atual_num_tarefas[2], ' / ', $max_tarefas[2] ?> ]  </label> <br>
+            <div id="3" class="quadro em_processo" ondragenter="startAnim(event)" ondragleave=" finishAnim(event)" ondrop="drop(event, <?php echo $max_tarefas[2], ',', $atual_num_tarefas[2] ?>)" ondragover="allowDrop(event)" >
+
+                <label style="color:#D02E27" class="texto"> <strong>  EM PROCESSO </strong> </label><br/>
+                <label style="color:#D02E27" class="texto" > [ <?php echo $atual_num_tarefas[2], ' / ', $max_tarefas[2] ?> ]  </label> <br>
+
                 <?php
                     
 					if ( $row_tarefas['sit_id'] == 3 ){
@@ -386,9 +389,11 @@
             
 
 
-            <div id="4" class="quadro" ondragenter="startAnim(event)" ondragleave=" finishAnim(event)" ondrop="drop(event, <?php echo $max_tarefas[3], ',', $atual_num_tarefas[3] ?>)" ondragover="allowDrop(event)" >
-                <label class="texto"> <strong>  CONCLUIDO </strong> </label><br/>
-				<label class="texto" > [ <?php echo $atual_num_tarefas[3], ' / ', $max_tarefas[3] ?> ]  </label> <br>
+            <div id="4" class="quadro concluido" ondragenter="startAnim(event)" ondragleave=" finishAnim(event)" ondrop="drop(event, <?php echo $max_tarefas[3], ',', $atual_num_tarefas[3] ?>)" ondragover="allowDrop(event)" >
+            
+                <label style="color:#2EB3C4" class="texto"> <strong>  CONCLUIDO </strong> </label><br/>
+                <label style="color:#2EB3C4" class="texto" > [ <?php echo $atual_num_tarefas[3], ' / ', $max_tarefas[3] ?> ]  </label> <br>
+                
                 <?php
                     
 					if ( $row_tarefas['sit_id'] == 4 ){
@@ -423,7 +428,7 @@
             
 					if ( $row_tarefas['sit_id'] == 5 ){
 						do {
-							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" >
+							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="false" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" >
 							<div class="info_tarefa">  
 								<strong class="tar_titulo">', substr( $row_tarefas['tar_titulo'], 0, 40), '... </strong> <br/> <strong>', $row_tarefas['usu_nickname'], '<br/> ID:  ' , $row_tarefas['tar_id'] , '</strong>
 								<a href="editar_tarefas.php?pro_id=', $pro_id, '&tar_id=', $row_tarefas['tar_id'], '&tip_id=', $permissao, '"> 

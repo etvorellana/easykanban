@@ -28,9 +28,7 @@
 				$data = mysqli_query($dbc, $query);
 				
 				$result = mysqli_num_rows($data);
-				
-				echo($result);
-				
+
 				if ( $result == 1) 
 				{	
 					// O log-in está OK, então configuramos as variáveis de sessão e cookies do usu_id e usu_nome e redirecionamo o usuário para a página de abertura
@@ -68,13 +66,20 @@
   </head> 
 
   <body>
-	<div id="container-cabecalho">
-    	<header>
+    <div id="container-cabecalho">
+        <header>
 
-      </header>
+        </header>
     </div>
-	<div id="container-menu">
-
+        
+    <div id="container-menu">
+        <ul>
+            <li class="atual"> <a href="">Home</a></li>
+            <li><a href="projeto.php">Contato</a></li>
+            <li><a href="#">Sobre</a></li>
+            <li><a href="#">Ajuda</a></li>
+        </ul>
+        <br style="clear:left"/>
     </div>
     
 	<div id="allcontent">
@@ -100,7 +105,7 @@
 			<?php
                 // If the session var is empty, show any error message and the log-in form; otherwise confirm the log-in
                 if (empty($_SESSION['usu_id'])) {
-                	echo '<p class="error">' . $error_msg . '</p>';
+                	echo '<p style="color: red" class="error">' . $error_msg . '</p>';
             ?>
             
             <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">

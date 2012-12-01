@@ -49,9 +49,8 @@ html, body {
 
 #container-menu{
 	background-color: 		white;
-	height: 				40px;
 	width:					100%;
-	height:					50px;
+	height:					49px;
 	-webkit-box-shadow: 	0 5px 10px #aaa;
 	-moz-box-shadow:	    0 5px 10px #aaa;
 	box-shadow: 			0 5px 10px #aaa;
@@ -214,9 +213,6 @@ input[type="submit"]:hover{
 	color:				white;
 }
 
-.menu_acesso_rapido:hover {
-	color:				#F99D1C; 
-}
 /************************************************/
 /*				FIM CSS MENU 		     		*/
 /************************************************/
@@ -241,7 +237,7 @@ input[type="submit"]:hover{
 
 .purple_button{
 	padding:			10px;
-	background: 		#309; /* Amarelo */
+	background: 		#309; /* Roxo */
 	border-style: 		none;
 	border-radius: 		5px;
 	font-weight:		bold;
@@ -327,4 +323,13 @@ input[type="submit"]:hover{
 
 #tip_tarefa{
 	width: 102%;	
+}
+
+/* Css menu de acesso rápido */
+#nome_usuario a{
+	color: white;	
+}
+
+#nome_usuario a:hover{
+	color: #F89C20;	
 }
