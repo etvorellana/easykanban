@@ -100,9 +100,19 @@
         function dragOver(ev) { 
             return false; 
         } 
+		
+		function startAnim(ev){
+			document.getElementById(ev.target.id).style.backgroundColor="#CCC";
+		}
+		
+		function finishAnim(ev){
+			document.getElementById(ev.target.id).style.backgroundColor="#FFF";
+		}
 
         function drop(ev, maximo_tarefas, quantidade_atual )
         {
+			document.getElementById(ev.target.id).style.backgroundColor="trasparent";
+			
             //alert( 'Máximo de Tarefas =' + String(maximo_tarefas) );
 			//alert( 'Quantidade atual =' + String(quantidade_atual) );
 			
@@ -279,7 +289,7 @@
 				mysqli_data_seek( $data, 0 );
             ?>  
             
-            <div id="1" class="quadro" ondrop="drop(event, <?php echo $max_tarefas[0], ',', $atual_num_tarefas[0] ?> )" ondragover="allowDrop(event)" >
+            <div id="1" class="quadro" ondragenter="startAnim(event)" ondragleave=" finishAnim(event)" ondrop="drop(event, <?php echo $max_tarefas[0], ',', $atual_num_tarefas[0] ?> )" ondragover="allowDrop(event)" >
 				<label class="texto" > <strong> BACKLOG </strong> </label> <br/>
 				<label class="texto" > [ <?php echo $atual_num_tarefas[0], ' / ', $max_tarefas[0] ?> ]  </label> <br>	
                 <?php
@@ -288,8 +298,12 @@
                     if ( $row_tarefas['sit_id'] == 1 ){
                         do {
                             echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" >
-							<div class="opcoes"> </div>  <a href="editar_tarefas.php?pro_id=', $pro_id, '&tar_id=', $row_tarefas['tar_id'], '&tip_id=', $permissao, '"> 
-							<strong>', $row_tarefas['usu_nickname'], '<br/> ID:  ' , $row_tarefas['tar_id'] , '</strong> <br/> <img src="../images/edit_button.png" alt="configurações" /> </a> </div>';
+							<div class="info_tarefa">  
+								<strong class="tar_titulo">', $row_tarefas['tar_titulo'], ' </strong> <br/> <strong>', $row_tarefas['usu_nickname'], '<br/> ID:  ' , $row_tarefas['tar_id'] , '</strong>
+								<a href="editar_tarefas.php?pro_id=', $pro_id, '&tar_id=', $row_tarefas['tar_id'], '&tip_id=', $permissao, '"> 
+								<br/> <img src="../images/edit_button.png" alt="configurações" /> </a> 
+							</div> 
+							</div>';
 							
                             $linha++;
                             $row_tarefas = mysqli_fetch_array($data);
@@ -306,7 +320,7 @@
             
             
 
-            <div id="2" class="quadro" ondrop="drop(event, <?php echo $max_tarefas[1], ',', $atual_num_tarefas[1] ?> )" ondragover="allowDrop(event)" >
+            <div id="2" class="quadro" ondragenter="startAnim(event)" ondragleave=" finishAnim(event)" ondrop="drop(event, <?php echo $max_tarefas[1], ',', $atual_num_tarefas[1] ?> )" ondragover="allowDrop(event)" >
                 <label class="texto"> <strong>  REQUISITADO </strong> </label><br/>
 				<label class="texto" > [ <?php echo $atual_num_tarefas[1], ' / ', $max_tarefas[1] ?> ]  </label> <br>
                 <?php
