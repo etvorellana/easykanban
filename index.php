@@ -1,5 +1,5 @@
 <?php
-	require_once('connect/guest_connect_vars.php');
+	require_once('connect/connect_vars.php');
 	
 	// Inicia a sessão
 	session_start();
