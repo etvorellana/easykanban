@@ -17,7 +17,7 @@
 	border-radius: 			8px;
 }
 
-#botoes_tarefas{
+#botoes_tarefas, #edit_user{
 	padding-top:	5px;
 	padding-bottom:	5px;
 	width:			130px;
@@ -70,10 +70,6 @@
 	
 	border:						1px solid #D8D3CD;
 	border-radius:				5px;
-}
-
-.label_titulo{
-	padding-left: 25px;
 }
 
 /* Painel Esquerdo */

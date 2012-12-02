@@ -15,4 +15,5 @@
  
   define('ADMIN', '1');
   define('COLABORADOR', '2');
+  define('MASTER', '3');
 ?>

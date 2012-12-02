@@ -34,11 +34,26 @@
 					// O log-in está OK, então configuramos as variáveis de sessão e cookies do usu_id e usu_nome e redirecionamo o usuário para a página de abertura
 					$row = mysqli_fetch_array($data);
 					$_SESSION['usu_id'] = $row['usu_id'];
-					$_SESSION['usu_nome'] = $row['usu_nome'];;
-					setcookie('usu_id', $row['usu_id'], time() + (60 * 60 * 24 * 30));    // expires in 30 days
-					setcookie('usu_nome', $row['usu_nome'], time() + (60 * 60 * 24 * 30));  // expires in 30 days
+					$_SESSION['usu_nome'] = $row['usu_nome'];
+					setcookie('usu_id', $row['usu_id'], time() + (60 * 60 * 24 * 30));    // expira em 30 dias
+					setcookie('usu_nome', $row['usu_nome'], time() + (60 * 60 * 24 * 30));  // expira em 30 dias
+					
+					
+					// tip_id = 3 é o usuario master
+					$query = "SELECT tp.tip_id FROM usuario_tipo tp WHERE tp.usu_id =" . $row['usu_id'] . " AND tp.tip_id = 3" or die('Erro na consulta');
+					$master_data = mysqli_query($dbc, $query);
+					$result = mysqli_num_rows($master_data);
+					
+					if ( $result == 1 ) //usuario master logado
+					{
+						$master_row = mysqli_fetch_array($master_data);
+						$_SESSION['tip_id'] = $master_row['tip_id'];
+						setcookie('tip_id', $row['tip_id'], time() + (60 * 60 * 24 * 30));  // expira em 30 dias
+					}
+					
 					$home_url = 'home/home.php';
 					header('Location: ' . $home_url);
+					
 				}
 				else {
 					// O nome de usuário e/ou a senha estão incorretos 
@@ -74,10 +89,10 @@
         
     <div id="container-menu">
         <ul>
-            <li class="atual"> <a href="">Home</a></li>
-            <li><a href="projeto.php">Contato</a></li>
-            <li><a href="#">Sobre</a></li>
-            <li><a href="#">Ajuda</a></li>
+            <li class="atual"> <a href=""> Home </a></li>
+            <li><a href="projeto.php"> Contato </a></li>
+            <li><a href="#"> Sobre </a></li>
+            <li><a href="#"> Ajuda </a></li>
         </ul>
         <br style="clear:left"/>
     </div>

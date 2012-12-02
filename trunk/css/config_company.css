@@ -9,7 +9,7 @@
 	margin:					0 auto;
 	background-color:		white;
 	
-	margin-top:				10px;
+	margin-top:				40px;
 	
 	border-color: 			#D8D3CD; /* marron escuro */
 	border-width:			1px;
@@ -77,9 +77,6 @@
 	border-radius:				5px;
 }
 
-.label_titulo{
-	padding-left: 25px;
-}
 
 /* Painel Esquerdo */
 #usuarios{

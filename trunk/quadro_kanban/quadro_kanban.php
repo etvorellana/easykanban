@@ -18,12 +18,13 @@
 			mysqli_select_db($dbc, "easykanban-bd")
 				or die ('Erro ao selecionar o Banco de Dados');
 			
-			// selecioma todos os usuários logados ao projeto selecionado
-			$query = "SELECT u.`usu_id`, u.`usu_nome`
+			// seleciona todos os usuários logados ao projeto selecionado
+			$query = "SELECT u.`usu_id`, u.`usu_nome`, u.`usu_nickname`
 					  FROM `usuario` u 
 					  JOIN `usuario_projeto_tipo` up on up.`usu_id` = u.`usu_id` 
 					  JOIN `projeto` p on p.`pro_id` = up.`pro_id`
-					  WHERE p.`pro_id`= '$parametro_pro_id'"
+					  WHERE p.`pro_id`= '$parametro_pro_id'
+					  AND NOT ( u.`usu_nickname` = 'MASTER') "
 			or die ("Erro ao construir a consulta");	
 					
 			//executa query de inserção na tabela cep
@@ -561,8 +562,8 @@
 	
     <script type="text/javascript" language="javascript">
     
-        var atual_numero_de_tarefas = "<?php echo $atual_num_tarefas[0] ?>";
-        var maximo_numero_de_tarefas = "<?php echo $max_tarefas[0] ?>";
+        //var atual_numero_de_tarefas = "<?php echo $atual_num_tarefas[0] ?>";
+        //var maximo_numero_de_tarefas = "<?php echo $max_tarefas[0] ?>";
     
 		$(document).ready(function(){
 			$('.fancybox').fancybox();

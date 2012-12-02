@@ -85,8 +85,8 @@
     
     <script>	
         $(function() {
-            $("#data_inicio").datepicker({ dateFormat: "dd/mm/yy" }).val()
-            $("#data_fim").datepicker({ dateFormat: "dd/mm/yy" }).val()
+            $("#data_inicio").datepicker({ dateFormat: "yy-mm-dd" }).val()
+            $("#data_fim").datepicker({ dateFormat: "yy-mm-dd" }).val()
         });
         
         $(function() {
@@ -97,18 +97,6 @@
             $( "#data_fim" ).datepicker();
         });
     </script>
-        
-	<script type="text/javascript">  
-        function enter(ev) {  
-            if(window.event && window.event.keyCode == 13) {  
-                alert('Enter!');
-                return false; 
-            }  
-            else  
-                return true; 
-        }  
-    </script>
-    
     
   </head> 
 
@@ -118,7 +106,7 @@
         <header>
         
             <div id="nome_usuario" class="menu_acesso_rapido">
-                <label> <?php echo ( $_SESSION['usu_nome']) ?> </label>
+                <a href="../home/home.php"> <?php echo ( $_SESSION['usu_nome'] ) ?> </a>
             </div>
             
            <div id="logout" class="config_logout">
@@ -132,13 +120,16 @@
                 <li><a href="../home/home.php">Home</a></li>
                 <li class="atual"><a href="projeto.php">Projetos</a></li>
                 <li><a href="#">Relatórios</a></li>
-                <li><a href="#">Configurações</a></li>
+                <?php if( isset($_SESSION['tip_id']) == MASTER ) echo '<li><a href="../usuario/config_usuario.php">Usuários</a></li>'; ?>
             </ul>
             
             <div id="nova-tarefa" >
-                <a id="bug" class="modalbox" href="#inline"> 
-                	<input class="orange_button" type="submit" value="+ Novo Projeto" >
-                </a>
+            	<?php if ( isset($_SESSION['tip_id']) == MASTER  ) {
+					echo '<a id="bug" class="modalbox" href="#inline"> 
+						<input class="orange_button" type="submit" value="+ Novo Projeto" >
+					</a>';
+				}
+				?>
             </div>
             
         	<br style="clear:left"/>
@@ -147,7 +138,7 @@
         <div id="main">
             <div>
             	<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" >
-                	<input type="text" onkeypress="return enter(this)" name="busca" id="busca" placeholder="Buscar Projetos" />
+                	<input type="text" name="busca" id="busca" placeholder="Buscar Projetos" />
                 	<input type="hidden" value="buscar" name="buscar" />
                 </form>
             </div>
@@ -236,10 +227,17 @@
 				}
 				mysqli_close($dbc);
 				
+				$numero_de_projetos = mysqli_num_rows($data);
+
             }
+			
+			if ( $numero_de_projetos  == 0 )
+				echo '<p class="fim_da_lista"> Você não possui e/ou não está ligado à nenhum projeto.</p>';
+			else
+				echo '<p class="fim_da_lista"> Não existem mais projetos cadastradas </p>';
         ?>
         
-        <p id="fim_da_lista"> Não existem mais projetos cadastradas </p>
+        
             
         </div>
     </div>

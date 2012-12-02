@@ -24,7 +24,7 @@
 			$data_fim = trim($_POST['data_fim']);
 			$tip_situacao = trim ($_POST['tipo_situacao']);	
 
-			if ( !empty($pro_nome) && !empty($pro_descrição) && !empty($data_fim) && !empty($tip_situacao) )
+			if ( !empty($pro_nome) && !empty($data_fim) && !empty($tip_situacao) )
 			{
 				$por_usu_criador = $usu_id;
 				
@@ -58,19 +58,37 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 	<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-    <title>easykanban</title>
-
-    <link rel="stylesheet" type="text/css" media="all" href="../css/formulario.css">
-    <link rel="stylesheet" type="text/css" media="all" href="../fancybox/jquery.fancybox.css">
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script type="text/javascript" src="../fancybox/jquery.fancybox.js?v=2.0.6"></script>
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+        <title>easykanban</title>
     
-    <link rel="stylesheet" type="text/css" href="../css/main.css" />
-    <link rel="stylesheet" type="text/css" href="../css/config_company.css" />
-  	
-    <script type="text/javascript" src="../js/table_row.js"></script>
-    
+        <link rel="stylesheet" type="text/css" media="all" href="../css/formulario.css">
+        <link rel="stylesheet" type="text/css" media="all" href="../fancybox/jquery.fancybox.css">
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script type="text/javascript" src="../fancybox/jquery.fancybox.js?v=2.0.6"></script>
+        
+        <link rel="stylesheet" type="text/css" href="../css/main.css" />
+        <link rel="stylesheet" type="text/css" href="../css/config_company.css" />
+        
+        <script type="text/javascript" src="../js/table_row.js"></script>
+        
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+        <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+        <link rel="stylesheet" href="/resources/demos/style.css" />
+        
+        <script>	
+            $(function() {
+                $("#data_inicio").datepicker({ dateFormat: "yy-mm-dd" }).val()
+                $("#data_fim").datepicker({ dateFormat: "yy-mm-dd" }).val()
+            });
+            
+            $(function() {
+                $( "#data_inicio" ).datepicker();
+            });
+            
+            $(function() {
+                $( "#data_fim" ).datepicker();
+            });
+        </script>
 	</head> 
 
   	<body>
@@ -78,19 +96,13 @@
 	<div id="container-cabecalho">
     <header>
 		<div id="nome_usuario" class="menu_acesso_rapido">
-        	<label> <?php echo ( $usu_nome ) ?> </label>
+        	<a href="../home/home.php"> <?php echo ( $_SESSION['usu_nome'] ) ?> </a> / <?php echo '<a style="color:#F89C20" href="projeto.php"> Projetos </a> '; ?>
     	</div>
     	
         <div id="logout" class="config_logout">
         	<label > <a class="menu_acesso_rapido" href="../logout.php"> logout </a> </label>
         </div>
     </header>
-    </div>
-    
-	<div id="container_voltar">
-        <a id="bug" href="projeto.php"> 
-        	<input class="purple_button" type="submit" value="Voltar aos Projetos" > 
-        </a>
     </div>
     
     <div id="main">
@@ -143,7 +155,7 @@
  ?>
         
         <div id="colaboradores" class="info" >
-            <strong class="label_titulo" > Colaboradores não vinculados ao Projeto </strong> 
+            <p class="label_titulo" > Colaboradores não vinculados ao Projeto </p> 
             
             <div class="css_colaboradores_usuarios">
 <?php	
@@ -158,7 +170,7 @@
 					or die ('Erro ao selecionar o Banco de Dados');
 				
 				// selecioma todos os usuários que não estão ligados ao projeto selecionado	
-				$query = 'SELECT u.usu_id, u.usu_nome
+				$query = 'SELECT u.usu_id, u.usu_nome, u.usu_nickname
 						  FROM usuario u
 						  WHERE u.usu_id NOT 
 						  IN ( SELECT u.usu_id
@@ -205,7 +217,7 @@
         </div>
         
         <div id="usuarios" class="info">   
-            <strong class="label_titulo" > Usuários </strong>	
+            <p class="label_titulo" > Usuários vinculados ao Projeto </p>	
             <div = class="css_colaboradores_usuarios">
 <?php	
 			// se a sessão do usuário estiver devidamente definida
@@ -218,11 +230,12 @@
 				mysqli_select_db($dbc, "easykanban-bd")
 					or die ('Erro ao selecionar o Banco de Dados');
 					
-				$query = 'SELECT u.usu_id, u.usu_nome, up.tip_id
+				$query = 'SELECT u.usu_id, u.usu_nome, u.usu_nickname, up.tip_id
 						  FROM usuario u
 						  jOIN usuario_projeto_tipo up on up.usu_id = u.usu_id
 						  JOIN projeto p on p.pro_id = up.pro_id
-						  WHERE p.pro_id = %s'
+						  WHERE p.pro_id = %s
+						  AND NOT(u.usu_nickname = \'Master\')'
 					         or die ('Erro ao construir a consulta');
 			
 				// alimenta os parametros da conculta
@@ -234,7 +247,7 @@
 				echo '<table class="tabela_zebrada" > 
 				<thead>
 				<tr>
-					<th>Nome</th>
+					<th width="90%">Nome</th>
 					<th>Admin.</th>
 					<th>Remover</th>
 				</tr>
@@ -330,8 +343,9 @@
                             <td> <label class="negrito" >Situação:</label> </td>
                         </tr>
                         <tr>
-                            <td> <input type="date" disabled="disabled" id="data_inicio" name="data_inicio" value="<?php echo($row['pro_dt_inicio']);?>" required> </td>
-                            <td> <input type="date" id="data_fim" name="data_fim" value="<?php echo($row['pro_dt_fim']);?>" required> </td>
+                            <td> <input disabled class="selector" type="text" id="data_inicio" name="data_inicio" value="<?php echo($row['pro_dt_inicio']);?>"/></td>
+                            <td> <input class="selector" type="text" id="data_fim" name="data_fim" value="<?php echo($row['pro_dt_fim']);?>" required/> </td>
+                        
                             <td>
                             <select id="tipo_situacao" name="tipo_situacao" required>
                                 <option value="1">Em andamento</option>

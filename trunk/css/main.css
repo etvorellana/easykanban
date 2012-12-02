@@ -229,6 +229,13 @@ input[type="submit"]:hover{
 	font-weight:		bold;
 }
 
+
+.fim_da_lista{
+	padding-top:	5px;
+	color:			#333;
+	text-align:		center
+}
+
 .blue_button{
 	padding:			10px;
 	background: 		#2EB3C4; /* Azul */
@@ -332,4 +339,10 @@ input[type="submit"]:hover{
 
 #nome_usuario a:hover{
 	color: #F89C20;	
+}
+
+/* titulo de todas as telas ( titulo dentro da barra escura ) */
+.label_titulo{
+	text-align:		center;
+	font-weight:bold;
 }
