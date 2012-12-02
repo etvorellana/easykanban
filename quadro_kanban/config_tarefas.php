@@ -110,17 +110,17 @@
 			
 			
         $query = 'SELECT t.`tar_id`, t.`tip_t_id` , t.`pri_id` , t.`met_id` , t.`sit_id` , t.`pro_id` , t.`tar_titulo` , t.`tar_descricao` , t.`tar_comentario` , t.`tar_data_inicio` , t.`tar_data_conclusao` , t.`tar_tempo_estimado` , t.`tar_data_criacao` , u.`usu_nome` , s.`sit_descricao` , p.`pro_id`, p.`pro_nome`, p.`pro_descricao`, p.`pro_dt_inicio`, p.`pro_dt_fim`, p.`pro_dt_criacao`, p.`pro_usu_criador`
-				FROM  `tarefa` AS t
-				JOIN  `projeto` p ON p.`pro_id` = t.`pro_id` 
-				JOIN  `responsavel` r ON r.`tar_id` = t.`tar_id` 
-				JOIN  `usuario` u ON u.`usu_id` = r.`usu_id` 
-				JOIN  `situacao` s ON s.`sit_id` = t.`sit_id` 
+				FROM  `projeto` AS p
+				LEFT JOIN  `tarefa` t ON t.`pro_id` = p.`pro_id` 
+				LEFT JOIN  `responsavel` r ON r.`tar_id` = t.`tar_id` 
+				LEFT JOIN  `usuario` u ON u.`usu_id` = r.`usu_id` 
+				LEFT JOIN  `situacao` s ON s.`sit_id` = t.`sit_id` 
 				WHERE p.`pro_id` =%s '
                  or die ('Erro ao contruir a consulta');                
                  
         // alimenta os parametros da conculta
         $query = sprintf($query, $pro_id ); 	
-        
+		
         // executa consulta
         $data = mysqli_query($dbc, $query) or die ('Erro ao executar consulta');
     
@@ -130,7 +130,6 @@
 		
 		echo '<div class="projeto_info_hover" id="menu_perfil">
 			  <table width="100%" class="border_space">';
-		
 		
 		echo '<tr> <td> <strong class="nome_titulo">', $row['pro_nome'], '</strong> </td> </tr>
 			  <tr> <td>  <strong> Descrição: </strong>', $row['pro_descricao'], '</td> </tr>';
@@ -155,7 +154,7 @@
  ?>
 
         <div id="usuarios" class="info">   
-            <strong class="label_titulo" > Tarefas </strong>	
+            <p class="label_titulo" > Tarefas </p>	
             <div = class="css_colaboradores_usuarios">
             
 <?php	

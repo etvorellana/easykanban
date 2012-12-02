@@ -32,32 +32,6 @@
 	
 		/* Fecha conexão com o banco */
 		mysqli_close($dbc);
-		
-		// Quando o usuário submeter os dados de cadastro de novo usuario
-		if (isset($_POST['send'])) 
-		{
-			// conectar ao banco de dados
-			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
-			die('Erro ao conectar ao BD!');
-			
-			$nome = trim ($_POST['nome']);	
-			$nickname = trim($_POST['nickname']);
-			$email = trim($_POST['email']);
-			$senha = trim($_POST['senha']);
-			
-			if ( !empty($nome) && !empty($email) && !empty($senha) && !empty($nickname) )
-			{
-				$query = "INSERT INTO `usuario` ( `usu_nickname`, `usu_nome`, `usu_email`, `usu_senha`, `usu_dt_cadastro`, `usu_foto` ) 
-				VALUES ( '$nickname', '$nome', '$email', SHA('$senha'), CURRENT_TIMESTAMP() )" or 
-					die ('Erro ao contruir a consulta');
-				
-				$result = mysqli_query($dbc, $query)
-					or die('Erro ao execultar a consulta');
-			}
-				
-			/* Fecha conexão com o banco */
-			mysqli_close($dbc);
-		}
 ?>
 
 <!DOCTYPE HTML>
@@ -72,10 +46,8 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script type="text/javascript" src="../fancybox/jquery.fancybox.js?v=2.0.6"></script>
     
-    
     <link rel="stylesheet" type="text/css" href="../css/main.css" />
     <link rel="stylesheet" type="text/css" href="home.css" />
-
   
   </head> 
 
@@ -99,16 +71,16 @@
         <ul>
             <li class="atual" ><a href="home.php">Home</a></li>
             <li><a href="../projetos/projeto.php">Projetos</a></li>
-            <li><a href="#">Relatórios</a></li>
-            <li><a href="#">Configurações</a></li>
+            <li><a href="#">Relatórios</a></li> 
+            <?php if( isset($_SESSION['tip_id']) == MASTER ) echo '<li><a href="../usuario/config_usuario.php">Usuários</a></li>'; ?>
         </ul>
-            
+        
         <div id="nova-tarefa" >
             <a id="bug" class="modalbox" href="#inline"> 
                 <input class="orange_button" type="submit" value=" + Novo Usuário " > 
             </a>
         </div>
-        
+
       	<br style="clear:left"/>
     </div>
     
@@ -141,7 +113,7 @@
         </div>
     
         <div id="container_projetos" class="info" >
-            <strong class="label_titulo" > Meus Projetos </strong>
+            <p class="label_titulo" > Meus Projetos </p>
             
             <div class="barra_de_rolagem">
             <?php
@@ -164,7 +136,9 @@
                 // executa consulta
                 $data = mysqli_query($dbc, $query) or die ('Erro ao execultar consulta');
                 //*$row = mysqli_num_rows($data); */
-            
+				
+				$numero_de_projetos = mysqli_num_rows($data);
+					
                 while ( $row = mysqli_fetch_array($data) ) 
                 {
                     echo '<div class="projeto_info" id="sumario_projetos">';
@@ -179,6 +153,11 @@
                     echo '</div>';
                 }
 				
+				if ( $numero_de_projetos == 0 )
+					echo '<p class="fim_da_lista"> Você não está ligado a nenhum projeto </p>';
+            	else
+					echo '<p class="fim_da_lista"> Não existem mais projetos cadastradas </p>';
+				
 				// fecha conexão com o bd
                 mysqli_close($dbc);
         ?>
@@ -187,7 +166,7 @@
         </div>
 
         <div id="container_tarefas" class="info">   
-            <strong class="label_titulo" > Minhas Tarefas </strong>	
+            <p class="label_titulo" > Minhas Tarefas </p>	
             
        		<div class="barra_de_rolagem">
 			<?php
@@ -265,7 +244,7 @@
 	<div id="edit_inline">
     
     <h2> Editar Usuário </h2><br />
-    <form id="editar_usuario_formulario" name="editar_usuario_formulario" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" >
+    <form id="editar_usuario_formulario" name="editar_usuario_formulario" method="post" action="../usuario/inserir_remover_usuario.php?action=atualizar" >
     <table class="border_space" >
     <tr>
         <td>
@@ -288,7 +267,7 @@
                 </tr>
                 <tr>
                     <td> <input type="email" id="email" name="email" value="<?php echo $dados_usuario['usu_email'] ?>" required> </td>
-                    <td> <input type="email" id="confirmar_email" name="confirmar_email"  value="<?php echo $dados_usuario['usu_email'] ?>" required oninput="check_email(this)"> </td>
+                    <td> <input type="email" id="confirmar_email" name="confirmar_email"  value="<?php echo $dados_usuario['usu_email'] ?>" required oninput="checkEditEmail(this)"> </td>
                 </tr>
             </table>
        </td>
@@ -302,8 +281,8 @@
                     <td> <label class="negrito" >Confirmar Senha:</label> </td>
                 </tr>
                 <tr>
-                    <td> <input type="password" id="senha" name="senha" value="<?php echo $dados_usuario['usu_nome'] ?>" required> </td>
-                    <td> <input type="password" id="confirmar_senha" name="confirmar_senha" value="<?php echo $dados_usuario['usu_nome'] ?>" onChange="return validarSenha();" required> </td>
+                    <td> <input type="password" id="senha" name="senha" placeholder="Digite sua nova senha" required> </td>
+                    <td> <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="Digite sua nova senha" oninput="checkEditSenha(this)" required> </td>
                 </tr>
             </table>
        </td>
@@ -314,7 +293,7 @@
             <table class="border_space">
                 <tr>
                     <tr>
-                    <td> <input class="blue_button" type="submit" value="Editar" name="send" id="send" /> </td>
+                    <td> <input class="blue_button" type="submit" value="Salvar" name="editar_usuario" id="editar_usuario" /> </td>
                     </tr>
                 </tr>
             </table>
@@ -330,7 +309,7 @@
 	<div id="inline">
 	<h2> Adicionar Novo Usuário </h2><br />
     <div id="formulario">
-	<form id="contact" name="contact" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>" >
+	<form id="contact" name="contact" method="post" action="../usuario/inserir_remover_usuario.php?action=inserir" >
          <table class="border_space" >
             <tr>
             	<td>
@@ -352,8 +331,8 @@
                             <td>  <label class="negrito" >Confirmar e-mail:</label> </td>
                         </tr>
                         <tr>
-                            <td> <input type="email" id="email" name="email" placeholder="Ex: thalles@easykanban.com" required> </td>
-                            <td> <input type="email" id="confirmar_email" name="confirmar_email" required oninput="check_email(this)"> </td>
+                            <td> <input type="email" id="insert_email" name="insert_email" placeholder="Ex: thalles@easykanban.com" required> </td>
+                            <td> <input type="email" id="confirmar_email" name="confirmar_email" required oninput="checkEmail(this)"> </td>
                         </tr>
                     </table>
                </td>
@@ -367,8 +346,8 @@
                             <td> <label class="negrito" >Confirmar Senha:</label> </td>
                         </tr>
                         <tr>
-                            <td> <input type="password" id="senha" name="senha" placeholder="" required> </td>
-                            <td> <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="" onChange="return validarSenha();" required> </td>
+                            <td> <input type="password" id="insert_senha" name="insert_senha" placeholder="" required> </td>
+                            <td> <input type="password" id="confirmar_senha" name="confirmar_senha" placeholder="" oninput="checkSenha(this)" required> </td>
                         </tr>
                     </table>
                </td>
@@ -379,7 +358,7 @@
                     <table class="border_space">
                         <tr>
                             <tr>
-                            <td> <input class="blue_button" type="submit" value="Cadastrar" name="send" id="send" /> </td>
+                            <td> <input class="blue_button" type="submit" value="Cadastrar" name="inserir_usuario" id="inserir_usuario" /> </td>
                             </tr>
                         </tr>
                     </table>
@@ -396,23 +375,38 @@
 <!-- basic fancybox setup -->
 <script type="text/javascript">
 
-	function validateEmail(email) { 
-		var reg = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		return reg.test(email);
-	}
-	
-	function sleep(milliseconds) {
-	  var start = new Date().getTime();
-	  for (var i = 0; i < 1e7; i++) {
-		if ((new Date().getTime() - start) > milliseconds){
-		  break;
+	function checkEmail(input) {
+		if (input.value != document.getElementById('insert_email').value) {
+			input.setCustomValidity('Os endereços de email não correspondem.');
+		} else {
+			input.setCustomValidity('');
 		}
+	}
+
+
+	function checkSenha(input) {
+	  if (input.value != document.getElementById('insert_senha').value) {
+		input.setCustomValidity('As senhas digitadas não correspondem.');
+	  } else {
+		input.setCustomValidity('');
 	  }
 	}
 	
-	function validarSenha(){
+	function checkEditEmail(input) {
+		if (input.value != document.getElementById('email').value) {
+			input.setCustomValidity('Os endereços de email não correspondem.');
+		} else {
+			input.setCustomValidity('');
+		}
+	}
 
-		document.getElementById("#senha").innerHTML='Os campos de não podem ser diferente';
+
+	function checkEditSenha(input) {
+	  if (input.value != document.getElementById('senha').value) {
+		input.setCustomValidity('As senhas digitadas não correspondem.');
+	  } else {
+		input.setCustomValidity('');
+	  }
 	}
 
 	$(document).ready(function() {

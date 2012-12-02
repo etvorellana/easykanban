@@ -69,10 +69,6 @@ div.barra_de_rolagem{
 	overflow: 					auto;
 }
 
-.label_titulo{
-	padding-left: 25px;
-}
-
 /* Painel Esquerdo */
 #container_tarefas{
 	margin-left:	440px;
