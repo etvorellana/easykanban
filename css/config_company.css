@@ -43,7 +43,7 @@
 	
 	padding:					5px 5px 5px 5px;
 	
-	margin-top:  				30px;
+	margin-top:  				10px;
 	
 	border-bottom:  			solid;
 	border-bottom-width:		5px;
@@ -65,7 +65,7 @@
 	margin-top:					20px;
 	
 	width:						410px;/* Propriedade obrigatória para todo elemento flutuante */
-	height:						350px;
+	height:						340px;
 
 	background-image:			url('../images/home_barra.png');
 	background-repeat:  		no-repeat;
