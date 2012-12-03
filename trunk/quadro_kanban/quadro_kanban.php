@@ -562,16 +562,16 @@
 	
     <script type="text/javascript" language="javascript">
     
-        //var atual_numero_de_tarefas = "<?php echo $atual_num_tarefas[0] ?>";
-        //var maximo_numero_de_tarefas = "<?php echo $max_tarefas[0] ?>";
+        var atual_numero_de_tarefas = "<?php echo $atual_num_tarefas[0] ?>";
+        var maximo_numero_de_tarefas = "<?php echo $max_tarefas[0] ?>";
     
 		$(document).ready(function(){
 			$('.fancybox').fancybox();
 				
             $("#contact").submit(function() {  // quando os dados forem submetidos...
 			    
-			    alert( 'Atual - ' + atual_numero_de_tarefas );
-                alert( 'Maximo - ' + maximo_numero_de_tarefas );
+			    //alert( 'Atual - ' + atual_numero_de_tarefas );
+                //alert( 'Maximo - ' + maximo_numero_de_tarefas );
         
 				if ( atual_numero_de_tarefas < maximo_numero_de_tarefas ){
                     $("#contact").fadeOut("slow", function(){
