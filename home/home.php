@@ -7,6 +7,9 @@
 	{
 		$usu_id =  $_SESSION['usu_id'];
 		
+		// ação padrão para o quadro de kanban
+		$default_action = 'mostrar_todas_as_tarefas';
+		
 		// conectar ao banco de dados
 		$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 			die('Erro ao conectar ao BD!');
@@ -153,7 +156,7 @@
 						
 						echo '<tr> <td> <strong> Situação: </strong>';     echo( $row['tip_situacao'] ); echo '</td> </tr>';
 						echo '<tr>';
-                 		echo '<tr> <td> <a href="../quadro_kanban/quadro_kanban.php?pro_id=' , $row['pro_id'] , ' &tip_id=' , $row['tip_id'] , '" class="gray_button">Entrar</a> <tr> </td>';
+                 		echo '<tr> <td> <a href="../quadro_kanban/quadro_kanban.php?pro_id=' , $row['pro_id'] , ' &tip_id=' , $row['tip_id'] , '&action=', $default_action, '" class="gray_button">Entrar</a> <tr> </td>';
 						echo '</tr>';
                     echo '</table>';
                     echo '</div>';

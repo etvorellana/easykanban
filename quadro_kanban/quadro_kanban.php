@@ -240,8 +240,6 @@
         <div id="div_scroll_quadro">
         
             <?php 
-						
-				
 				// conectar ao banco de dados
 				$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
 				die('Erro ao conectar ao BD!');
@@ -254,7 +252,7 @@
 				switch( $action['action'] )
 				{
 					case 'mostrar_todas_as_tarefas':
-						$query = "SELECT s.`sit_id`, t.`tar_id`, t.`tar_titulo`, r.`res_id`, r.`usu_id`, u.`usu_nickname`
+						$query = "SELECT s.`sit_id`, t.`tar_id`, t.`tar_titulo`, r.`res_id`, r.`usu_id`, u.`usu_nickname`, t.`tar_data_conclusao`
 									FROM `tarefa` t
 									JOIN `projeto` p ON p.`pro_id` = t.`pro_id`
 									JOIN `situacao` s ON s.`sit_id` = t.`sit_id`
@@ -268,7 +266,7 @@
 
 
 					case 'mostrar_somente_minhas_tarefas':
-						$query = "SELECT s.`sit_id`, t.`tar_id`, t.`tar_titulo`, r.`res_id`, r.`usu_id`, u.`usu_nickname`
+						$query = "SELECT s.`sit_id`, t.`tar_id`, t.`tar_titulo`, r.`res_id`, r.`usu_id`, u.`usu_nickname`, t.`tar_data_conclusao`
 									FROM `tarefa` t
 									JOIN `projeto` p ON p.`pro_id` = t.`pro_id`
 									JOIN `situacao` s ON s.`sit_id` = t.`sit_id`
@@ -282,7 +280,7 @@
 						break;
 						
 					case 'mostrar_somente_tarefas_atrasadas':
-						$query = "SELECT s.`sit_id`, t.`tar_id`, t.`tar_titulo`, r.`res_id`, r.`usu_id`, u.`usu_nickname`
+						$query = "SELECT s.`sit_id`, t.`tar_id`, t.`tar_titulo`, r.`res_id`, r.`usu_id`, u.`usu_nickname`, t.`tar_data_conclusao`
 									FROM `tarefa` t
 									JOIN `projeto` p ON p.`pro_id` = t.`pro_id`
 									JOIN `situacao` s ON s.`sit_id` = t.`sit_id`
@@ -290,6 +288,7 @@
 									JOIN `usuario` u on u.`usu_id` = r.`usu_id`
 									WHERE t.`pro_id` = '$pro_id'
 									AND u.`usu_id` = '$usu_id'
+									AND t.`tar_data_conclusao` < CURRENT_DATE() 
 									ORDER BY(s.`sit_id`)"
 						or die ("Erro ao construir a consulta");	
 						$action = 'mostrar_somente_tarefas_atrasadas';
@@ -299,7 +298,7 @@
 						
 						$selected_id = $_GET['selected_id'];
 					
-						$query = "SELECT s.`sit_id`, t.`tar_id`, t.`tar_titulo`, r.`res_id`, r.`usu_id`, u.`usu_nickname`
+						$query = "SELECT s.`sit_id`, t.`tar_id`, t.`tar_titulo`, r.`res_id`, r.`usu_id`, u.`usu_nickname`, t.`tar_data_conclusao`
 									FROM `tarefa` t
 									JOIN `projeto` p ON p.`pro_id` = t.`pro_id`
 									JOIN `situacao` s ON s.`sit_id` = t.`sit_id`
@@ -386,9 +385,9 @@
                         do {
                             echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" >
 							<div class="info_tarefa">  
-								<strong class="tar_titulo">', substr( $row_tarefas['tar_titulo'], 0, 40), '... </strong> <br/> <strong>', $row_tarefas['usu_nickname'], '<br/> ID:  ' , $row_tarefas['tar_id'] , '</strong>
+								<strong class="tar_titulo">', substr( $row_tarefas['tar_titulo'], 0, 40), '... </strong> <br/> <strong>', $row_tarefas['usu_nickname'], '<br/> Conclusão:  ' , $row_tarefas['tar_data_conclusao'] , '</strong>
 								<a href="editar_tarefas.php?quadro_kanban&pro_id=', $pro_id, '&tar_id=', $row_tarefas['tar_id'], '&tip_id=', $permissao, '"> 
-								<br/> <img src="../images/edit_button.png" alt="configurações" /> </a> 
+								<br/> <div class="config"> <img src="../images/edit_button.png" alt="configurações" /> </div> </a>  
 							</div> 
 							</div>';
 							
@@ -417,9 +416,9 @@
                         do {
                            echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" >
 							<div class="info_tarefa">  
-								<strong class="tar_titulo">', substr( $row_tarefas['tar_titulo'], 0, 40), '... </strong> <br/> <strong>', $row_tarefas['usu_nickname'], '<br/> ID:  ' , $row_tarefas['tar_id'] , '</strong>
+								<strong class="tar_titulo">', substr( $row_tarefas['tar_titulo'], 0, 40), '... </strong> <br/> <strong>', $row_tarefas['usu_nickname'], '<br/> Conclusão:  ' , $row_tarefas['tar_data_conclusao'] , '</strong>
 								<a href="editar_tarefas.php?pro_id=', $pro_id, '&tar_id=', $row_tarefas['tar_id'], '&tip_id=', $permissao, '"> 
-								<br/> <img src="../images/edit_button.png" alt="configurações" /> </a> 
+								<br/> <div class="config"> <img src="../images/edit_button.png" alt="configurações" /> </div> </a>  
 							</div> 
 							</div>';
                             
@@ -449,9 +448,9 @@
 						do {
 							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" >
 							<div class="info_tarefa">  
-								<strong class="tar_titulo">', substr( $row_tarefas['tar_titulo'], 0, 40), '... </strong> <br/> <strong>', $row_tarefas['usu_nickname'], '<br/> ID:  ' , $row_tarefas['tar_id'] , '</strong>
+								<strong class="tar_titulo">', substr( $row_tarefas['tar_titulo'], 0, 40), '... </strong> <br/> <strong>', $row_tarefas['usu_nickname'], '<br/> Conclusão:  ' , $row_tarefas['tar_data_conclusao'] , '</strong>
 								<a href="editar_tarefas.php?pro_id=', $pro_id, '&tar_id=', $row_tarefas['tar_id'], '&tip_id=', $permissao, '"> 
-								<br/> <img src="../images/edit_button.png" alt="configurações" /> </a> 
+								<br/> <div class="config"> <img src="../images/edit_button.png" alt="configurações" /> </div> </a>  
 							</div> 
 							</div>';
 							
@@ -482,9 +481,9 @@
 						do {
 							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="true" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" >
 							<div class="info_tarefa">  
-								<strong class="tar_titulo">', substr( $row_tarefas['tar_titulo'], 0, 40), '... </strong> <br/> <strong>', $row_tarefas['usu_nickname'], '<br/> ID:  ' , $row_tarefas['tar_id'] , '</strong>
+								<strong class="tar_titulo">', substr( $row_tarefas['tar_titulo'], 0, 40), '... </strong> <br/> <strong>', $row_tarefas['usu_nickname'], '<br/> Conclusão:  ' , $row_tarefas['tar_data_conclusao'] , '</strong>
 								<a href="editar_tarefas.php?pro_id=', $pro_id, '&tar_id=', $row_tarefas['tar_id'], '&tip_id=', $permissao, '"> 
-								<br/> <img src="../images/edit_button.png" alt="configurações" /> </a> 
+								<br/> <div class="config"> <img src="../images/edit_button.png" alt="configurações" /> </div> </a>  
 							</div> 
 							</div>';
 							
@@ -512,9 +511,9 @@
 						do {
 							echo '<div id="', $row_tarefas['tar_id'], '" class="tarefa" draggable="false" ondragstart="drag(event, ', $row_tarefas['usu_id'], ')" >
 							<div class="info_tarefa">  
-								<strong class="tar_titulo">', substr( $row_tarefas['tar_titulo'], 0, 40), '... </strong> <br/> <strong>', $row_tarefas['usu_nickname'], '<br/> ID:  ' , $row_tarefas['tar_id'] , '</strong>
+								<strong class="tar_titulo">', substr( $row_tarefas['tar_titulo'], 0, 40), '... </strong> <br/> <strong>', $row_tarefas['usu_nickname'], '<br/> Conclusão:  ' , $row_tarefas['tar_data_conclusao'] , '</strong>
 								<a href="editar_tarefas.php?pro_id=', $pro_id, '&tar_id=', $row_tarefas['tar_id'], '&tip_id=', $permissao, '"> 
-								<br/> <img src="../images/edit_button.png" alt="configurações" /> </a> 
+								<br/> <div class="config"> <img src="../images/edit_button.png" alt="configurações" /> </div> </a>  
 							</div> 
 							</div>';
 							
