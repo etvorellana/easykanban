@@ -153,13 +153,14 @@
 			  <tr> <td> <strong> Tipo: </strong>', $row['tip_t_descricao'], '</tr> </td>
 			  <tr> <td> <strong> Data de Criação: </strong>', $row['tar_data_inicio'], '</tr> </td>
 	
-			  </table>
-		
-			  <div id="botoes_tarefas">
-				<a id="botao_editar" class="fancybox" href="#inline" > Editar Tarefa </a>
-			  </div>
-		
-		</div>';
+			  </table>';
+			  
+			  if ( $permissao == ADMIN ){
+				  echo '<div id="botoes_tarefas">
+					<a id="botao_editar" class="fancybox" href="#inline" > Editar Tarefa </a>
+				  </div>';
+			  }
+		echo '</div>';
         
 		// fecha conexão com o banco
         mysqli_close($dbc);
