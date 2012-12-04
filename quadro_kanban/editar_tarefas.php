@@ -190,7 +190,7 @@
 				  	or die ('Erro ao contruir a consulta');       
 		
         // executa consulta
-        $data = mysqli_query($dbc, $query) or die ('Erro ao executar consulta');
+        $data_hitorico = mysqli_query($dbc, $query) or die ('Erro ao executar consulta');
        
 		// fecha conexão com o banco
         mysqli_close($dbc);
@@ -206,18 +206,18 @@
 		</tr>
 		</thead> ';
 		 
-	    while ( $row = mysqli_fetch_array($data) )
+	    while ( $historico = mysqli_fetch_array($data_hitorico) )
 		{
 			echo '<tr> 
-				  <td>', $row['ace_tipo'], '</td>
+				  <td>', $historico['ace_tipo'], '</td>
 				  
-				  <td>', $row['ace_acao'], '</td> 
+				  <td>', $historico['ace_acao'], '</td> 
 				  
-				  <td>', $row['usu_nome'], '</td>
+				  <td>', $historico['usu_nome'], '</td>
 				  
-				  <td> Movido para: ',  $row['ace_tar_destino'], '</td>
+				  <td> Movido para: ',  $historico['ace_tar_destino'], '</td>
 				  
-				  <td>', $row['ace_data_hora'], '</td>';
+				  <td>', $historico['ace_data_hora'], '</td>';
 		}
 		
 		echo '</table>';
