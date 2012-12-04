@@ -9,7 +9,9 @@
 		$usu_id = $_SESSION['usu_id'];
 		$pro_id = $_GET['pro_id'];
 		$permissao = $_GET['tip_id'];
-		$selected_id = $usu_id;
+		
+		if ( isset( $_GET['selected_id'] ) ) 
+			$selected_id = $_GET['selected_id'];
 		
 		function pegar_usuario_por_projeto( $parametro_pro_id )
 		{
