@@ -11,7 +11,7 @@
 		$tar_id = $_GET['tar_id'];
 		$permissao = $_GET['tip_id'];
 		
-		function pegar_usuario_por_projeto( $parametro_pro_id )
+		function pegar_usuario_por_projeto( $parametro_pro_id, $parametro_usu_id )
 		{
 			// conectar ao banco de dados
 			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
@@ -26,11 +26,12 @@
 					  FROM `usuario` u 
 					  JOIN `usuario_projeto_tipo` up on up.`usu_id` = u.`usu_id` 
 					  JOIN `projeto` p on p.`pro_id` = up.`pro_id`
-					  WHERE p.`pro_id`= %s'
+					  WHERE p.`pro_id`= %s
+					  AND NOT (u.`usu_id` = %s)'
 			or die ("Erro ao construir a consulta");
 			
 			// alimenta os parametros da conculta
-			$query = sprintf($query, $parametro_pro_id);	
+			$query = sprintf($query, $parametro_pro_id, $parametro_usu_id );	
 					
 			//executa query de inserção na tabela cep
 			$data = mysqli_query($dbc, $query)
@@ -246,7 +247,7 @@
                                 <select class="tipo_situacao" name="responsavel" required>  
                                 <?php  
 									echo '<option selected value="' , $row['usu_id'] , '"> ' , $row['usu_nome'] , '</option>';
-                                    pegar_usuario_por_projeto( $_GET['pro_id'] );
+                                    pegar_usuario_por_projeto( $_GET['pro_id'],  $row['usu_id']);
                                 ?>    
                                 </select>          
                             </td>

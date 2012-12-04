@@ -75,12 +75,16 @@
             <?php if( isset($_SESSION['tip_id']) == MASTER ) echo '<li><a href="../usuario/config_usuario.php">Usuários</a></li>'; ?>
         </ul>
         
-        <div id="nova-tarefa" >
-            <a id="bug" class="modalbox" href="#inline"> 
-                <input class="orange_button" type="submit" value=" + Novo Usuário " > 
-            </a>
-        </div>
-
+        <?php
+        if ( isset($_SESSION['tip_id']) == MASTER  ) {
+			echo '<div id="nova-tarefa" >
+				<a id="bug" class="modalbox" href="#inline"> 
+					<input class="orange_button" type="submit" value=" + Novo Usuário " > 
+				</a>
+			</div>';
+		}
+		?>
+        
       	<br style="clear:left"/>
     </div>
     
@@ -120,7 +124,8 @@
                 // conecta ao banco de dados
                 $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
                     die('Erro ao conectar ao BD!');
-
+				
+				// selecina os projetos do usuario logado no sistema, que estão com a situação = 1 (EM ANDAMENTO)
                 $query = 'SELECT p.`pro_id`, ts.`tip_situacao`, p.`pro_nome`, p.`pro_descricao`, p.`pro_dt_inicio`, p.`pro_dt_fim`, p.`pro_usu_criador`, up.`tip_id`
 					      FROM `projeto` p
 						  JOIN `usuario_projeto_tipo` up on up.`pro_id` = p.`pro_id`
@@ -131,20 +136,21 @@
                           or die ('Erro ao contruir a consulta');
                 
 				// alimenta os parametros da consulta
-				$query = sprintf($query, $usu_id ); 	
+				$query = sprintf($query, $usu_id );
 				
                 // executa consulta
                 $data = mysqli_query($dbc, $query) or die ('Erro ao execultar consulta');
-                //*$row = mysqli_num_rows($data); */
 				
+				// recupera o número de projetos retornados
 				$numero_de_projetos = mysqli_num_rows($data);
 					
                 while ( $row = mysqli_fetch_array($data) ) 
                 {
-                    echo '<div class="projeto_info" id="sumario_projetos">';
-                    echo '<table width="100%" class="border_space">';
-						echo '<tr> <td> <strong> Nome: </strong> <strong >'; echo( $row['pro_nome'] ); echo '</strong> </td> </tr>';
-						echo '<tr> <td> <strong> Descrição: </strong>';     echo( $row['pro_descricao'] ); echo '</td> </tr>';
+                    echo '<div class="projeto_info" id="sumario_projetos">
+                          <table width="100%" class="border_space">';
+						echo '<tr> <td> <strong> Nome: </strong> <strong >'; echo( substr($row['pro_nome'], 0, 40 ) ); echo '</strong> </td> </tr>';
+						echo '<tr> <td> <strong> Descrição: </strong>';     echo( substr($row['pro_descricao'], 0, 100 ) ); echo '</td> </tr>';
+						
 						echo '<tr> <td> <strong> Situação: </strong>';     echo( $row['tip_situacao'] ); echo '</td> </tr>';
 						echo '<tr>';
                  		echo '<tr> <td> <a href="../quadro_kanban/quadro_kanban.php?pro_id=' , $row['pro_id'] , ' &tip_id=' , $row['tip_id'] , '" class="gray_button">Entrar</a> <tr> </td>';
