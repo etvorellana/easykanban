@@ -11,6 +11,8 @@
 		$tar_id = $_GET['tar_id'];
 		$permissao = $_GET['tip_id'];
 		
+		$default_action = 'mostrar_todas_as_tarefas';
+		
 		function pegar_usuario_por_projeto( $parametro_pro_id, $parametro_usu_id )
 		{
 			// conectar ao banco de dados
@@ -94,7 +96,7 @@
 	<div id="container-cabecalho">
     <header>
         <div id="nome_usuario" class="menu_acesso_rapido" >
-            <a href="../home/home.php"> <?php echo ( $_SESSION['usu_nome'] ) ?> </a> / <?php if (isset($_GET['quadro_kanban']) ) echo '<a href="quadro_kanban.php?pro_id= ', $pro_id, '&tip_id=', $permissao, '"> Quadro Kanban </a>'; else echo '<a href="config_tarefas.php?pro_id= ', $pro_id, '&tip_id=', $permissao, '"> Tarefas </a> '; ?>
+            <a href="../home/home.php"> <?php echo ( $_SESSION['usu_nome'] ) ?> </a> / <?php if (isset($_GET['quadro_kanban']) ) echo '<a href="quadro_kanban.php?pro_id= ', $pro_id, '&tip_id=', $permissao, '&action=', $default_action, '"> Quadro Kanban </a>'; else echo '<a href="config_tarefas.php?pro_id= ', $pro_id, '&tip_id=', $permissao, '"> Tarefas </a> '; ?>
         </div>
     	
         <div id="logout" class="config_logout">
