@@ -63,6 +63,8 @@
     <link rel="stylesheet" type="text/css" href="../css/main.css" />
     <link rel="stylesheet" type="text/css" href="../css/config_tarefas.css" />
     
+    <script type="text/javascript" src="../js/table_row.js"></script>
+    
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
     <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
     <link rel="stylesheet" href="/resources/demos/style.css" />
