@@ -186,6 +186,28 @@
     <!-- Barra de Menu -->
     <div id="container-menu">
     <?php
+		// conectar ao banco de dados
+		$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
+		die('Erro ao conectar ao BD!');
+		
+		// Seleciona o banco de dados
+		mysqli_select_db($dbc, "easykanban-bd")
+			or die ('Erro ao selecionar o Banco de Dados');
+			
+		// constroi query	
+		$query = "SELECT `pro_nome` FROM `projeto` WHERE `pro_id` = '$pro_id'" or die('Erro ao contruir a query');
+		
+		//executa query de inserção na tabela cep
+		$projeto_data = mysqli_query($dbc, $query)
+			or die('Erro ao executar a inserção na tabela projeto');
+		
+		// fecha conexão com bd
+		mysqli_close($dbc);	
+		
+		$projeto = mysqli_fetch_array($projeto_data);
+		
+		echo '<div class="nome_do_projeto">', $projeto['pro_nome'], '</div>';
+		
         if ($permissao == ADMIN ) {
             echo '
                 <div id="nova-tarefa" >
