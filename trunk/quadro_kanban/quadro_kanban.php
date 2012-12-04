@@ -104,11 +104,11 @@
         {
             var usuario_logado = <?php echo $_SESSION['usu_id'] ?>;
             
-            if ( responsavel != usuario_logado ){
-                alert('Permissão negada!');
-                return false;	
-            }
-
+            //if ( responsavel != usuario_logado ){
+            //    alert('Permissão negada!');
+            //    return false;	
+            //}
+		
             ev.dataTransfer.setData("Text",ev.target.id);
         }
         
@@ -559,7 +559,7 @@
 	<div id="inline">
 	<h2> Adicionar nova Tarefa </h2> <br />
     
-	<form id="contact" name="contact" method="post" action="add_tarefa.php?pro_id=<?php echo $pro_id, '&tip_id=', $permissao; ?>" >
+	<form id="contact" name="contact" method="post" action="add_tarefa.php?pro_id=<?php echo $pro_id, '&tip_id=', $permissao, '&action=', $action; ?>" >
 		<table class="add_projeto" >
          	
             <tr>
@@ -682,7 +682,7 @@
                     });
                 }
                 else{
-                    $(this).before("<p><strong>Número máximo de tarefas exedido!</strong></p>");
+                    $(this).before("<p><strong>Número máximo de tarefas excedido!</strong></p>");
 					return false;
 				}
 				
