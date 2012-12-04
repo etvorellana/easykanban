@@ -49,8 +49,8 @@
 	padding:					14px 5px 5px 5px;
 	
 	width:						410px;/* Propriedade obrigatória para todo elemento flutuante */
-	height:						430px;
-	min-height:					430px;
+	height:						400px;
+	min-height:					400px;
 	
 	background-image:			url('../images/home_barra.png');
 	background-repeat:  		no-repeat;
@@ -65,7 +65,7 @@
 div.barra_de_rolagem{
 	margin:						12px 5px 5px 0px;	
 	width:						100%;
-	height:						390px;
+	height:						370px;
 	overflow: 					auto;
 }
 
