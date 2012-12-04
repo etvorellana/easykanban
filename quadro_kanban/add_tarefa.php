@@ -5,7 +5,8 @@
 	{
 		$pro_id = $_GET['pro_id'];
 		$permissao = $_GET['tip_id'];
-		
+		$action = &$_REQUEST;
+
 		if (isset($_POST['send'])) 
 		{
 			// conectar ao banco de dados
@@ -57,7 +58,7 @@
 	}
 	
 	// volta para o quadro kanban
-	$voltar_url = 'quadro_kanban.php?pro_id=' . $pro_id . '&tip_id=' . $permissao;
+	$voltar_url = 'quadro_kanban.php?pro_id=' . $pro_id . '&tip_id=' . $permissao . '&action=' . $action['action'] ;
 	header('Location: ' . $voltar_url ) xor die;
 		
 ?>

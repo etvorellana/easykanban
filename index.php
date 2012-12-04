@@ -100,14 +100,12 @@
 	<div id="allcontent">
     
     <div id="main">
+
         <article>
             <section>
-                <h2>article section h2</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices. Proin in est sed erat facilisis pharetra.</p>
-            </section>
-            <section>
-                <h2>article section h2</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sodales urna non odio egestas tempor. Nunc vel vehicula ante. Etiam bibendum iaculis libero, eget molestie nisl pharetra in. In semper consequat est, eu porta velit mollis nec. Curabitur posuere enim eget turpis feugiat tempor. Etiam ullamcorper lorem dapibus velit suscipit ultrices. Proin in est sed erat facilisis pharetra.</p>
+                <h2>Bem Vindo ao <label style="color:rgb(248,156,32)">e</label><label style="color:rgb(229,78,38)">a</label><label style="color:rgb(105,77,159)">s</label><label style="color:rgb(46,179,196)">y</label><label style="color:rgb(229,78,38)">Kanban</label></h2><br/>
+                <p class="boas_vindas"> O easyKanban é um software inovador de gerenciamento de projetos e gestão empresarial concebido para micro, pequenas, médias e grandes empresas. O sistema proporciona um controle completo do gerenciamento de projetos e tarefas e permite administrar de forma organizada as ações e os colaboradores de uma tarefa dentro de um projeto.
+O software desenvolvido pela empresa .CON Computer On Network funciona como um excelente aliado para gestores de projetos. Com uma interface atraente e de fácil utilização, é um sistema eficiente e pode ser usado em diferentes áreas e ambientes corporativos.</p>
             </section>
     
         </article>
