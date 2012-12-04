@@ -1,205 +1,91 @@
-
-<?php
-	require_once('../connect/connect_vars.php');
+ï»¿<?php
+	include_once('../connect/connect_vars.php');
 	require_once('../sessao_php/inicia_sessao.php');
 	
-	if ( isset($_SESSION['usu_id']) and isset($_GET['pro_id']) and isset($_GET['tip_id']) )
+	$return = &$_REQUEST;
+	$action = &$_REQUEST;
+	$pro_id = $_GET['pro_id'];
+	$permissao = $_GET['tip_id'];
+	
+	// se o status da tarefa foi modificado ...
+	if ( $action['action']=='change_state' and $_GET['tar_id'] and $_GET['sit_id'])
 	{
+		$tar_id = $_GET['tar_id'];
+		$sit_id = $_GET['sit_id'];
 		$usu_id = $_SESSION['usu_id'];
-		$usu_nome = $_SESSION['usu_nome'];
-		$pro_id = $_GET['pro_id'];
-		$permissao = $_GET['tip_id'];
+		$sit_descricao = '';
 		
-		// Quando o usuário submeter os dados de cadastro de nova empresa
-		if (isset($_POST['edit'])) 
-		{
-			// conectar ao banco de dados
-			$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
-			die('Erro ao conectar ao BD!');
-			
-			mysqli_select_db($dbc, "easykanban-bd")
-				or die ('Erro ao selecionar o Banco de Dados');
-			
-			// recupera os dados digitados no formulário
-			$pro_nome = trim ($_POST['nome']);	
-			$pro_descrição = trim($_POST['descricao']);
-			$data_fim = trim($_POST['data_fim']);
-			$tip_situacao = trim ($_POST['tipo_situacao']);	
-
-			if ( !empty($pro_nome) && !empty($pro_descrição) && !empty($data_fim) && !empty($tip_situacao) )
-			{
-				$por_usu_criador = $usu_id;
-				
-				// criando query de inserção na tabela projeto
-				$query = "UPDATE projeto SET
-						  tip_id = '$tip_situacao',
-			              pro_nome = '$pro_nome',
-			              pro_descricao= '$pro_descrição',
-			              pro_dt_fim = '$data_fim'
-						  WHERE pro_id = '$pro_id' "
-				or die ('Erro ao contruir a consulta');
-				
-				// alimenta os parametros da conculta
-				$query = sprintf($query, $tip_situacao, $pro_nome, $pro_descrição, $data_fim, $pro_id );	
-				
-				//execulta query de inserção na tabela cep
-				$data = mysqli_query($dbc, $query)
-					or die('Erro ao execultar a inserção na tabela projeto');
-				
-			}
-				
-			/* Fecha conexão com o banco */
-			mysqli_close($dbc);
+		switch($sit_id){
+			case 1:
+				$sit_descricao = 'Backlog';
+				break;
+			case 2:
+				$sit_descricao = 'Requisitado';
+				break;
+			case 3:
+				$sit_descricao = 'Em processo';
+				break;
+			case 4:
+				$sit_descricao = 'Concluido';
+				break;
+			case 5:
+				$sit_descricao = 'Arquivado';
+				break;
 		}
-	}
-
-?>
-
-<!doctype html>
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-    <title>Gerência de Tarefas</title>
-
-    <link rel="stylesheet" type="text/css" media="all" href="../css/formulario.css">
-    <link rel="stylesheet" type="text/css" media="all" href="../fancybox/jquery.fancybox.css">
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script type="text/javascript" src="../fancybox/jquery.fancybox.js?v=2.0.6"></script>
-    
-    <link rel="stylesheet" type="text/css" href="../css/main.css" />
-    <link rel="stylesheet" type="text/css" href="../css/config_tarefas.css" />
-  	
-    <script type="text/javascript" src="../js/table_row.js"></script>
-    	
-    <script type="text/javascript">
-		// função
-		function getTarId( tar_id ) {  				
-			//alert(String(tar_id));
-			var tar_id_edit = tar_id;
-						
-		}  
-    </script>
-    
-
-
-	</head> 
-
-<body>
-	<div id="container-cabecalho">
-    <header>
-		<div id="nome_usuario" class="menu_acesso_rapido">
-        	<a href="../home/home.php"> <?php echo ( $_SESSION['usu_nome'] ) ?> </a> / <?php echo '<a href="quadro_kanban.php?pro_id= ', $pro_id, '&tip_id=', $permissao, '">'; ?> Quadro Kanban </a> 
-    	</div>
-    	
-        <div id="logout" class="config_logout">
-        	<label > <a class="menu_acesso_rapido" href="../logout.php"> logout </a> </label>
-        </div>
-    </header>
-    </div>
-    
-</head>
-<body>    
-    <div id="main">
-<?php
-        // conectar ao banco de dados
-        $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
-            die('Erro ao conectar ao BD!');
-			
+				
+		// conectar ao banco de dados
+		$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
+		die('Erro ao conectar ao BD!');
+		
 		mysqli_select_db($dbc, "easykanban-bd")
 			or die ('Erro ao selecionar o Banco de Dados');
-			
-			
-        $query = 'SELECT t.`tar_id`, t.`tip_t_id` , t.`pri_id` , t.`met_id` , t.`sit_id` , t.`pro_id` , t.`tar_titulo` , t.`tar_descricao` , t.`tar_comentario` , t.`tar_data_inicio` , t.`tar_data_conclusao` , t.`tar_tempo_estimado` , t.`tar_data_criacao` , u.`usu_nome` , s.`sit_descricao` , p.`pro_id`, p.`pro_nome`, p.`pro_descricao`, p.`pro_dt_inicio`, p.`pro_dt_fim`, p.`pro_dt_criacao`, p.`pro_usu_criador`
-				FROM  `projeto` AS p
-				LEFT JOIN  `tarefa` t ON t.`pro_id` = p.`pro_id` 
-				LEFT JOIN  `responsavel` r ON r.`tar_id` = t.`tar_id` 
-				LEFT JOIN  `usuario` u ON u.`usu_id` = r.`usu_id` 
-				LEFT JOIN  `situacao` s ON s.`sit_id` = t.`sit_id` 
-				WHERE p.`pro_id` =%s '
-                 or die ('Erro ao contruir a consulta');                
-                 
-        // alimenta os parametros da conculta
-        $query = sprintf($query, $pro_id ); 	
 		
-        // executa consulta
-        $data = mysqli_query($dbc, $query) or die ('Erro ao executar consulta');
-    
-		$num_tarefas = mysqli_num_rows($data);
-
-        $row = mysqli_fetch_array($data);
+		$query = 'UPDATE `tarefa` SET `sit_id`=' . $sit_id . ' WHERE `tar_id` =' . $tar_id
+		or die ('Erro ao criar a consulta');
 		
-		echo '<div class="projeto_info_hover" id="menu_perfil">
-			  <table width="100%" class="border_space">';
+		// execulta query de inserÃ§Ã£o na tabela tarefa
+		$data = mysqli_query($dbc, $query)
+			or die('Erro ao executar a inserÃ§Ã£o na tabela tarefa');
 		
-		echo '<tr> <td> <strong class="nome_titulo">', $row['pro_nome'], '</strong> </td> </tr>
-			  <tr> <td>  <strong> Descrição: </strong>', $row['pro_descricao'], '</td> </tr>';
-		  
-		echo '<tr> <td width="60%"> <strong> Data de Início: </strong>', $row['pro_dt_inicio'], '</td>
-			  <td> <strong> Previsão de Término:   </strong>', $row['pro_dt_fim'], '</td> </tr>';
+		$trasicao = 'Transicao';
 		
-		echo '<tr> <td> <strong> Número de Tarefas: </strong>', $num_tarefas, '</td>
-		<td> <strong> Sua Função: </strong>'; if ( $row['pro_usu_criador'] == $usu_id ) echo'Criador/Administradar'; else if ($row['tip_id'] == 1 ) echo'Administrador'; else echo'Colaborador'; echo '</td> </tr>';
+		// insere na tabela acessos, a fim de guardar log das modificaÃ§Ãµes
+		$query = "INSERT INTO `acesso` (
+				`ace_id` ,
+				`usu_id` ,
+				`ace_tabela` ,
+				`ace_tipo` ,
+				`ace_acao`,
+				`tar_id`,
+				`ace_tar_destino` ,
+				`ace_data_hora` ,
+				`pro_id` )
+				VALUES ( NULL ,  '$usu_id',  'Tarefa',  '$trasicao',  'Update',  '$tar_id',  '$sit_descricao',  NOW(), NULL )"
+		or die ('Erro ao criar a consulta');
+		
+		// execulta query de inserÃ§Ã£o na tabela acesso
+		$data = mysqli_query($dbc, $query)
+			or die('Erro ao executar a inserÃ§Ã£o na tabela acesso');
+		
+		/* Fecha conexÃ£o com o banco */
+		mysqli_close($dbc);
+	}
 	
-		echo '</table>
-
-			
-			<div id="botoes_tarefas">
-				<a id="botao_editar" class="modalbox" href="#inline" > Editar Quadro </a>
-			</div>
-
-		</div>';
-        
-		// fecha conexão com o banco
-        mysqli_close($dbc);
- ?>
-
-        <div id="usuarios" class="info">   
-            <p class="label_titulo" > Tarefas </p>	
-            <div = class="css_colaboradores_usuarios">
-            
-<?php	
-		echo '<table class="tabela_zebrada" width="100%" > 
-		<thead>
-		<tr>
-			<th>Nome da Tarefa</th>
-			<th>Responsável</th>
-			<th>Status</th>
-			<th>Editar</th>
-			<th>Apagar</th>
-		</tr>
-		</thead> ';
-		 
-		do 
-		{
-			echo '<tr> 
-				  <td>', $row['tar_titulo'], '</td>
-				  
-				  <td>', $row['usu_nome'], '</td> 
-				  
-				  <td>', $row['sit_descricao'], '</td>';
-			
-			echo '<td align="center">
-					<a href="editar_tarefas.php?tar_id=', $row['tar_id'], '&pro_id=', $row['pro_id'], '&tip_id=', $permissao, '"> <img src="../images/edit_button.png" title="Editar"/> </a>
-				  </td>';
-							
-			echo '<td align="center">
-					<a href="inserir_remover_tarefas.php?tar_id=', $row['tar_id'], "&pro_id=", $pro_id, '&tip_id=', $permissao, '&action=remove"> <img src="../images/del.png" title="Remover"/> </a>
-				  </td>';
-						
-		}while ($row = mysqli_fetch_array($data));
-		
-		echo '</table>';
-		
-		
-?>    
-           
-            </div>
-        </div>
-    </div>
-    
-    <?php 
-		include_once('edit_tarefa.php');
-	?>
+	if (  isset( $return['return'] ) && isset($_GET['selected_id']) ){
+		$voltar_url = 'quadro_kanban.php?pro_id=' . $pro_id . '&tip_id=' . $permissao . '&action=' . $return['return'] . '&selected_id=' . $_GET['selected_id'] ; 
+	}else
+	if ( isset( $return['return'] ) ){
+		// volta para o quadro kanban
+		$voltar_url = 'quadro_kanban.php?pro_id=' . $pro_id . '&tip_id=' . $permissao . '&action=' . $return['return']; 
+	}
+	//else{
+	// volta para o quadro kanban
+	//	$voltar_url = 'quadro_kanban.php?pro_id=' . $pro_id . '&tip_id=' . $permissao; 
+	//}
 	
-</body>
-</html>
+	//if(isset($_GET['usu_id_selecionado'])) 
+	//	echo $voltar_url . '&usu_id_selecionado=' . $_GET['usu_id_selecionado'];
+	
+	header('Location: ' . $voltar_url );
+?>
+		

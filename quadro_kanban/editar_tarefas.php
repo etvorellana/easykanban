@@ -161,13 +161,75 @@
 				  </div>';
 			  }
 		echo '</div>';
-        
+
 		// fecha conexão com o banco
         mysqli_close($dbc);
 		
+?>
+        
+        <div id="usuarios" class="info">   
+            <p class="label_titulo" > Histórico </p>	
+            <div = class="css_colaboradores_usuarios">
+            
+<?php	
+        // conectar ao banco de dados
+        $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
+            die('Erro ao conectar ao BD!');
 		
- 		?>
+		// seleciona banco de dados	
+		mysqli_select_db($dbc, "easykanban-bd")
+			or die ('Erro ao selecionar o Banco de Dados');
+			
+        $query = "SELECT a.`ace_id`, a.`usu_id`, u.`usu_nome`, a.`ace_tabela`, a.`ace_tipo`, a.`ace_acao`, a.`tar_id`, a.`ace_tar_destino`, a.`ace_data_hora`, a.`pro_id` 
+				  FROM `acesso` a 
+				  JOIN usuario u on u.`usu_id` = a.`usu_id`
+				  JOIN tarefa t on t.`tar_id` = a.`tar_id`
+				  WHERE t.`tar_id`='$tar_id'"
+				  	or die ('Erro ao contruir a consulta');       
+		
+        // executa consulta
+        $data = mysqli_query($dbc, $query) or die ('Erro ao executar consulta');
+       
+		// fecha conexão com o banco
+        mysqli_close($dbc);
+		
+		echo '<table class="tabela_zebrada" width="100%" > 
+		<thead>
+		<tr>
+			<th>Tipo</th>
+			<th>Evento</th>
+			<th>Autor</th>
+			<th>Detalhes</th>
+			<th>Data</th>
+		</tr>
+		</thead> ';
+		 
+	    while ( $row = mysqli_fetch_array($data) )
+		{
+			echo '<tr> 
+				  <td>', $row['ace_tipo'], '</td>
+				  
+				  <td>', $row['ace_acao'], '</td> 
+				  
+				  <td>', $row['usu_nome'], '</td>
+				  
+				  <td> Movido para: ',  $row['ace_tar_destino'], '</td>
+				  
+				  <td>', $row['ace_data_hora'], '</td>';
+		}
+		
+		echo '</table>';
+		
+?>    
+           
+            </div>
+        </div>
+
+        
+        
  	</div>
+    
+    
     
         
 	<!-- invisivel inline form -->

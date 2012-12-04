@@ -143,6 +143,13 @@ img {
 	margin-left:			180px;	
 }
 
+.nome_do_projeto{
+	font-size:			22px;
+	font-weight:		bold;	
+	margin:				10px 0px 0px 15px;
+	float:				left;
+}
+
 /************************************************/
 /*         	FIM CSS DO QUADRO DE KANBAN         */
 /************************************************/
