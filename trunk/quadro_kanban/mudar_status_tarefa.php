@@ -26,7 +26,7 @@
 				$sit_descricao = 'Em processo';
 				break;
 			case 4:
-				$sit_descricao = 'Concluído';
+				$sit_descricao = 'Concluido';
 				break;
 			case 5:
 				$sit_descricao = 'Arquivado';
@@ -47,7 +47,7 @@
 		$data = mysqli_query($dbc, $query)
 			or die('Erro ao executar a inserção na tabela tarefa');
 		
-		$trasicao = 'Transição';
+		$trasicao = 'Transicao';
 		
 		// insere na tabela acessos, a fim de guardar log das modificações
 		$query = "INSERT INTO `acesso` (
@@ -85,8 +85,6 @@
 	
 	//if(isset($_GET['usu_id_selecionado'])) 
 	//	echo $voltar_url . '&usu_id_selecionado=' . $_GET['usu_id_selecionado'];
-	
-	echo 'fdsafadsfsdafsadfsdafsdfsdf';
 	
 	header('Location: ' . $voltar_url );
 ?>
