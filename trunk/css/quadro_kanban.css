@@ -106,8 +106,8 @@
 }
 
 .tarefa:hover{
-		
-}
+	opacity: 				0.7;
+}	
 
 .info_tarefa{
 	font-family:		"Comic Sans MS", cursive;

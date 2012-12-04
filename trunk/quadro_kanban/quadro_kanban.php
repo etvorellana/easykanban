@@ -4,9 +4,12 @@
 	
 	if (isset($_SESSION['usu_id']) and isset($_GET['pro_id']) and isset($_GET['tip_id']) ) 
 	{
+		$action = &$_REQUEST;
+		
 		$usu_id = $_SESSION['usu_id'];
 		$pro_id = $_GET['pro_id'];
 		$permissao = $_GET['tip_id'];
+		$selected_id = $usu_id;
 		
 		function pegar_usuario_por_projeto( $parametro_pro_id )
 		{
@@ -23,8 +26,7 @@
 					  FROM `usuario` u 
 					  JOIN `usuario_projeto_tipo` up on up.`usu_id` = u.`usu_id` 
 					  JOIN `projeto` p on p.`pro_id` = up.`pro_id`
-					  WHERE p.`pro_id`= '$parametro_pro_id'
-					  AND NOT ( u.`usu_nickname` = 'MASTER') "
+					  WHERE p.`pro_id`= '$parametro_pro_id'"
 			or die ("Erro ao construir a consulta");	
 					
 			//executa query de inserção na tabela cep
@@ -76,6 +78,19 @@
             $( "#data_fim" ).datepicker();
         });
     </script>
+    
+    <script>
+		function checkboxclick( checkbox ){
+			var nome = checkbox.name;
+            // se a tarefa for alocada de posição, o servidor é requisitado para fazer a atualização do status da tarefa
+            location.href= '<?php echo  'quadro_kanban.php?pro_id=' , $pro_id , '&tip_id=', $permissao, '&action=' ?>' + nome;
+		}
+		
+		function comboBoxSelected(){
+			var selectedId = document.getElementById("mostrar_tarefas").value;	
+			location.href= '<?php echo  'quadro_kanban.php?pro_id=' , $pro_id , '&tip_id=', $permissao, '&action=selecionar_tarefas_de', '&selected_id=' ?>' + selectedId;
+		}
+	</script>
 
 	<script>
         function allowDrop(ev)
@@ -135,7 +150,7 @@
             //alert( sit_id + " " + tar_id );
 
             // se a tarefa for alocada de posição, o servidor é requisitado para fazer a atualização do status da tarefa
-            location.href= '<?php echo  'mudar_status_tarefa.php?pro_id=' , $pro_id , '&tip_id=', $permissao, '&action=change_state&tar_id='; ?>' + tar_id + '<?php echo'&sit_id='; ?>' + sit_id + '<?php if (isset($usu_id_selecionado)) echo '&usu_id_selecionado=', $usu_id_selecionado; ?>';
+            location.href= '<?php echo  'mudar_status_tarefa.php?pro_id=' , $pro_id , '&tip_id=', $permissao, '&action=change_state&tar_id=' ?>' + tar_id + '<?php echo'&return=', $action['action'], '&sit_id='; ?>' + sit_id + '<?php if (isset($selected_id)) echo '&selected_id=', $selected_id; ?>';
             
         }
     </script>
@@ -185,11 +200,21 @@
     <!-- menu de opções -->
     <nav id="options_menu">
     <ul>
-        <li> Mostrar somente minhas tarefas: <input type="checkbox" name="mostrar_tarefas" value="Bike"> </li>
-        <li> Mostrar somente tarefas atrasadas:  <input type="checkbox" name="mostrar_tarefas" value="Car"> </li>
+    	<li> Mostrar todas as tarefas: 
+        <input onClick="checkboxclick(this)" <?php if($action['action'] == 'mostrar_todas_as_tarefas')echo 'checked' ?> type="checkbox" name="mostrar_todas_as_tarefas" value="Bike"> 
+        </li>
+       
+        <li> 
+        Mostrar somente minhas tarefas: <input onClick="checkboxclick(this)" <?php if($action['action'] == 'mostrar_somente_minhas_tarefas')echo 'checked' ?> type="checkbox" name="mostrar_somente_minhas_tarefas" value="Bike"> 
+        </li>
+       
+        <li> 
+        Mostrar somente tarefas atrasadas:  <input onClick="checkboxclick(this)" <?php if($action['action'] == 'mostrar_somente_tarefas_atrasadas')echo 'checked' ?> type="checkbox" name="mostrar_somente_tarefas_atrasadas" value="Car"> 
+        </li>
+        
         <li>
             Mostrar Tarefas de:
-            <select id="mostrar_tarefas" name="mostrar_tarefas" required>      
+            <select onChange=" comboBoxSelected() " id="mostrar_tarefas" name="mostrar_tarefas" required>      
             <?php
                $pegar_usuario_por_projeto = pegar_usuario_por_projeto( $_GET['pro_id'] );
 			   
@@ -213,28 +238,82 @@
         <div id="div_scroll_quadro">
         
             <?php 
-                // conectar ao banco de dados
-                $dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
-                die('Erro ao conectar ao BD!');
-            
-                // Seleciona o banco de dados
-                mysqli_select_db($dbc, "easykanban-bd")
-                    or die ('Erro ao selecionar o Banco de Dados');
-            
-                $query = "SELECT s.`sit_id`, t.`tar_id`, t.`tar_titulo`, r.`usu_id`, u.`usu_nickname`
-							FROM `tarefa` t
-							JOIN `projeto` p ON p.`pro_id` = t.`pro_id`
-							JOIN `situacao` s ON s.`sit_id` = t.`sit_id`
-							JOIN `responsavel` r on r.`tar_id` = t.`tar_id` 
-							JOIN `usuario` u on u.`usu_id` = r.`usu_id`
-							WHERE t.`pro_id` = '$pro_id'
-							ORDER BY(s.`sit_id`)"
-                or die ("Erro ao construir a consulta");		
-                        
-                //executa query de consulta na tabela tarefa
-                $data = mysqli_query($dbc, $query)
-                    or die('Erro ao executar a consulta na tabela tarefa');
+						
+				
+				// conectar ao banco de dados
+				$dbc = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) or
+				die('Erro ao conectar ao BD!');
 
+				// Seleciona o banco de dados
+				mysqli_select_db($dbc, "easykanban-bd")
+					or die ('Erro ao selecionar o Banco de Dados');
+					
+				// Quando o usuário submeter os dados de atualização da tarefa
+				switch( $action['action'] )
+				{
+					case 'mostrar_todas_as_tarefas':
+						$query = "SELECT s.`sit_id`, t.`tar_id`, t.`tar_titulo`, r.`res_id`, r.`usu_id`, u.`usu_nickname`
+									FROM `tarefa` t
+									JOIN `projeto` p ON p.`pro_id` = t.`pro_id`
+									JOIN `situacao` s ON s.`sit_id` = t.`sit_id`
+									JOIN `responsavel` r on r.`tar_id` = t.`tar_id` 
+									JOIN `usuario` u on u.`usu_id` = r.`usu_id`
+									WHERE t.`pro_id` = '$pro_id'
+									ORDER BY(s.`sit_id`)"
+						or die ("Erro ao construir a consulta");	
+						$action = 'mostrar_todas_as_tarefas';	
+						break;
+
+
+					case 'mostrar_somente_minhas_tarefas':
+						$query = "SELECT s.`sit_id`, t.`tar_id`, t.`tar_titulo`, r.`res_id`, r.`usu_id`, u.`usu_nickname`
+									FROM `tarefa` t
+									JOIN `projeto` p ON p.`pro_id` = t.`pro_id`
+									JOIN `situacao` s ON s.`sit_id` = t.`sit_id`
+									JOIN `responsavel` r on r.`tar_id` = t.`tar_id` 
+									JOIN `usuario` u on u.`usu_id` = r.`usu_id`
+									WHERE t.`pro_id` = '$pro_id'
+									AND u.`usu_id` = '$usu_id'
+									ORDER BY(s.`sit_id`)"
+						or die ("Erro ao construir a consulta");	
+						$action = 'mostrar_somente_minhas_tarefas';
+						break;
+						
+					case 'mostrar_somente_tarefas_atrasadas':
+						$query = "SELECT s.`sit_id`, t.`tar_id`, t.`tar_titulo`, r.`res_id`, r.`usu_id`, u.`usu_nickname`
+									FROM `tarefa` t
+									JOIN `projeto` p ON p.`pro_id` = t.`pro_id`
+									JOIN `situacao` s ON s.`sit_id` = t.`sit_id`
+									JOIN `responsavel` r on r.`tar_id` = t.`tar_id` 
+									JOIN `usuario` u on u.`usu_id` = r.`usu_id`
+									WHERE t.`pro_id` = '$pro_id'
+									AND u.`usu_id` = '$usu_id'
+									ORDER BY(s.`sit_id`)"
+						or die ("Erro ao construir a consulta");	
+						$action = 'mostrar_somente_tarefas_atrasadas';
+						break;
+						
+					case 'selecionar_tarefas_de':
+						
+						$selected_id = $_GET['selected_id'];
+					
+						$query = "SELECT s.`sit_id`, t.`tar_id`, t.`tar_titulo`, r.`res_id`, r.`usu_id`, u.`usu_nickname`
+									FROM `tarefa` t
+									JOIN `projeto` p ON p.`pro_id` = t.`pro_id`
+									JOIN `situacao` s ON s.`sit_id` = t.`sit_id`
+									JOIN `responsavel` r on r.`tar_id` = t.`tar_id` 
+									JOIN `usuario` u on u.`usu_id` = r.`usu_id`
+									WHERE t.`pro_id` = '$pro_id'
+									AND u.`usu_id` = '$selected_id'
+									ORDER BY(s.`sit_id`)"
+						or die ("Erro ao construir a consulta");	
+						$action = 'selecionar_tarefas_de';
+						break;
+				}
+				
+				//executa query de consulta na tabela tarefa
+				$data = mysqli_query($dbc, $query)
+					or die('Erro ao executar a consulta na tabela tarefa');
 				
 				// seleciona o limite de tarefa de cada uma das colunas do quadro kanban
 				$query = 'SELECT s.`sit_id`, l.`lin_limite`
@@ -455,7 +534,7 @@
     </div>
 	<!-- invisivel inline form -->
 	<div id="inline">
-	<h2> Adicionar novo Projeto </h2> <br />
+	<h2> Adicionar nova Tarefa </h2> <br />
     
 	<form id="contact" name="contact" method="post" action="add_tarefa.php?pro_id=<?php echo $pro_id, '&tip_id=', $permissao; ?>" >
 		<table class="add_projeto" >

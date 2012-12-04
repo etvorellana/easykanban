@@ -7,6 +7,8 @@
 	{
 		$usu_id = $_SESSION['usu_id'];
 		
+		$default_action = 'mostrar_todas_as_tarefas';
+			
 		// Quando o usuário submeter os dados de cadastro de nova empresa
 		if (isset($_POST['send'])) 
 		{
@@ -218,7 +220,7 @@
 					echo '</table>';
 					
 					echo '<div align="center" id="botoes_projeto">';
-						echo '<a href="../quadro_kanban/quadro_kanban.php?pro_id=' , $row['pro_id'] , ' &tip_id=' , $row['tip_id'] , '" class="gray_button">Entrar</a>';
+						echo '<a href="../quadro_kanban/quadro_kanban.php?pro_id=' , $row['pro_id'] , '&tip_id=' , $row['tip_id'] , '&action=', $default_action, '" class="gray_button">Entrar</a>';
 						
 						if ( $row['tip_id'] == ADMIN )
 							echo '<a id="config_button" href="config_projeto.php?pro_id=' . $row['pro_id'] . ' " class="gray_button">Configurações</a>';

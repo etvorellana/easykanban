@@ -1,6 +1,7 @@
 ﻿<?php
 	include_once('../connect/connect_vars.php');
-
+	
+	$return = &$_REQUEST;
 	$action = &$_REQUEST;
 	$pro_id = $_GET['pro_id'];
 	$permissao = $_GET['tip_id'];
@@ -31,11 +32,20 @@
 		mysqli_close($dbc);
 	}
 	
+	if (  isset( $return['return'] ) && isset($_GET['selected_id']) ){
+		$voltar_url = 'quadro_kanban.php?pro_id=' . $pro_id . '&tip_id=' . $permissao . '&action=' . $return['return'] . '&selected_id=' . $_GET['selected_id'] ; 
+	}else
+	if ( isset( $return['return'] ) ){
+		// volta para o quadro kanban
+		$voltar_url = 'quadro_kanban.php?pro_id=' . $pro_id . '&tip_id=' . $permissao . '&action=' . $return['return']; 
+	}
+	//else{
 	// volta para o quadro kanban
-	$voltar_url = 'quadro_kanban.php?pro_id=' . $pro_id . '&tip_id=' . $permissao; 
+	//	$voltar_url = 'quadro_kanban.php?pro_id=' . $pro_id . '&tip_id=' . $permissao; 
+	//}
 	
-	if(isset($_GET['usu_id_selecionado'])) 
-		echo $voltar_url . '&usu_id_selecionado=' . $_GET['usu_id_selecionado'];
+	//if(isset($_GET['usu_id_selecionado'])) 
+	//	echo $voltar_url . '&usu_id_selecionado=' . $_GET['usu_id_selecionado'];
 	
 	header('Location: ' . $voltar_url );
 ?>
