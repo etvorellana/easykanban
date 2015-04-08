@@ -1,0 +1,1 @@
+Parte das atividades desenvolvidas por um grupo de estudantes da matéria de Engenharia de Software, da Universidade Estadual de Santa Cruz (UESC), curso de Ciência da Computação
